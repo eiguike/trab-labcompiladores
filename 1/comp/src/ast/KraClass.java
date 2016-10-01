@@ -16,6 +16,6 @@ public class KraClass extends Type {
    private KraClass superclass;
    private InstanceVariableList instanceVariableList;
    // private MethodList publicMethodList, privateMethodList;
-   // métodos públicos get e set para obter e iniciar as variáveis acima,
-   // entre outros métodos
+   // mÃ©todos pÃºblicos get e set para obter e iniciar as variÃ¡veis acima,
+   // entre outros mÃ©todos
 }
