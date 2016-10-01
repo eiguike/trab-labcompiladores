@@ -13,7 +13,7 @@ typedef
 typedef
   struct _St_A {
     Func *vt;
-       /* variável de instância i da classe A */
+       /* variÃ¡vel de instÃ¢ncia i da classe A */
     int _A_i;
     } _class_A;
 
@@ -27,7 +27,7 @@ void _A_put( _class_A *this, int _p_i ) {
   this->_A_i = _p_i;
 }
 
-  /* tabela de métodos da classe A -- virtual table */
+  /* tabela de mÃ©todos da classe A -- virtual table */
 Func VTclass_A[] = {
   ( void (*)() ) _A_get,
   ( void (*)() ) _A_put
@@ -79,7 +79,7 @@ int _B_getLastInc( _class_B *this )
   return this->_B_lastInc;
 }  
 
-   /* apenas os métodos públicos  */
+   /* apenas os mÃ©todos pÃºblicos  */
 Func VTclass_B[] = {
   (void (*) () ) _A_get,
   (void (*) () ) _B_put,

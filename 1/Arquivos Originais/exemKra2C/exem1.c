@@ -1,4 +1,4 @@
-/* deve-se incluir alguns headers porque algumas funções da biblioteca padrão de C são utilizadas na tradução. */
+/* deve-se incluir alguns headers porque algumas funÃ§Ãµes da biblioteca padrÃ£o de C sÃ£o utilizadas na traduÃ§Ã£o. */
 
 #include <malloc.h>
 #include <stdlib.h>
@@ -9,50 +9,50 @@ typedef int boolean;
 #define true  1
 #define false 0
 
-/* define um tipo Func que é um ponteiro para função */
+/* define um tipo Func que Ã© um ponteiro para funÃ§Ã£o */
 typedef
   void (*Func)();
 
-/* Para cada classe, deve ser gerada uma estrutura como a abaixo. Se Program tivesse variáveis de instância, estas seriam declaradas nesta estrutura. _class_Program representa em C uma classe em Krakatoa. */
+/* Para cada classe, deve ser gerada uma estrutura como a abaixo. Se Program tivesse variÃ¡veis de instÃ¢ncia, estas seriam declaradas nesta estrutura. _class_Program representa em C uma classe em Krakatoa. */
 
 typedef
   struct _St_Program {
-       /* ponteiro para um vetor de métodos da classe */
+       /* ponteiro para um vetor de mÃ©todos da classe */
     Func *vt;
     } _class_Program;
 
-   /* Este é um protótipo de método que cria um objeto da classe Program. Toda classe 
-      A não abstrata possui um método new_A que cria e retorna um objeto da classe A.
-      O método new_Program é declarado antes do método main, abaixo.
+   /* Este Ã© um protÃ³tipo de mÃ©todo que cria um objeto da classe Program. Toda classe 
+      A nÃ£o abstrata possui um mÃ©todo new_A que cria e retorna um objeto da classe A.
+      O mÃ©todo new_Program Ã© declarado antes do mÃ©todo main, abaixo.
    */
 _class_Program *new_Program(void);
 
 
    /* 
-      Este é o método run da classe Program. Note que o método é traduzido para 
-      uma função de C cujo nome é uma concatenação do nome da classe com o nome
-      do método. Sempre há um primeiro parâmetro chamado this cujo tipo é a 
+      Este Ã© o mÃ©todo run da classe Program. Note que o mÃ©todo Ã© traduzido para 
+      uma funÃ§Ã£o de C cujo nome Ã© uma concatenaÃ§Ã£o do nome da classe com o nome
+      do mÃ©todo. Sempre hÃ¡ um primeiro parÃ¢metro chamado this cujo tipo Ã© a 
       estrutura que representa a classe, neste caso, _class_Program.
    */
 void _Program_run( _class_Program *this )
 {
-      /* os nomes de variáveis locais são precedidos por _ */
+      /* os nomes de variÃ¡veis locais sÃ£o precedidos por _ */
    int _i;
    int _b;
    boolean _primo;
-      /* Strings são mapeadas para char * em C */
+      /* Strings sÃ£o mapeadas para char * em C */
    char *_msg;
 
-      /* write com Strings são mapeados para puts em C */
+      /* write com Strings sÃ£o mapeados para puts em C */
    puts( "Ola, este e o meu primeiro programa" );
    puts( "Digite um numero: ");
-      /* read(b), com b inteiro é mapeado para o código entre { e } abaixo */
+      /* read(b), com b inteiro Ã© mapeado para o cÃ³digo entre { e } abaixo */
    { 
      char __s[512];
      gets(__s);
      sscanf(__s, "%d", &_b);
    }
-     /* o restante do código é praticamente igual em Krakatoa e C, a menos
+     /* o restante do cÃ³digo Ã© praticamente igual em Krakatoa e C, a menos
         de nomes de identificadores */
    _primo = true;
    _i = 2;
@@ -74,10 +74,10 @@ void _Program_run( _class_Program *this )
 
    /*
       Para toda classe deve ser declarado um vetor de Func (vetor de ponteiro para
-      funções). O nome deve ser VTclass_NomeDaClasse, como VTclass_Program. Este
-      vetor é inicializado (iniciado) com as funções em C, como _Program_run, que
-      representam os métodos **públicos** da classe. Note que o tipo de _Program_run
-      é void (*)(_class_program *) e portanto é necessário um cast para convertê-lo
+      funÃ§Ãµes). O nome deve ser VTclass_NomeDaClasse, como VTclass_Program. Este
+      vetor Ã© inicializado (iniciado) com as funÃ§Ãµes em C, como _Program_run, que
+      representam os mÃ©todos **pÃºblicos** da classe. Note que o tipo de _Program_run
+      Ã© void (*)(_class_program *) e portanto Ã© necessÃ¡rio um cast para convertÃª-lo
       para o tipo de Func, void (*)()
    */
 Func VTclass_Program[] = {
@@ -85,9 +85,9 @@ Func VTclass_Program[] = {
   };
 
    /*
-      Para toda classe não abstrata se declara uma função new_NomeDaClasse que aloca
-      memória para um objeto da classe, que é um "objeto" da estrutura
-       _class_NomeDaClasse. Note que este método é igual para todas as classes, a 
+      Para toda classe nÃ£o abstrata se declara uma funÃ§Ã£o new_NomeDaClasse que aloca
+      memÃ³ria para um objeto da classe, que Ã© um "objeto" da estrutura
+       _class_NomeDaClasse. Note que este mÃ©todo Ã© igual para todas as classes, a 
        menos do nome da classe. 
    */
 
@@ -96,12 +96,12 @@ _class_Program *new_Program()
   _class_Program *t;
 
   if ( (t = malloc(sizeof(_class_Program))) != NULL )
-       /* o texto explica porque vt é inicializado */ 
+       /* o texto explica porque vt Ã© inicializado */ 
     t->vt = VTclass_Program;
   return t;
 }
 
-   /* genC de Program da ASA deve gerar a função main exatamente como abaixo. */
+   /* genC de Program da ASA deve gerar a funÃ§Ã£o main exatamente como abaixo. */
 int main() {
   _class_Program *program;
 

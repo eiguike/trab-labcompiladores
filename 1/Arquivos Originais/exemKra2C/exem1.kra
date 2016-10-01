@@ -4,10 +4,10 @@ class Program {
       int i, b;
       boolean primo;
       String msg;
-      write( "Olá, este é o meu primeiro programa" );
-      write( "Digite um número: ");
+      write( "OlÃ¡, este Ã© o meu primeiro programa" );
+      write( "Digite um nÃºmero: ");
       read(b);
-         // um meio super ineficiente de verificar se um número é primo
+         // um meio super ineficiente de verificar se um nÃºmero Ã© primo
       primo = true;
       i = 2;
       while ( i < b ) 
