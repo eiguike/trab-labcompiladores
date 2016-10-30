@@ -64,7 +64,6 @@ public class Compiler {
 		ArrayList<Object> metaobjectParamList = new ArrayList<>();
 		if ( lexer.token == Symbol.LEFTPAR ) {
 			// metaobject call with parameters
-                         System.out.println("Aqui");
 			lexer.nextToken();
 			while ( lexer.token == Symbol.LITERALINT || lexer.token == Symbol.LITERALSTRING ||
 					lexer.token == Symbol.IDENT ) {
@@ -266,9 +265,20 @@ public class Compiler {
 			result = Type.stringType;
 			break;
 		case IDENT:
+                        Type aux_ident = null;
+                        Variable aux_variable;
 			// # corrija: fa�a uma busca na TS para buscar a classe
 			// IDENT deve ser uma classe.
-			result = null;
+                        
+//                        procura no local
+                        aux_variable = symbolTable.getInLocal(lexer.getStringValue()); 
+                        if (aux_variable != null){
+                            aux_ident = aux_variable.getType();
+                        }else{
+//                            nao achou no local procura no global
+                             aux_ident = symbolTable.getInGlobal(lexer.getStringValue());
+                        }
+			result = aux_ident;
 			break;
 		default:
 			signalError.showError("Type expected");
