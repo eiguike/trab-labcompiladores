@@ -34,9 +34,9 @@ public class Compiler {
 			while ( lexer.token == Symbol.MOCall ) {
 				metaobjectCallList.add(metaobjectCall());
 			}
-			classDec();
+			kraClassList.add(classDec());
 			while ( lexer.token == Symbol.CLASS )
-				classDec();
+				kraClassList.add(classDec());
 			if ( lexer.token != Symbol.EOF ) {
 				signalError.showError("End of file expected");
 			}
@@ -47,6 +47,7 @@ public class Compiler {
 		}
 		return program;
 	}
+
 
 	/**  parses a metaobject call as <code>{@literal @}ce(...)</code> in <br>
      * <code>
@@ -109,7 +110,7 @@ public class Compiler {
 		return new MetaobjectCall(name, metaobjectParamList);
 	}
 
-	private void classDec() {
+	private KraClass classDec() {
 		// Note que os métodos desta classe não correspondem exatamente as
 		// regras
 		// da gramtica. Este mtodo classDec, por exemplo, implementa
@@ -123,18 +124,29 @@ public class Compiler {
 		 * MethodDec ::= Qualifier Type Id "("[ FormalParamDec ] ")" "{" StatementList "}" 
 		 * Qualifier ::= [ "static" ]  ( "private" | "public" )
 		 */
+
+		KraClass superclass = null;
+		InstanceVariableList variableList = new InstanceVariableList();
+
 		if ( lexer.token != Symbol.CLASS ) signalError.showError("'class' expected");
 		lexer.nextToken();
 		if ( lexer.token != Symbol.IDENT )
 			signalError.show(ErrorSignaller.ident_expected);
 		String className = lexer.getStringValue();
-		symbolTable.putInGlobal(className, new KraClass(className));
+		//symbolTable.putInGlobal(className, new KraClass(className));
 		lexer.nextToken();
 		if ( lexer.token == Symbol.EXTENDS ) {
 			lexer.nextToken();
 			if ( lexer.token != Symbol.IDENT )
 				signalError.show(ErrorSignaller.ident_expected);
 			String superclassName = lexer.getStringValue();
+
+			// parte semântica
+			superclass = (KraClass) symbolTable.get(superclassName);
+			if(superclass == null){
+				// se não houver a superclasse, então sinaliza erro
+				signalError.showError("não ha classe "+ superclassName+" para herdar...");
+			}	
 
 			lexer.nextToken();
 		}
@@ -168,11 +180,13 @@ public class Compiler {
 			else if ( qualifier != Symbol.PRIVATE )
 				signalError.showError("Attempt to declare a public instance variable");
 			else
-				instanceVarDec(t, name);
+				instanceVarDec(t, name, variableList);
 		}
 		if ( lexer.token != Symbol.RIGHTCURBRACKET )
 			signalError.showError("public/private or \"}\" expected");
 		lexer.nextToken();
+		symbolTable.putInGlobal(className, new KraClass(className, superclass, variableList));
+		return (KraClass) symbolTable.get(className);
 
 	}
 
