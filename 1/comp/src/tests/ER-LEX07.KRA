@@ -1,4 +1,4 @@
-@ce(8, "'.' n√£o √© um caractere permitido", 
+@ce(8, "'.' n„o È um caractere permitido", 
     "Unknown character", "lexer.Lexer.nextToken()")
 
 	

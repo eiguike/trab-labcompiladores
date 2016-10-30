@@ -21,6 +21,11 @@ public class Compiler {
 		Program program = null;
 		lexer.nextToken();
 		program = program(compilationErrorList);
+
+		if(program.hasCompilationErrors() == true){
+			System.out.println("HEUHEUHU");
+
+		}
 		return program;
 	}
 
@@ -30,6 +35,7 @@ public class Compiler {
 		ArrayList<KraClass> kraClassList = new ArrayList<>();
 		Program program = new Program(kraClassList, metaobjectCallList, compilationErrorList);
 		try {
+			// parte do texto em que ele simboliza onde deve ser exibido o erro 
 			while ( lexer.token == Symbol.MOCall ) {
 				metaobjectCallList.add(metaobjectCall());
 			}
@@ -41,6 +47,7 @@ public class Compiler {
 			}
 		}
 		catch( RuntimeException e) {
+			System.out.println(e);
 			// if there was an exception, there is a compilation signalError
 		}
 		return program;
