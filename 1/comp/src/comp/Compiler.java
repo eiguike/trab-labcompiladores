@@ -252,22 +252,24 @@ public class Compiler {
 		}
 	}
 
-	private void formalParamDec() {
+	private ParamList formalParamDec() {
 		// FormalParamDec ::= ParamDec { "," ParamDec }
-
-		paramDec();
+                ParamList para_list = new ParamList();
+		para_list.addElement(paramDec());
 		while (lexer.token == Symbol.COMMA) {
 			lexer.nextToken();
-			paramDec();
+			para_list.addElement(paramDec());
 		}
+                return para_list;
 	}
 
-	private void paramDec() {
+	private Parameter paramDec() {
 		// ParamDec ::= Type Id
-
-		type();
-		if ( lexer.token != Symbol.IDENT ) signalError.showError("Identifier expected");
+		Type aux_type = type();
+            	if ( lexer.token != Symbol.IDENT ) signalError.showError("Identifier expected");
+                Parameter parametro = new Parameter(lexer.getStringValue(),aux_type);
 		lexer.nextToken();
+                return parametro;
 	}
 
 	private Type type() {
