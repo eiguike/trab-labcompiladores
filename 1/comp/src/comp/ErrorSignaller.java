@@ -41,6 +41,7 @@ public class ErrorSignaller {
 
 
    public void showError( String strMessage, String lineWithError, int lineNumber ) {
+	   System.out.println(strMessage +" "+lineWithError+" "+lineNumber);
       /* String msg = lineNumber + " : " + strMessage;
       out.println(msg);
       out.println(lineWithError); */

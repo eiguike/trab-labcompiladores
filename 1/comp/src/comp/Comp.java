@@ -243,7 +243,7 @@ public class Comp {
            callMetaobjects(filename, program, outError);
 
            
-           if ( ! program.hasCompilationErrors() ) {
+           if (!program.hasCompilationErrors()) {
         	   
                String outputFileName;
         	   
