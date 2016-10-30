@@ -176,12 +176,12 @@ public class Compiler {
 	}
 
 //      returna array de instanceVarDec
-	private ArrayList<InstanceVariable> instanceVarDec(Type type, String name) {
+	private void instanceVarDec(Type type, String name, InstanceVariableList variable_array) {
 		// InstVarDec ::= [ "static" ] "private" Type IdList ";"
-                ArrayList<InstanceVariable> variable_array = new ArrayList();
+//                ArrayList<InstanceVariable> variable_array = new ArrayList();
                 InstanceVariable aux_variable = new InstanceVariable(name,type);
 //                pelo menos uma variavel vai existir
-                variable_array.add(aux_variable); 
+                variable_array.addElement(aux_variable); 
 //                caso mais de uma existir
 		while (lexer.token == Symbol.COMMA) {
 			lexer.nextToken();
@@ -190,13 +190,12 @@ public class Compiler {
 			String variableName = lexer.getStringValue();
                         aux_variable = new InstanceVariable(lexer.getStringValue(),type);
 //                        adiciona nova variavel na lista
-                        variable_array.add(aux_variable);
+                        variable_array.addElement(aux_variable);
 			lexer.nextToken();
 		}
 		if ( lexer.token != Symbol.SEMICOLON )
 			signalError.show(ErrorSignaller.semicolon_expected);
 		lexer.nextToken();
-                return variable_array;
 	}
 
 	private void methodDec(Type type, String name, Symbol qualifier) {
