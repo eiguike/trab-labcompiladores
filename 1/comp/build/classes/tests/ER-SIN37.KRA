@@ -1,0 +1,13 @@
+@ce(8, "Expressão do 'if' vazia", 
+   "Expression expected", "comp.Compiler.factor()")
+
+class Program {
+  
+    public void run() {
+        
+      if () {   //#
+      }
+      
+    }
+
+}
