@@ -298,6 +298,7 @@ public class Comp {
 					// there was no compilation error. There should be no call @ce(...)
 					// the source code, through calls to "@ce(...)", informs that 
 					// there are errors
+                                        System.out.print(program.getMetaobjectCallList());
 					String whatToCorrect = "";
 					if ( moCall.getParamList().size() >= 4 ) {
 						whatToCorrect = (String ) moCall.getParamList().get(3);

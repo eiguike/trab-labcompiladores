@@ -70,7 +70,6 @@ public class Lexer {
 	public void nextToken() {
 		char ch;
 
-		
 		lastTokenPos = tokenPos;
 		while (  (ch = input[tokenPos]) == ' ' || ch == '\r' ||
 			ch == '\t' || ch == '\n')  {

@@ -50,8 +50,10 @@ public class ErrorSignaller {
       out.flush();
       if ( out.checkError() )
          System.out.println("Error in signaling an error");
+      
       foundCompilerError = true;
       CompilationError newError = new CompilationError(strMessage, lineNumber, lineWithError);
+      System.out.print(newError);
       compilationErrorList.add(newError);
       throw new RuntimeException();
    }

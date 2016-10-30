@@ -21,11 +21,6 @@ public class Compiler {
 		Program program = null;
 		lexer.nextToken();
 		program = program(compilationErrorList);
-
-		if(program.hasCompilationErrors() == true){
-			System.out.println("HEUHEUHU");
-
-		}
 		return program;
 	}
 
@@ -70,6 +65,7 @@ public class Compiler {
 		ArrayList<Object> metaobjectParamList = new ArrayList<>();
 		if ( lexer.token == Symbol.LEFTPAR ) {
 			// metaobject call with parameters
+                         System.out.println("Aqui");
 			lexer.nextToken();
 			while ( lexer.token == Symbol.LITERALINT || lexer.token == Symbol.LITERALSTRING ||
 					lexer.token == Symbol.IDENT ) {
@@ -223,6 +219,9 @@ public class Compiler {
 		if ( lexer.token != Symbol.IDENT ) signalError.showError("Identifier expected");
 		Variable v = new Variable(lexer.getStringValue(), type);
 		lexer.nextToken();
+                if(lexer.token != Symbol.COMMA || lexer.token != Symbol.SEMICOLON){
+                    signalError.showError("Unknown character");
+                }
 		while (lexer.token == Symbol.COMMA) {
 			lexer.nextToken();
 			if ( lexer.token != Symbol.IDENT )
