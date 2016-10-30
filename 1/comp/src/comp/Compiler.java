@@ -321,13 +321,16 @@ public class Compiler {
 			lexer.nextToken();
 	}
 
-	private void statementList() {
+	private ArrayList<Statement> statementList() {
+		ArrayList<Statement> statementList = new ArrayList<Statement>();
+		// qm chama essa função 'eo methodDec
 		// CompStatement ::= "{" { Statement } "}"
 		Symbol tk;
 		// statements always begin with an identifier, if, read, write, ...
 		while ((tk = lexer.token) != Symbol.RIGHTCURBRACKET
 				&& tk != Symbol.ELSE)
-			statement();
+			statementList.add(statement());
+		return statementList;
 	}
 
 	private void statement() {
