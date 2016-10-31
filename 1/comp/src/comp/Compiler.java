@@ -126,6 +126,7 @@ public class Compiler {
 
 		KraClass superclass = null;
 		InstanceVariableList variableList = new InstanceVariableList();
+                MethodDec_class aux_method;
 
 		if ( lexer.token != Symbol.CLASS ) signalError.showError("'class' expected");
 		lexer.nextToken();
@@ -174,9 +175,9 @@ public class Compiler {
 				signalError.showError("Identifier expected");
 			String name = lexer.getStringValue();
 			lexer.nextToken();
-			if ( lexer.token == Symbol.LEFTPAR )
-				methodDec(t, name, qualifier);
-			else if ( qualifier != Symbol.PRIVATE )
+			if ( lexer.token == Symbol.LEFTPAR ){
+                            aux_method = methodDec(t, name, qualifier);
+                        }else if ( qualifier != Symbol.PRIVATE )
 				signalError.showError("Attempt to declare a public instance variable");
 			else
 				instanceVarDec(t, name, variableList);
@@ -212,14 +213,14 @@ public class Compiler {
 		lexer.nextToken();
 	}
 
-	private void methodDec(Type type, String name, Symbol qualifier) {
+	private MethodDec_class methodDec(Type type, String name, Symbol qualifier) {
 		/*
 		 * MethodDec ::= Qualifier Return Id "("[ FormalParamDec ] ")" "{"
 		 *                StatementList "}"
 		 */
-
+                MethodDec_class aux_methodDec = new MethodDec_class(name,qualifier,type);
 		lexer.nextToken();
-		if ( lexer.token != Symbol.RIGHTPAR ) formalParamDec();
+		if ( lexer.token != Symbol.RIGHTPAR ) aux_methodDec.setParamList(formalParamDec());
 		if ( lexer.token != Symbol.RIGHTPAR ) signalError.showError(") expected");
 
 		lexer.nextToken();
@@ -230,6 +231,7 @@ public class Compiler {
 		if ( lexer.token != Symbol.RIGHTCURBRACKET ) signalError.showError("} expected");
 
 		lexer.nextToken();
+                return aux_methodDec;
 
 	}
 
