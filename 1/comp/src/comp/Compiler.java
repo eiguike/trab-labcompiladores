@@ -126,7 +126,6 @@ public class Compiler {
 
 		KraClass superclass = null;
 		InstanceVariableList variableList = new InstanceVariableList();
-                MethodDec_class aux_method;
 
 		if ( lexer.token != Symbol.CLASS ) signalError.showError("'class' expected");
 		lexer.nextToken();
@@ -154,6 +153,7 @@ public class Compiler {
 			signalError.showError("{ expected", true);
 		lexer.nextToken();
 
+                ArrayList<Variable>  aux_member = new  ArrayList<Variable>();
 		while (lexer.token == Symbol.PRIVATE || lexer.token == Symbol.PUBLIC) {
 
 			Symbol qualifier;
@@ -176,16 +176,16 @@ public class Compiler {
 			String name = lexer.getStringValue();
 			lexer.nextToken();
 			if ( lexer.token == Symbol.LEFTPAR ){
-                            aux_method = methodDec(t, name, qualifier);
+                            aux_member.add(methodDec(t, name, qualifier));
                         }else if ( qualifier != Symbol.PRIVATE )
 				signalError.showError("Attempt to declare a public instance variable");
 			else
-				instanceVarDec(t, name, variableList);
+				 instanceVarDec(t, name, variableList);
 		}
 		if ( lexer.token != Symbol.RIGHTCURBRACKET )
 			signalError.showError("public/private or \"}\" expected");
 		lexer.nextToken();
-		symbolTable.putInGlobal(className, new KraClass(className, superclass, variableList));
+		symbolTable.putInGlobal(className, new KraClass(className, superclass, variableList, aux_member));
 		return (KraClass) symbolTable.get(className);
 
 	}
@@ -218,7 +218,7 @@ public class Compiler {
 		 * MethodDec ::= Qualifier Return Id "("[ FormalParamDec ] ")" "{"
 		 *                StatementList "}"
 		 */
-                MethodDec_class aux_methodDec = new MethodDec_class(name,qualifier,type);
+                MethodDec_class aux_methodDec = new MethodDec_class(qualifier,name,type);
 		lexer.nextToken();
 		if ( lexer.token != Symbol.RIGHTPAR ) aux_methodDec.setParamList(formalParamDec());
 		if ( lexer.token != Symbol.RIGHTPAR ) signalError.showError(") expected");
