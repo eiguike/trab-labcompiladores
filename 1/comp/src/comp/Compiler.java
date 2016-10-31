@@ -233,12 +233,14 @@ public class Compiler {
 
 	}
 
-	private void localDec() {
+	private Expr localDec() {
 		// LocalDec ::= Type IdList ";"
+		ArrayList<Variable> variableList = new ArrayList<Variable>();
 
 		Type type = type();
 		if ( lexer.token != Symbol.IDENT ) signalError.showError("Identifier expected");
 		Variable v = new Variable(lexer.getStringValue(), type);
+		variableList.add(v);
 		lexer.nextToken();
                 if(lexer.token != Symbol.COMMA || lexer.token != Symbol.SEMICOLON){
                     signalError.showError("Unknown character");
@@ -248,8 +250,10 @@ public class Compiler {
 			if ( lexer.token != Symbol.IDENT )
 				signalError.showError("Identifier expected");
 			v = new Variable(lexer.getStringValue(), type);
+			variableList.add(v);
 			lexer.nextToken();
 		}
+		return new LocalDec(type, variableList);
 	}
 
 	private void formalParamDec() {
@@ -333,12 +337,14 @@ public class Compiler {
 		return statementList;
 	}
 
-	private void statement() {
+	private Statement statement() {
 		/*
 		 * Statement ::= Assignment ``;'' | IfStat |WhileStat | MessageSend
 		 *                ``;'' | ReturnStat ``;'' | ReadStat ``;'' | WriteStat ``;'' |
 		 *               ``break'' ``;'' | ``;'' | CompStatement | LocalDec
 		 */
+		
+		Statement stmt = null;
 
 		switch (lexer.token) {
 		case THIS:
@@ -347,7 +353,7 @@ public class Compiler {
 		case INT:
 		case BOOLEAN:
 		case STRING:
-			assignExprLocalDec();
+			stmt = new AssignmentStatement((AssignmentExpr) assignExprLocalDec());
 			break;
 		case ASSERT:
 			assertStatement();
@@ -368,13 +374,13 @@ public class Compiler {
 			ifStatement();
 			break;
 		case BREAK:
-			breakStatement();
+			stmt = breakStatement();
 			break;
 		case WHILE:
 			whileStatement();
 			break;
 		case SEMICOLON:
-			nullStatement();
+			stmt = nullStatement();
 			break;
 		case LEFTCURBRACKET:
 			compositeStatement();
@@ -382,6 +388,8 @@ public class Compiler {
 		default:
 			signalError.showError("Statement expected");
 		}
+		
+		return stmt;
 	}
 
 	private Statement assertStatement() {
@@ -417,7 +425,7 @@ public class Compiler {
 	 * AssignExprLocalDec ::= Expression [ ``$=$'' Expression ] | LocalDec
 	 */
 	private Expr assignExprLocalDec() {
-
+		Expr expr1=null, expr2=null;
 		if ( lexer.token == Symbol.INT || lexer.token == Symbol.BOOLEAN
 				|| lexer.token == Symbol.STRING ||
 				// token � uma classe declarada textualmente antes desta
@@ -429,23 +437,23 @@ public class Compiler {
 			 * AssignExprLocalDec ::= Expression [ ``$=$'' Expression ] | LocalDec 
 			 * LocalDec ::= Type IdList ``;''
 			 */
-			localDec();
+			return new AssignmentExpr(localDec(), null);
 		}
 		else {
 			/*
 			 * AssignExprLocalDec ::= Expression [ ``$=$'' Expression ]
 			 */
-			expr();
+			expr1 = expr();
 			if ( lexer.token == Symbol.ASSIGN ) {
 				lexer.nextToken();
-				expr();
+				expr2 = expr();
 				if ( lexer.token != Symbol.SEMICOLON )
 					signalError.showError("';' expected", true);
 				else
 					lexer.nextToken();
 			}
+			return new AssignmentExpr(expr1, expr2);
 		}
-		return null;
 	}
 
 	private ExprList realParameters() {
@@ -548,15 +556,18 @@ public class Compiler {
 		lexer.nextToken();
 	}
 
-	private void breakStatement() {
+	private BreakStatement breakStatement() {
 		lexer.nextToken();
 		if ( lexer.token != Symbol.SEMICOLON )
 			signalError.show(ErrorSignaller.semicolon_expected);
 		lexer.nextToken();
+		
+		return new BreakStatement();
 	}
 
-	private void nullStatement() {
+	private Statement nullStatement() {
 		lexer.nextToken();
+		return new Statement();
 	}
 
 	private ExprList exprList() {
