@@ -9,29 +9,20 @@ package ast;
  *
  * @author floss
  */
-public class WriteStatement extends Statement {
+public class ReturnStatement extends Statement{
+	private Expr expr;
 	
-	public WriteStatement(ExprList exprList, String ln){
-		this.exprList = exprList;
-		this.ln = ln;
+	public ReturnStatement(Expr expr) {
+		this.expr = expr;
 	}
 	
-	private String ln;
-
-	public String getLn() {
-		return ln;
-	}
-	
-	public ExprList getExprList(){
-		return this.exprList;
+	public Expr getExpr(){
+		return this.expr;
 	}
 
 	@Override
 	public void genC(PW pw) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
-	
-	private ExprList exprList;
-	
 	
 }

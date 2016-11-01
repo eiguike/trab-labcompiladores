@@ -5,33 +5,26 @@
  */
 package ast;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author floss
  */
-public class WriteStatement extends Statement {
-	
-	public WriteStatement(ExprList exprList, String ln){
-		this.exprList = exprList;
-		this.ln = ln;
+public class ReadStatement extends Statement{
+	public ReadStatement(ArrayList<Variable> variableList){
+		this.variableList = variableList;
 	}
-	
-	private String ln;
 
-	public String getLn() {
-		return ln;
+	public ArrayList<Variable> getVariableList() {
+		return variableList;
 	}
-	
-	public ExprList getExprList(){
-		return this.exprList;
-	}
+		
+	private ArrayList<Variable> variableList;
 
 	@Override
 	public void genC(PW pw) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
-	
-	private ExprList exprList;
-	
 	
 }

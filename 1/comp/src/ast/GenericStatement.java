@@ -9,29 +9,21 @@ package ast;
  *
  * @author floss
  */
-public class WriteStatement extends Statement {
-	
-	public WriteStatement(ExprList exprList, String ln){
-		this.exprList = exprList;
-		this.ln = ln;
-	}
-	
-	private String ln;
+// utilziado para o nullstatement e break
+public class GenericStatement extends Statement{
+	private String stmt;
 
-	public String getLn() {
-		return ln;
+	public String getStmt() {
+		return stmt;
 	}
 	
-	public ExprList getExprList(){
-		return this.exprList;
+	public GenericStatement(String stmt){
+		this.stmt = stmt;
 	}
 
 	@Override
 	public void genC(PW pw) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
-	
-	private ExprList exprList;
-	
 	
 }
