@@ -8,20 +8,26 @@ public class InstanceVariable extends Variable {
         super(name, type);
     }
     
-    public InstanceVariable( String name, Type type, Symbol sym_entra , Symbol sym_entra1 ) {
+    public InstanceVariable( String name, Type type, Symbol sym_entra , Symbol sym_entra1, Symbol sym_entra2) {
         super(name, type);
         this.qualifier = sym_entra;
-        this.qualifier1 = sym_entra1;
+        this.quali_static = sym_entra1;
+        this.quali_final = sym_entra2;
     }
     
     public Symbol getQualifier(){
         return this.qualifier;
     }
     
-    public Symbol getQualifier1(){
-        return this.qualifier1;
+    public Symbol getQuali_static() {
+        return this.quali_static;
+    }
+    
+    public Symbol getQuali_final() {
+        return this.quali_final;
     }
 
     private Symbol qualifier;
-    private Symbol qualifier1;
+    private Symbol quali_static;
+    private Symbol quali_final; 
 }

@@ -20,13 +20,15 @@ public class MethodDec_class extends Variable{
     public MethodDec_class(Symbol symbol_entra, String name, Type type) {
         super(name, type);
         this.qualifier = symbol_entra;
-        this.qualifier1 = null;
+        this.quali_static = null;
+        this.quali_final = null;
     }
     
-    public MethodDec_class(Symbol symbol_entra, String name, Type type, Symbol symbol_entra1) {
+    public MethodDec_class(Symbol symbol_entra, String name, Type type, Symbol symbol_entra1, Symbol symbol_entra2) {
         super(name, type);
         this.qualifier = symbol_entra;
-        this.qualifier1 = symbol_entra1;
+        this.quali_static = symbol_entra1;
+        this.quali_final = symbol_entra2;
     }
     
     
@@ -40,15 +42,19 @@ public class MethodDec_class extends Variable{
     }
     
     public void setQualifier1(Symbol entra_quali) {
-        this.qualifier1 = entra_quali;
+        this.quali_static = entra_quali;
     }
      
     public Symbol getQualifier() {
         return this.qualifier;
     }
     
-    public Symbol getQualifie1r() {
-        return this.qualifier1;
+    public Symbol getQuali_static() {
+        return this.quali_static;
+    }
+    
+    public Symbol getQuali_final() {
+        return this.quali_final;
     }
     
     public String getName() {
@@ -63,5 +69,6 @@ public class MethodDec_class extends Variable{
 
     private ParamList paramList;
     private Symbol qualifier;
-    private Symbol qualifier1;
+    private Symbol quali_static;
+    private Symbol quali_final;  //final
 }
