@@ -24,7 +24,6 @@ public class Compiler {
 		lexer.nextToken();
 		
 		classeAtual = new Stack();
-		
 		program = program(compilationErrorList);
 		return program;
 	}
@@ -169,7 +168,8 @@ public class Compiler {
                 
 		while (lexer.token == Symbol.PRIVATE || lexer.token == Symbol.PUBLIC) {
 
-			Symbol qualifier;
+			Symbol qualifier = null;
+                        Symbol qualifier1 = null;
 			switch (lexer.token) {
 			case PRIVATE:
 				lexer.nextToken();
@@ -179,6 +179,35 @@ public class Compiler {
 				lexer.nextToken();
 				qualifier = Symbol.PUBLIC;
 				break;
+                        case STATIC: // necessarimente vai ter private ou public
+				lexer.nextToken();
+				qualifier1 = Symbol.STATIC;
+                                switch (lexer.token) {
+                                    case PRIVATE:
+                                        lexer.nextToken();
+                                        qualifier = Symbol.PRIVATE;
+                                        break;
+                                    case PUBLIC:
+                                        lexer.nextToken();
+                                        qualifier = Symbol.PUBLIC;
+                                        break;
+                                }
+				break;
+                       case FINAL: // necessarimente vai ter private ou public
+				lexer.nextToken();
+				qualifier1 = Symbol.FINAL;
+                                switch (lexer.token) {
+                                    case PRIVATE:
+                                        lexer.nextToken();
+                                        qualifier = Symbol.PRIVATE;
+                                        break;
+                                    case PUBLIC:
+                                        lexer.nextToken();
+                                        qualifier = Symbol.PUBLIC;
+                                        break;
+                                }
+				break;
+                        
 			default:
 				signalError.showError("private, or public expected");
 				qualifier = Symbol.PUBLIC;
@@ -189,11 +218,11 @@ public class Compiler {
 			String name = lexer.getStringValue();
 			lexer.nextToken();
 			if ( lexer.token == Symbol.LEFTPAR ){
-                            aux_member.add(methodDec(t, name, qualifier));
+                            aux_member.add(methodDec(t, name, qualifier,qualifier1));
                         }else if ( qualifier != Symbol.PRIVATE )
 				signalError.showError("Attempt to declare a public instance variable");
 			else
-				 instanceVarDec(t, name, variableList);
+				 instanceVarDec(t, name, variableList,qualifier,qualifier1);
 		}
 		if ( lexer.token != Symbol.RIGHTCURBRACKET )
 			signalError.showError("public/private or \"}\" expected");
@@ -207,10 +236,10 @@ public class Compiler {
 	}
 
 //      returna array de instanceVarDec
-	private void instanceVarDec(Type type, String name, InstanceVariableList variable_array) {
+	private void instanceVarDec(Type type, String name, InstanceVariableList variable_array,Symbol qualifier, Symbol qualifier1) {
 		// InstVarDec ::= [ "static" ] "private" Type IdList ";"
 //                ArrayList<InstanceVariable> variable_array = new ArrayList();
-                InstanceVariable aux_variable = new InstanceVariable(name,type);
+                InstanceVariable aux_variable = new InstanceVariable(name,type,qualifier,qualifier1);
 //                pelo menos uma variavel vai existir
                 variable_array.addElement(aux_variable); 
 //                caso mais de uma existir
@@ -229,12 +258,12 @@ public class Compiler {
 		lexer.nextToken();
 	}
 
-	private MethodDec_class methodDec(Type type, String name, Symbol qualifier) {
+	private MethodDec_class methodDec(Type type, String name, Symbol qualifier, Symbol qualifier1) {
 		/*
 		 * MethodDec ::= Qualifier Return Id "("[ FormalParamDec ] ")" "{"
 		 *                StatementList "}"
 		 */
-                MethodDec_class aux_methodDec = new MethodDec_class(qualifier,name,type);
+                MethodDec_class aux_methodDec = new MethodDec_class(qualifier,name,type,qualifier1);
 		lexer.nextToken();
 		if ( lexer.token != Symbol.RIGHTPAR ) aux_methodDec.setParamList(formalParamDec());
 		if ( lexer.token != Symbol.RIGHTPAR ) signalError.showError(") expected");
@@ -247,6 +276,7 @@ public class Compiler {
 		if ( lexer.token != Symbol.RIGHTCURBRACKET ) signalError.showError("} expected");
 
 		lexer.nextToken();
+
                 return aux_methodDec;
 
 	}
@@ -694,8 +724,12 @@ public class Compiler {
 		Expr anExpr;
 		ExprList exprList;
 		String messageName, id;
-
-		switch (lexer.token) {
+                KraClass aux_class = (KraClass) classeAtual.get(classeAtual.size()-1); //recebe ultima classe
+//                MethodDec_class aux_method = (MethodDec_class) methodAtual.get(classeAtual.size()-1);
+//                String quali = aux_method.getQualifier().toString();
+//                String aux_name;
+		InstanceVariableList aux_instanceVariable = aux_class.getIntance();
+                switch (lexer.token) {
 		// IntValue
 		case LITERALINT:
 			return literalInt();
@@ -871,6 +905,12 @@ public class Compiler {
 				// only 'this'
 				// retorne um objeto da ASA que representa 'this'
 				// confira se n�o estamos em um m�todo est�tico
+//                                for(Variable item : aux_method){
+//                                    aux_name = item.getName();
+//                                    if (quali.equals()){
+//                                        System.out.print('c');
+//                                    }
+//                                }
 				return this_expr;
 			}
 			else {

@@ -41,6 +41,11 @@ public class KraClass extends Type {
         public ArrayList<Variable> getMethodList() {
             return methodDecList;
         }
+        
+        public InstanceVariableList getIntance() {
+            return instanceVariableList;
+        }
+        
 	private String name; //id
 	private KraClass superclass; // extends
 	private InstanceVariableList instanceVariableList;

@@ -47,6 +47,7 @@ public enum Symbol {
     SEMICOLON(";"),
     STRING("String"),
     SUPER("super"),
+    STATIC("static"),
     THIS("this"),
     TRUE("true"),
     VOID("void"),

@@ -20,9 +20,17 @@ public class MethodDec_class extends Variable{
     public MethodDec_class(Symbol symbol_entra, String name, Type type) {
         super(name, type);
         this.qualifier = symbol_entra;
+        this.qualifier1 = null;
+    }
+    
+    public MethodDec_class(Symbol symbol_entra, String name, Type type, Symbol symbol_entra1) {
+        super(name, type);
+        this.qualifier = symbol_entra;
+        this.qualifier1 = symbol_entra1;
     }
     
     
+    @Override
      public Type getType() {
         return super.getType();
     }
@@ -30,9 +38,17 @@ public class MethodDec_class extends Variable{
     public void setQualifier(Symbol entra_quali) {
         this.qualifier = entra_quali;
     }
+    
+    public void setQualifier1(Symbol entra_quali) {
+        this.qualifier1 = entra_quali;
+    }
      
     public Symbol getQualifier() {
         return this.qualifier;
+    }
+    
+    public Symbol getQualifie1r() {
+        return this.qualifier1;
     }
     
     public String getName() {
@@ -47,4 +63,5 @@ public class MethodDec_class extends Variable{
 
     private ParamList paramList;
     private Symbol qualifier;
+    private Symbol qualifier1;
 }
