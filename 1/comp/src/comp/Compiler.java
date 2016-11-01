@@ -319,14 +319,16 @@ public class Compiler {
 		return result;
 	}
 
-	private void compositeStatement() {
+	private CompositeStatement compositeStatement() {
 
 		lexer.nextToken();
-		statementList();
+		ArrayList<Statement> stmtList = statementList();
 		if ( lexer.token != Symbol.RIGHTCURBRACKET )
 			signalError.showError("} expected");
 		else
 			lexer.nextToken();
+		
+		return new CompositeStatement(stmtList);
 	}
 
 	private ArrayList<Statement> statementList() {
@@ -381,13 +383,13 @@ public class Compiler {
 			stmt = breakStatement();
 			break;
 		case WHILE:
-			whileStatement();
+			stmt = whileStatement();
 			break;
 		case SEMICOLON:
 			stmt = nullStatement();
 			break;
 		case LEFTCURBRACKET:
-			compositeStatement();
+			stmt = compositeStatement();
 			break;
 		default:
 			signalError.showError("Statement expected");
@@ -396,7 +398,7 @@ public class Compiler {
 		return stmt;
 	}
 
-	private Statement assertStatement() {
+	private StatementAssert assertStatement() {
 		lexer.nextToken();
 		int lineNumber = lexer.getLineNumber();
 		Expr e = expr();
@@ -471,15 +473,17 @@ public class Compiler {
 		return anExprList;
 	}
 
-	private void whileStatement() {
+	private WhileStatement whileStatement() {
 
 		lexer.nextToken();
 		if ( lexer.token != Symbol.LEFTPAR ) signalError.showError("( expected");
 		lexer.nextToken();
-		expr();
+		Expr expr = expr();
 		if ( lexer.token != Symbol.RIGHTPAR ) signalError.showError(") expected");
 		lexer.nextToken();
-		statement();
+		Statement stmt = statement();
+		
+		return new WhileStatement(stmt, expr);
 	}
 
 	private IfStatement ifStatement() {
