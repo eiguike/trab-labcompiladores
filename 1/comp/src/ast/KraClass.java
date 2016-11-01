@@ -27,11 +27,20 @@ public class KraClass extends Type {
         public Iterator<Variable> elements() {
             return methodDecList.iterator();
         }
+        
+           
 	
 	public String getCname() {
 		return getName();
 	}
+        
+        public KraClass getSuper(){
+            return this.superclass;
+        }
 	
+        public ArrayList<Variable> getMethodList() {
+            return methodDecList;
+        }
 	private String name; //id
 	private KraClass superclass; // extends
 	private InstanceVariableList instanceVariableList;

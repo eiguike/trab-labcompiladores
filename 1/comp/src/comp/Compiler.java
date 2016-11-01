@@ -571,7 +571,7 @@ public class Compiler {
 
 	private Statement nullStatement() {
 		lexer.nextToken();
-		return new Statement();
+		return null;
 	}
 
 	private ExprList exprList() {
@@ -652,6 +652,7 @@ public class Compiler {
 	 *                 "this" "." Id "(" [ ExpressionList ] ")"  | 
 	 *                 "this" "." Id "." Id "(" [ ExpressionList ] ")"
 	 */
+        @SuppressWarnings("UnusedAssignment")
 	private Expr factor() {
 
 		Expr anExpr;
@@ -699,12 +700,17 @@ public class Compiler {
 				signalError.showError("Identifier expected");
 
 			String className = lexer.getStringValue();
+                        KraClass aClass;
+                        
 			/*
 			 * // encontre a classe className in symbol table KraClass 
 			 *      aClass = symbolTable.getInGlobal(className); 
 			 *      if ( aClass == null ) ...
 			 */
-
+                        
+                        
+                        aClass =  symbolTable.getInGlobal(className);
+                        
 			lexer.nextToken();
 			if ( lexer.token != Symbol.LEFTPAR ) signalError.showError("( expected");
 			lexer.nextToken();
@@ -713,7 +719,11 @@ public class Compiler {
 			/*
 			 * return an object representing the creation of an object
 			 */
-			return null;
+                        if (aClass == null){
+                            return LiteralBoolean.False;
+                        }else{
+                            return LiteralBoolean.True;
+                        }
 			/*
           	 * PrimaryExpr ::= "super" "." Id "(" [ ExpressionList ] ")"  | 
           	 *                 Id  |
@@ -736,6 +746,9 @@ public class Compiler {
 			if ( lexer.token != Symbol.IDENT )
 				signalError.showError("Identifier expected");
 			messageName = lexer.getStringValue();
+                        KraClass aux_class;
+                        aux_class =  symbolTable.getInGlobal(messageName);
+                        aux_class = aux_class.getSuper();
 			/*
 			 * para fazer as confer�ncias sem�nticas, procure por 'messageName'
 			 * na superclasse/superclasse da superclasse etc
@@ -753,11 +766,13 @@ public class Compiler {
 			 */
 
 			String firstId = lexer.getStringValue();
+                        ExpressionList prim_expr = new ExpressionList();
 			lexer.nextToken();
+                        prim_expr.addID1(firstId);
 			if ( lexer.token != Symbol.DOT ) {
 				// Id
 				// retorne um objeto da ASA que representa um identificador
-				return null;
+				return prim_expr;
 			}
 			else { // Id "."
 				lexer.nextToken(); // coma o "."
@@ -766,6 +781,8 @@ public class Compiler {
 				}
 				else {
 					// Id "." Id
+                                        String secondId = lexer.getStringValue();
+                                        prim_expr.addID2(secondId);
 					lexer.nextToken();
 					id = lexer.getStringValue();
 					if ( lexer.token == Symbol.DOT ) {
@@ -781,6 +798,8 @@ public class Compiler {
 						if ( lexer.token != Symbol.IDENT )
 							signalError.showError("Identifier expected");
 						messageName = lexer.getStringValue();
+                                                String thirdId = lexer.getStringValue();
+                                                prim_expr.addID3(thirdId);
 						lexer.nextToken();
 						exprList = this.realParameters();
 
