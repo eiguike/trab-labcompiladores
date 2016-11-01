@@ -48,6 +48,10 @@ public class ExpressionList  extends Expr{
         this.expr = expr_entra;
     }
     
+    public void setThis(boolean value){
+        this.valueThis = value;
+    }
+    
     private boolean valueThis;
     private boolean valueSuper;
     private String id1;

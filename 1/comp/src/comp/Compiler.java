@@ -821,24 +821,29 @@ public class Compiler {
                                                 String thirdId = lexer.getStringValue();
                                                 prim_expr.addID3(thirdId);
 						lexer.nextToken();
-						exprList = this.realParameters();
-
+//						exprList = this.realParameters();
+                                                prim_expr.setExpr(this.realParameters());
+                                                return prim_expr;
 					}
 					else if ( lexer.token == Symbol.LEFTPAR ) {
 						// Id "." Id "(" [ ExpressionList ] ")"
-						exprList = this.realParameters();
+//						exprList = this.realParameters();
+                                                prim_expr.setExpr(this.realParameters());
+                                                return prim_expr;
 						/*
 						 * para fazer as confer�ncias sem�nticas, procure por
 						 * m�todo 'ident' na classe de 'firstId'
 						 */
 					}
 					else {
+                                            return prim_expr;
 						// retorne o objeto da ASA que representa Id "." Id
 					}
 				}
 			}
 			break;
 		case THIS:
+                     ExpressionList this_expr = new ExpressionList();
 			/*
 			 * Este 'case THIS:' trata os seguintes casos: 
           	 * PrimaryExpr ::= 
@@ -848,17 +853,19 @@ public class Compiler {
           	 *                 "this" "." Id "." Id "(" [ ExpressionList ] ")"
 			 */
 			lexer.nextToken();
+                        this_expr.setThis(true);
 			if ( lexer.token != Symbol.DOT ) {
 				// only 'this'
 				// retorne um objeto da ASA que representa 'this'
 				// confira se n�o estamos em um m�todo est�tico
-				return null;
+				return this_expr;
 			}
 			else {
 				lexer.nextToken();
 				if ( lexer.token != Symbol.IDENT )
 					signalError.showError("Identifier expected");
 				id = lexer.getStringValue();
+                                this_expr.addID1(id);
 				lexer.nextToken();
 				// j� analisou "this" "." Id
 				if ( lexer.token == Symbol.LEFTPAR ) {
@@ -867,23 +874,34 @@ public class Compiler {
 					 * Confira se a classe corrente possui um m�todo cujo nome �
 					 * 'ident' e que pode tomar os par�metros de ExpressionList
 					 */
-					exprList = this.realParameters();
+                                        this_expr.setExpr(this.realParameters());
+                                        return this_expr;
+//					exprList = this.realParameters();
 				}
 				else if ( lexer.token == Symbol.DOT ) {
 					// "this" "." Id "." Id "(" [ ExpressionList ] ")"
 					lexer.nextToken();
 					if ( lexer.token != Symbol.IDENT )
 						signalError.showError("Identifier expected");
+                                        this_expr.addID2(lexer.getStringValue());
 					lexer.nextToken();
-					exprList = this.realParameters();
+                                        if ( lexer.token == Symbol.LEFTPAR ){
+                                            this_expr.setExpr(this.realParameters());
+                                            return this_expr;
+                                        }else{
+                                            signalError.showError("( expected");
+                                        }
+//					exprList = this.realParameters();
 				}
 				else {
+                                        id = lexer.getStringValue();
+                                        this_expr.addID1(id);
 					// retorne o objeto da ASA que representa "this" "." Id
 					/*
 					 * confira se a classe corrente realmente possui uma
 					 * vari�vel de inst�ncia 'ident'
 					 */
-					return null;
+					return this_expr;
 				}
 			}
 			break;
