@@ -200,7 +200,7 @@ public class Compiler {
 		lexer.nextToken();
 		
 		// remove a classe que esta sendo trabalhada
-		classeAtual.remove(0);
+		classeAtual.pop();
 		
 		return (KraClass) symbolTable.get(className);
 
