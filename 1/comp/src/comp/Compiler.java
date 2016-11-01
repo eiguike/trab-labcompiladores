@@ -7,6 +7,8 @@ import java.io.*;
 import java.util.*;
 
 public class Compiler {
+	
+	private Stack classeAtual;
 
 	// compile must receive an input with an character less than
 	// p_input.lenght
@@ -20,6 +22,9 @@ public class Compiler {
 
 		Program program = null;
 		lexer.nextToken();
+		
+		classeAtual = new Stack();
+		
 		program = program(compilationErrorList);
 		return program;
 	}
@@ -126,19 +131,22 @@ public class Compiler {
 
 		KraClass superclass = null;
 		InstanceVariableList variableList = new InstanceVariableList();
-
+		ArrayList<Variable>  aux_member = new  ArrayList<Variable>();
+		String superclassName = new String();
+		String className = new String();
+		
 		if ( lexer.token != Symbol.CLASS ) signalError.showError("'class' expected");
 		lexer.nextToken();
 		if ( lexer.token != Symbol.IDENT )
 			signalError.show(ErrorSignaller.ident_expected);
-		String className = lexer.getStringValue();
-		//symbolTable.putInGlobal(className, new KraClass(className));
+		className = lexer.getStringValue();
+
 		lexer.nextToken();
 		if ( lexer.token == Symbol.EXTENDS ) {
 			lexer.nextToken();
 			if ( lexer.token != Symbol.IDENT )
 				signalError.show(ErrorSignaller.ident_expected);
-			String superclassName = lexer.getStringValue();
+			superclassName = lexer.getStringValue();
 
 			// parte semântica
 			superclass = (KraClass) symbolTable.get(superclassName);
@@ -152,8 +160,13 @@ public class Compiler {
 		if ( lexer.token != Symbol.LEFTCURBRACKET )
 			signalError.showError("{ expected", true);
 		lexer.nextToken();
-
-                ArrayList<Variable>  aux_member = new  ArrayList<Variable>();
+		
+		KraClass aux = new KraClass(className, superclass, variableList, aux_member);		
+		symbolTable.putInGlobal(className, aux);
+		
+		// semântica, pra identificar qual classe eu estou...
+		classeAtual.add(aux);	
+                
 		while (lexer.token == Symbol.PRIVATE || lexer.token == Symbol.PUBLIC) {
 
 			Symbol qualifier;
@@ -185,7 +198,10 @@ public class Compiler {
 		if ( lexer.token != Symbol.RIGHTCURBRACKET )
 			signalError.showError("public/private or \"}\" expected");
 		lexer.nextToken();
-		symbolTable.putInGlobal(className, new KraClass(className, superclass, variableList, aux_member));
+		
+		// remove a classe que esta sendo trabalhada
+		classeAtual.remove(0);
+		
 		return (KraClass) symbolTable.get(className);
 
 	}
@@ -727,9 +743,11 @@ public class Compiler {
 			 *      aClass = symbolTable.getInGlobal(className); 
 			 *      if ( aClass == null ) ...
 			 */
-                        
-                        
+                                                
                         aClass =  symbolTable.getInGlobal(className);
+			if (aClass == null){
+				signalError.showError("não existe tal classe. não complica rapaz");
+			}
                         
 			lexer.nextToken();
 			if ( lexer.token != Symbol.LEFTPAR ) signalError.showError("( expected");
@@ -739,10 +757,8 @@ public class Compiler {
 			/*
 			 * return an object representing the creation of an object
 			 */
-                        if (aClass == null){
-                            return LiteralBoolean.False;
-                        }else{
-                            return LiteralBoolean.True;
+                        if (aClass != null){
+                            return new FactorNew(aClass);
                         }
 			/*
           	 * PrimaryExpr ::= "super" "." Id "(" [ ExpressionList ] ")"  | 
@@ -766,9 +782,6 @@ public class Compiler {
 			if ( lexer.token != Symbol.IDENT )
 				signalError.showError("Identifier expected");
 			messageName = lexer.getStringValue();
-                        KraClass aux_class;
-                        aux_class =  symbolTable.getInGlobal(messageName);
-                        aux_class = aux_class.getSuper();
 			/*
 			 * para fazer as confer�ncias sem�nticas, procure por 'messageName'
 			 * na superclasse/superclasse da superclasse etc
