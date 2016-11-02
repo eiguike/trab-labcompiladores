@@ -42,7 +42,10 @@ public class Compiler {
 			while ( lexer.token == Symbol.CLASS )
 				kraClassList.add(classDec());
 			if ( lexer.token != Symbol.EOF ) {
-				signalError.showError("End of file expected");
+				if( lexer.token == Symbol.IDENT ){
+					signalError.showError("'class' expected");
+				}else
+					signalError.showError("End of file expected");
 			}
 		}
 		catch( RuntimeException e) {
