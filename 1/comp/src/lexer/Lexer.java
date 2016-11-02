@@ -70,7 +70,7 @@ public class Lexer {
 	
 	public void nextToken() {
 		char ch;
-
+		System.out.print(" ");
 		lastTokenPos = tokenPos;
 		while (  (ch = input[tokenPos]) == ' ' || ch == '\r' ||
 			ch == '\t' || ch == '\n')  {
@@ -122,6 +122,7 @@ public class Lexer {
 						token = Symbol.IDENT;
 					else
 						token = value;
+					System.out.print(this.stringValue);
 				}
 				else if ( Character.isDigit( ch ) ) {
 					// get a number
@@ -138,9 +139,11 @@ public class Lexer {
 					}
 					if ( numberValue > MaxValueInteger )
 						error.showError("Number out of limits");
+					System.out.print(this.numberValue);
 				}
 				else {
 					tokenPos++;
+					System.out.print(ch);
 					switch ( ch ) {
 						case '+' :
 							token = Symbol.PLUS;
