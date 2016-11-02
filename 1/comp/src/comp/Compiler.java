@@ -42,7 +42,10 @@ public class Compiler {
 			while ( lexer.token == Symbol.CLASS )
 				kraClassList.add(classDec());
 			if ( lexer.token != Symbol.EOF ) {
-				signalError.showError("End of file expected");
+				if( lexer.token == Symbol.IDENT ){
+					signalError.showError("'class' expected");
+				}else
+					signalError.showError("End of file expected");
 			}
 		}
 		catch( RuntimeException e) {
@@ -360,6 +363,7 @@ public class Compiler {
 
 		lexer.nextToken();
 		ArrayList<Statement> stmtList = statementList();
+
 		if ( lexer.token != Symbol.RIGHTCURBRACKET )
 			signalError.showError("} expected");
 		else
@@ -530,22 +534,20 @@ public class Compiler {
 		
 		if(lexer.token == Symbol.LEFTCURBRACKET){
 			cmpstmt = compositeStatement();
-		}else if(lexer.token == Symbol.WHILE){
-			signalError.showError("Expected left current bracket");
-
-			if(lexer.token == Symbol.WHILE){
+		}else signalError.showError("Expected '{' after 'do'");
+		
+		if(lexer.token == Symbol.WHILE){
+			lexer.nextToken();
+			if(lexer.token == Symbol.LEFTPAR){
 				lexer.nextToken();
-				if(lexer.token == Symbol.LEFTPAR){
+				expr = expr();
+				if(lexer.token == Symbol.RIGHTPAR){
 					lexer.nextToken();
-					expr = expr();
-					if(lexer.token == Symbol.RIGHTPAR)
-						return new DoWhileStatement(cmpstmt, expr);
-					else	signalError.showError("Expected a ')'");
-				}else	signalError.showError("Expected a '('");
-			}else	signalError.showError("Expected symbol 'while' but found "+lexer.token);
-		}
-		signalError.showError("Expected '{' after 'do'");
-	
+					return new DoWhileStatement(cmpstmt, expr);
+				}else	signalError.showError("Expected a ')'");
+			}else	signalError.showError("Expected a '('");
+		}else	signalError.showError("Expected symbol 'while' but found "+lexer.token);
+
 		return null;
 	}
 
