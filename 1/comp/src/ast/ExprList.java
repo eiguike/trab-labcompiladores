@@ -26,6 +26,10 @@ public class ExprList {
                 pw.print(", ");
         }
     }
+    
+    public ArrayList<Expr> getExpr(){
+        return this.exprList;
+    }
 
     private ArrayList<Expr> exprList;
 

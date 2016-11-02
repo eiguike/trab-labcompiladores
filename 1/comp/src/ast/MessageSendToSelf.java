@@ -1,5 +1,7 @@
 package ast;
 
+import java.util.ArrayList;
+
 
 public class MessageSendToSelf extends MessageSend {
     
@@ -21,8 +23,8 @@ public class MessageSendToSelf extends MessageSend {
     }
     
     
-    public ExprList getExp(){
-        return this.exprList;
+    public ArrayList<Expr> getExp(){
+        return this.exprList.getExpr();
     }
     
           

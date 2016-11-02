@@ -94,20 +94,37 @@ public class KraClass extends Type {
              return null;
         }
         
-        public boolean message(MessageSendToSelf message, ErrorSignaller signalError) {
+        public MethodDec_class message(MessageSendToSelf message, ErrorSignaller signalError) {
             boolean achouMethod = false;
+            ArrayList<Variable> parametros = null;
+            Variable metodo = null;
             for(Variable item : this.methodDecList){//procura pelo metodos
                 if (item.getName().equals(message.getString()) ){
-                    ArrayList<Variable> parametros = this.parametros(item.getName());
+                    parametros = this.parametros(item.getName());
+                    metodo = item;
                     achouMethod = true;
                     break;
                 }
             }
             if (!achouMethod){
                 signalError.showError("Method does not exist");
+                return null;
             }
-//           ExprList 
-            return true;
+            if (parametros.size() != this.methodDecList.size()){
+                signalError.showError("Parameter number different");
+                return null;
+            }
+            int i = 0;
+            ArrayList<Expr> message_pametros =  message.getExp();
+            for(Variable item : parametros){
+                if(item.getType() != message_pametros.get(i).getType()){
+                    signalError.showError("Parameter value different");
+                    return null;
+                }
+                
+               i++;
+            }
+            return (MethodDec_class) metodo;
         }
         
         
