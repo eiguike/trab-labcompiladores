@@ -434,6 +434,9 @@ public class Compiler {
 		case LEFTCURBRACKET:
 			stmt = compositeStatement();
 			break;
+		case DO:
+			stmt = doWhileStatement();
+			break;
 		default:
 			signalError.showError("Statement expected");
 		}
@@ -519,6 +522,31 @@ public class Compiler {
 		if ( lexer.token != Symbol.RIGHTPAR ) signalError.showError(") expected");
 		lexer.nextToken();
 		return anExprList;
+	}
+	private DoWhileStatement doWhileStatement() {
+		CompositeStatement cmpstmt = null;
+		Expr expr = null;
+		lexer.nextToken();
+		
+		if(lexer.token == Symbol.LEFTCURBRACKET){
+			cmpstmt = compositeStatement();
+		}else if(lexer.token == Symbol.WHILE){
+			signalError.showError("Expected left current bracket");
+
+			if(lexer.token == Symbol.WHILE){
+				lexer.nextToken();
+				if(lexer.token == Symbol.LEFTPAR){
+					lexer.nextToken();
+					expr = expr();
+					if(lexer.token == Symbol.RIGHTPAR)
+						return new DoWhileStatement(cmpstmt, expr);
+					else	signalError.showError("Expected a ')'");
+				}else	signalError.showError("Expected a '('");
+			}else	signalError.showError("Expected symbol 'while' but found "+lexer.token);
+		}
+		signalError.showError("Expected '{' after 'do'");
+	
+		return null;
 	}
 
 	private WhileStatement whileStatement() {
