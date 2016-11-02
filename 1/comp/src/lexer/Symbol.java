@@ -51,6 +51,7 @@ public enum Symbol {
     THIS("this"),
     TRUE("true"),
     VOID("void"),
+    DO("do"),
     WHILE("while"),
     WRITE("write"),
     WRITELN("writeln");
