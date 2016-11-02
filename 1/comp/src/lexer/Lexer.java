@@ -67,7 +67,6 @@ public class Lexer {
 	
 	
 	
-	
 	public void nextToken() {
 		char ch;
 		System.out.print(" ");
@@ -179,7 +178,11 @@ public class Lexer {
 								token = Symbol.EQ;
 							}
 							else
+                                                            if(Character.isLetter( ch = input[tokenPos] ) || Character.isDigit(ch)){
 								token = Symbol.ASSIGN;
+                                                            }else{
+                                                                error.showError("Expression expected OR invalid sequence of symbols");
+                                                            }
 							break;
 						case '!' :
 							if ( input[tokenPos] == '=' ) {

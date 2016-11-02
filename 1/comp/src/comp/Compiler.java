@@ -375,9 +375,13 @@ public class Compiler {
 		Symbol tk;
 		Statement aux;
 		// statements always begin with an identifier, if, read, write, ...
-		while ((tk = lexer.token) != Symbol.RIGHTCURBRACKET && tk != Symbol.ELSE){
-			statementList.add(statement());
-		}
+//                if(Symbol.ELSE == lexer.token){
+//                    signalError.showError(" expected");
+//                }else{
+                    while ((tk = lexer.token) != Symbol.RIGHTCURBRACKET){
+                            statementList.add(statement());
+                    }
+//                }
 			
 		return statementList;
 	}
@@ -398,7 +402,7 @@ public class Compiler {
 		case INT:
 		case BOOLEAN:
 		case STRING:
-			AssignmentExpr aux = (AssignmentExpr) assignExprLocalDec();
+                            AssignmentExpr aux = (AssignmentExpr) assignExprLocalDec();
 			if (aux == null){
 				signalError.showError("Statement expected");
 			}else
@@ -500,7 +504,7 @@ public class Compiler {
 				lexer.nextToken();
 				expr2 = expr();
 				if ( lexer.token != Symbol.SEMICOLON )
-					signalError.showError("';' expected", true);
+					signalError.showError("Missing ';'", true);
 				else
 					lexer.nextToken();
 			}
@@ -688,8 +692,7 @@ public class Compiler {
 
 		Expr left = simpleExpr();
 		Symbol op = lexer.token;
-		if ( op == Symbol.EQ || op == Symbol.NEQ || op == Symbol.LE
-				|| op == Symbol.LT || op == Symbol.GE || op == Symbol.GT ) {
+		if ( op == Symbol.EQ || op == Symbol.NEQ || op == Symbol.LE || op == Symbol.LT || op == Symbol.GE || op == Symbol.GT ) {
 			lexer.nextToken();
 			Expr right = simpleExpr();
 			left = new CompositeExpr(left, op, right);
@@ -1011,7 +1014,7 @@ public class Compiler {
 			}
 			break;
 		default:
-			signalError.showError("Expression expected");
+			signalError.showError("Expression expected OR Unknown sequence of symbols");
 		}
 		return null;
 	}
