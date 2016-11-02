@@ -177,11 +177,14 @@ public class Lexer {
 								tokenPos++;
 								token = Symbol.EQ;
 							}
-							else
-                                                            if(Character.isLetter( ch = input[tokenPos] ) || Character.isDigit(ch)){
-								token = Symbol.ASSIGN;
-                                                            }else{
+                                                        else{
+                                                            char ch_aux;
+                                                            ch_aux = input[tokenPos];
+                                                            if(!Character.isLetter( ch_aux = input[tokenPos] ) && !Character.isDigit(ch_aux) && ch_aux != ' '){
                                                                 error.showError("Expression expected OR invalid sequence of symbols");
+                                                            }else{
+                                                                token = Symbol.ASSIGN;
+                                                            }
                                                             }
 							break;
 						case '!' :
