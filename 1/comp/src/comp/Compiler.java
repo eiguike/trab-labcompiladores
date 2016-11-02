@@ -282,7 +282,7 @@ public class Compiler {
 		while (lexer.token == Symbol.COMMA) {
 			lexer.nextToken();
 			if ( lexer.token != Symbol.IDENT )
-				signalError.showError("Identifier expected");
+				signalError.showError("Missing identifier");
 			v = new Variable(lexer.getStringValue(), type);
 			variableList.add(v);
 			lexer.nextToken();
@@ -594,8 +594,9 @@ public class Compiler {
 	private ReadStatement readStatement() {
 		ArrayList<Variable> variableList = new ArrayList<Variable>();
 		lexer.nextToken();
-		if ( lexer.token != Symbol.LEFTPAR ) signalError.showError("( expected");
+		if ( lexer.token != Symbol.LEFTPAR ) signalError.showError("'(' expected after 'read' command");
 		lexer.nextToken();
+                if ( lexer.token == Symbol.RIGHTPAR ) signalError.showError("Command 'read' without arguments");
 		while (true) {
 			if ( lexer.token == Symbol.THIS ) {
 				lexer.nextToken();
@@ -603,7 +604,7 @@ public class Compiler {
 				lexer.nextToken();
 			}
 			if ( lexer.token != Symbol.IDENT )
-				signalError.show(ErrorSignaller.ident_expected);
+				signalError.showError("Expression expected");
 
 			String name = lexer.getStringValue();
 			// AQUI TEM QUE FAZER A VERIFICAÇAÕ DA EXISTÊNCIA DA VARIÁVEL
@@ -629,8 +630,9 @@ public class Compiler {
 	private WriteStatement writeStatement() {
 
 		lexer.nextToken();
-		if ( lexer.token != Symbol.LEFTPAR ) signalError.showError("( expected");
+		if ( lexer.token != Symbol.LEFTPAR ) signalError.showError("Missing '('");
 		lexer.nextToken();
+                if ( lexer.token == Symbol.RIGHTPAR ) signalError.showError("Command 'write' without arguments");
 		ExprList exprList = exprList();
 		if ( lexer.token != Symbol.RIGHTPAR ) signalError.showError(") expected");
 		lexer.nextToken();
