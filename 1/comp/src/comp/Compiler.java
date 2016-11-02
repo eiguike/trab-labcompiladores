@@ -279,9 +279,6 @@ public class Compiler {
 		Variable v = new Variable(lexer.getStringValue(), type);
 		variableList.add(v);
 		lexer.nextToken();
-                if(lexer.token != Symbol.COMMA || lexer.token != Symbol.SEMICOLON){
-                    signalError.showError("Unknown character");
-                }
 		while (lexer.token == Symbol.COMMA) {
 			lexer.nextToken();
 			if ( lexer.token != Symbol.IDENT )
@@ -290,6 +287,11 @@ public class Compiler {
 			variableList.add(v);
 			lexer.nextToken();
 		}
+		if(lexer.token != Symbol.SEMICOLON){
+                    //signalError.showError("Unknown character");
+		    signalError.showError("Missing ';'", true);
+                }
+		lexer.nextToken();
 		return new LocalDec(type, variableList);
 	}
 
@@ -371,10 +373,12 @@ public class Compiler {
 		// qm chama essa função 'eo methodDec
 		// CompStatement ::= "{" { Statement } "}"
 		Symbol tk;
+		Statement aux;
 		// statements always begin with an identifier, if, read, write, ...
-		while ((tk = lexer.token) != Symbol.RIGHTCURBRACKET
-				&& tk != Symbol.ELSE)
+		while ((tk = lexer.token) != Symbol.RIGHTCURBRACKET && tk != Symbol.ELSE){
 			statementList.add(statement());
+		}
+			
 		return statementList;
 	}
 
@@ -394,7 +398,11 @@ public class Compiler {
 		case INT:
 		case BOOLEAN:
 		case STRING:
-			stmt = new AssignmentStatement((AssignmentExpr) assignExprLocalDec());
+			AssignmentExpr aux = (AssignmentExpr) assignExprLocalDec();
+			if (aux == null){
+				signalError.showError("Statement expected");
+			}else
+				stmt = new AssignmentStatement(aux);
 			break;
 		case ASSERT:
 			assertStatement();
@@ -493,7 +501,11 @@ public class Compiler {
 				else
 					lexer.nextToken();
 			}
-			return new AssignmentExpr(expr1, expr2);
+			
+			if(expr1 == null){
+				return null;
+			}else
+				return new AssignmentExpr(expr1, expr2);
 		}
 	}
 
@@ -833,17 +845,17 @@ public class Compiler {
                         PrimaryExpr prim_expr = new PrimaryExpr();
 			lexer.nextToken();
                         prim_expr.addID1(firstId);
-			if ( lexer.token != Symbol.DOT ) {
+			if ( lexer.token != Symbol.DOT && lexer.token != Symbol.SEMICOLON) {
 				// Id
 				// retorne um objeto da ASA que representa um identificador
 				return prim_expr;
 			}
-			else { // Id "."
+			else if(lexer.token != Symbol.SEMICOLON){ // Id "."
 				lexer.nextToken(); // coma o "."
-				if ( lexer.token != Symbol.IDENT ) {
+				if ( lexer.token != Symbol.IDENT) {
 					signalError.showError("Identifier expected");
 				}
-				else {
+				else{
 					// Id "." Id
                                         String secondId = lexer.getStringValue();
                                         prim_expr.addID2(secondId);

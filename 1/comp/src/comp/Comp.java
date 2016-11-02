@@ -6,6 +6,7 @@ package comp;
 import java.io.*;
 import java.util.ArrayList;
 import ast.*;
+import java.util.Arrays;
 
 public class Comp {
 
@@ -59,6 +60,7 @@ public class Comp {
            if ( file.isDirectory() ) {
         	   // compile all files in this directory
         	   File fileList[] = file.listFiles();
+		   Arrays.sort(fileList);
         	   for ( File f : fileList ) {
         		   String filename = f.getName();
         		   int lastIndexDot = filename.lastIndexOf('.');
