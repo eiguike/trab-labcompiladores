@@ -209,7 +209,7 @@ public class Compiler {
 				signalError.showError("Identifier expected");
 			String name = lexer.getStringValue();
 			lexer.nextToken();
-			if ( lexer.token == Symbol.LEFTPAR ){
+			if  ( lexer.token == Symbol.LEFTPAR ){
                             aux_member.add(methodDec(t, name, qualifier,quali_static,quali_final));
                         }else if ( qualifier != Symbol.PRIVATE )
 				signalError.showError("Attempt to declare a public instance variable");
@@ -217,7 +217,11 @@ public class Compiler {
 				 instanceVarDec(t, name, variableList,qualifier,quali_static,quali_final );
 		}
 		if ( lexer.token != Symbol.RIGHTCURBRACKET )
-			signalError.showError("public/private or \"}\" expected");
+                    if ( lexer.token == Symbol.EOF ) {
+                        signalError.showError(" \'}\' expected");
+                    }else{
+			signalError.showError("'private',  'public', or '}' expected");
+                    }
 		lexer.nextToken();
 		
 		// remove a classe que esta sendo trabalhada
