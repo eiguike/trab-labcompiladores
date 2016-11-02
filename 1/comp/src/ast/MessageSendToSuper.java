@@ -1,13 +1,29 @@
 package ast;
 
-public class MessageSendToSuper extends MessageSend { 
+public class MessageSendToSuper extends MessageSend {
 
-    public Type getType() { 
-        return null;
-    }
+	private ExprList exprList;
+	private String nameMethod;
+	
+	public MessageSendToSuper(ExprList exprList, String nameMethod){
+		this.exprList = exprList;
+		this.nameMethod = nameMethod;
+	}
 
-    public void genC( PW pw, boolean putParenthesis ) {
-        
-    }
-    
+	public ExprList getExprList() {
+		return exprList;
+	}
+
+	public String getNameMethod() {
+		return nameMethod;
+	}
+	
+	public Type getType() {
+		return null;
+	}
+
+	public void genC(PW pw, boolean putParenthesis) {
+
+	}
+
 }

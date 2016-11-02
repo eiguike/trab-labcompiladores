@@ -11,8 +11,7 @@ import lexer.Symbol;
 
 /**
  *
- // João Marcos Costa Salles RA: 489972
-// Henrique Teruo Eihara RA: 490016
+ * // João Marcos Costa Salles RA: 489972 // Henrique Teruo Eihara RA: 490016
  */
 public class MethodDec_class extends Variable{
     
@@ -74,10 +73,14 @@ public class MethodDec_class extends Variable{
 //    public ParamList getParameter() {
 //        return this.paramList;
 //    }
-    
 
-    private ParamList paramList;
-    private Symbol qualifier;
-    private Symbol quali_static;
-    private Symbol quali_final;  //final
+
+	public ParamList getParamList() {
+		return paramList;
+	}
+
+	private ParamList paramList;
+	private Symbol qualifier;
+	private Symbol quali_static;
+	private Symbol quali_final;  //final
 }
