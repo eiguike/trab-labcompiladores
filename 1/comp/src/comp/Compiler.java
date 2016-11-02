@@ -497,6 +497,7 @@ public class Compiler {
 		}
 	}
 
+	
 	private ExprList realParameters() {
 		ExprList anExprList = null;
 
@@ -805,13 +806,19 @@ public class Compiler {
 			if ( lexer.token != Symbol.IDENT )
 				signalError.showError("Identifier expected");
 			messageName = lexer.getStringValue();
+			
 			/*
 			 * para fazer as confer�ncias sem�nticas, procure por 'messageName'
 			 * na superclasse/superclasse da superclasse etc
 			 */
+			
+			KraClass aux = (KraClass) classeAtual.lastElement();
+						
 			lexer.nextToken();
 			exprList = realParameters();
-			break;
+			
+			return new ExprSuper (aux.receivingMessage(new MessageSendToSuper(exprList, messageName), signalError));
+			//break;
 		case IDENT:
 			/*
           	 * PrimaryExpr ::=  

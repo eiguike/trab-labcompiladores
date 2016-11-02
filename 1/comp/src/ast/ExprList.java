@@ -7,6 +7,11 @@ public class ExprList {
     public ExprList() {
         exprList = new ArrayList<Expr>();
     }
+    
+    // utilizando no kraclass
+    public Integer getSizeExprList(){
+	    return exprList.size();
+    }
 
     public void addElement( Expr expr ) {
         exprList.add(expr);
