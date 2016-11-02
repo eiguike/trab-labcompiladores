@@ -1,5 +1,6 @@
 package ast;
 
+import comp.ErrorSignaller;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -46,10 +47,41 @@ public class KraClass extends Type {
             return instanceVariableList;
         }
         
+        public ArrayList<Variable> parametros(String method){
+             for(Variable item : this.methodDecList){//procura pelo metodos
+                 if (item.getName().equals(method) ){
+                    return item.getParameter();
+                 }
+             }
+             return null;
+        }
+        
+        public boolean message(MessageSendToSelf message, ErrorSignaller signalError) {
+            boolean achouMethod = false;
+            for(Variable item : this.methodDecList){//procura pelo metodos
+                if (item.getName().equals(message.getString()) ){
+                    ArrayList<Variable> parametros = this.parametros(item.getName());
+                    achouMethod = true;
+                    break;
+                }
+            }
+            if (!achouMethod){
+                signalError.showError("Method does not exist");
+            }
+//           ExprList 
+            for(Expr item : message)
+            return true;
+        }
+        
+        
+        
+        
+        
 	private String name; //id
 	private KraClass superclass; // extends
 	private InstanceVariableList instanceVariableList;
         private ArrayList<Variable> methodDecList;
+        private MessageSendToSelf self;
 	// private MethodList publicMethodList, privateMethodList;
 	// métodos públicos get e set para obter e iniciar as variáveis acima,
 	// entre outros métodos

@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author joaosalles
  */
-public class ExpressionList  extends Expr{
+public class PrimaryExpr  extends Expr{
     
     @Override
     public void genC( PW pw, boolean putParenthesis ){}
@@ -21,11 +21,11 @@ public class ExpressionList  extends Expr{
        return null;
     }
     
-    public ExpressionList(boolean value){
+    public PrimaryExpr(boolean value){
         this.valueThis = value;
     }
     
-    public ExpressionList(){
+    public PrimaryExpr(){
         this.valueThis = false;
         this.valueSuper = false;
         this.expr = null;
@@ -50,6 +50,10 @@ public class ExpressionList  extends Expr{
     
     public void setThis(boolean value){
         this.valueThis = value;
+    }
+    
+    public ExprList getExpr(){
+        return this.expr;
     }
     
     private boolean valueThis;

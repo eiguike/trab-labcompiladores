@@ -66,6 +66,15 @@ public class MethodDec_class extends Variable{
         this.paramList = paramList_entra;
     }
     
+    @Override
+    public ArrayList<Variable> getParameter() {
+       return this.paramList.getPara();
+    }
+    
+//    public ParamList getParameter() {
+//        return this.paramList;
+//    }
+    
 
     private ParamList paramList;
     private Symbol qualifier;

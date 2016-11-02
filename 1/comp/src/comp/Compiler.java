@@ -718,6 +718,7 @@ public class Compiler {
 //                String quali = aux_method.getQualifier().toString();
 //                String aux_name;
 		InstanceVariableList aux_instanceVariable = aux_class.getIntance();
+                ArrayList<Variable> aux_method = aux_class.getMethodList();
                 switch (lexer.token) {
 		// IntValue
 		case LITERALINT:
@@ -822,7 +823,7 @@ public class Compiler {
 			 */
 
 			String firstId = lexer.getStringValue();
-                        ExpressionList prim_expr = new ExpressionList();
+                        PrimaryExpr prim_expr = new PrimaryExpr();
 			lexer.nextToken();
                         prim_expr.addID1(firstId);
 			if ( lexer.token != Symbol.DOT ) {
@@ -879,7 +880,7 @@ public class Compiler {
 			}
 			break;
 		case THIS:
-                     ExpressionList this_expr = new ExpressionList();
+                     PrimaryExpr this_expr = new PrimaryExpr();
 			/*
 			 * Este 'case THIS:' trata os seguintes casos: 
           	 * PrimaryExpr ::= 
@@ -916,7 +917,20 @@ public class Compiler {
 					 * Confira se a classe corrente possui um m�todo cujo nome �
 					 * 'ident' e que pode tomar os par�metros de ExpressionList
 					 */
+                                        boolean possui_metodo = false;
+                                        for(Variable item : aux_method){
+                                            if(item.getName().equals(id)){
+                                                possui_metodo = true;
+                                            }
+                                        }
+                                        
+                                        if(!possui_metodo){
+                                            signalError.showError("Method does not exist");
+                                        }
+                                        
                                         this_expr.setExpr(this.realParameters());
+                                        MessageSendToSelf message = new MessageSendToSelf(id,this_expr.getExpr());
+                                        aux_class.message(message, signalError);
                                         return this_expr;
 //					exprList = this.realParameters();
 				}

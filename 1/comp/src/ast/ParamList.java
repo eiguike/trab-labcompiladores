@@ -19,6 +19,10 @@ public class ParamList {
     public int getSize() {
         return paramList.size();
     }
+    
+    public ArrayList<Variable> getPara(){
+        return this.paramList;
+    }
 
     private ArrayList<Variable> paramList;
 
