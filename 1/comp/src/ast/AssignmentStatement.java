@@ -28,7 +28,7 @@ public class AssignmentStatement extends Statement{
         
         
         public void genKra(PW pw) {
-            
+//            this.assignExpr.genKra(pw);
         }
 	
 }

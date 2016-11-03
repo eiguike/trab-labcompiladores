@@ -45,6 +45,7 @@ public class Compiler {
 			kraClassList.add(classDec());
 			while (lexer.token == Symbol.CLASS) {
 				kraClassList.add(classDec());
+                                symbolTable.removeLocalIdent();
 			}
 			if (lexer.token != Symbol.EOF) {
 				if (lexer.token == Symbol.IDENT) {
@@ -147,7 +148,6 @@ public class Compiler {
 		ArrayList<Variable> aux_member = new ArrayList<Variable>();
 		String superclassName = new String();
 		String className = new String();
-
 		if (lexer.token != Symbol.CLASS) {
 			signalError.showError("'class' expected");
 		}
@@ -1091,13 +1091,13 @@ public class Compiler {
 						id = lexer.getStringValue();
 						if (lexer.token == Symbol.DOT) {
 							// Id "." Id "." Id "(" [ ExpressionList ] ")"
-							
+							/*
 //						 * se o compilador permite vari�veis est�ticas, � poss�vel
 //						 * ter esta op��o, como
 //						 *     Clock.currentDay.setDay(12);
 //						 * Contudo, se vari�veis est�ticas n�o estiver nas especifica��es,
 //						 * sinalize um erro neste ponto.
-							
+							 */
 							lexer.nextToken();
 							if (lexer.token != Symbol.IDENT) {
 								signalError.showError("Identifier expected");
