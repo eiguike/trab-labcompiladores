@@ -847,7 +847,11 @@ public class Compiler {
 		while ((op = lexer.token) == Symbol.MINUS || op == Symbol.PLUS
 			|| op == Symbol.OR) {
 			lexer.nextToken();
+			if(left.getType().getName().compareTo("boolean") == 0)
+				signalError.showError("type boolean does not support operation '+'");
 			Expr right = term();
+			if(right.getType().getName().compareTo("boolean") == 0)
+				signalError.showError("type boolean does not support operation '+'");
 			left = new CompositeExpr(left, op, right);
 		}
 		return left;
@@ -860,7 +864,13 @@ public class Compiler {
 		while ((op = lexer.token) == Symbol.DIV || op == Symbol.MULT
 			|| op == Symbol.AND) {
 			lexer.nextToken();
+			if(left.getType().getName().compareTo("int") == 0){
+				signalError.showError("type 'int' does not support operator '&&'");
+			}
 			Expr right = signalFactor();
+			if(right.getType().getName().compareTo("int") == 0){
+				signalError.showError("type 'int' does not support operator '&&'");
+			}
 			left = new CompositeExpr(left, op, right);
 		}
 		return left;
@@ -1019,54 +1029,6 @@ public class Compiler {
           	 *                 Id "." Id "(" [ ExpressionList ] ")" |
           	 *                 Id "." Id "." Id "(" [ ExpressionList ] ")" |
 				 */
-
-//<<<<<<< HEAD
-//			String firstId = lexer.getStringValue();
-//                        PrimaryExpr prim_expr = new PrimaryExpr();
-//			lexer.nextToken();
-//                        prim_expr.addID1(firstId);
-//			if ( lexer.token != Symbol.DOT && lexer.token == Symbol.SEMICOLON) {
-//				// Id
-//				// retorne um objeto da ASA que representa um identificador
-//				return prim_expr;
-//			}
-//			else if(lexer.token != Symbol.SEMICOLON){ // Id "."
-//				lexer.nextToken(); // coma o "."
-//				if ( lexer.token != Symbol.IDENT) {
-//					signalError.showError("Identifier expected");
-//				}
-//				else{
-//					// Id "." Id
-//                                        String secondId = lexer.getStringValue();
-//                                        prim_expr.addID2(secondId);
-//					lexer.nextToken();
-//					id = lexer.getStringValue();
-//					if ( lexer.token == Symbol.DOT ) {
-						// Id "." Id "." Id "(" [ ExpressionList ] ")"
-						
-//||||||| merged common ancestors
-//			String firstId = lexer.getStringValue();
-//                        PrimaryExpr prim_expr = new PrimaryExpr();
-//			lexer.nextToken();
-//                        prim_expr.addID1(firstId);
-//			if ( lexer.token != Symbol.DOT && lexer.token != Symbol.SEMICOLON) {
-//				// Id
-//				// retorne um objeto da ASA que representa um identificador
-//				return prim_expr;
-//			}
-//			else if(lexer.token != Symbol.SEMICOLON){ // Id "."
-//				lexer.nextToken(); // coma o "."
-//				if ( lexer.token != Symbol.IDENT) {
-//					signalError.showError("Identifier expected");
-//				}
-//				else{
-//					// Id "." Id
-//                                        String secondId = lexer.getStringValue();
-//                                        prim_expr.addID2(secondId);
-//					lexer.nextToken();
-//					id = lexer.getStringValue();
-//					if ( lexer.token == Symbol.DOT ) {
-//						// Id "." Id "." Id "(" [ ExpressionList ] ")"
 						
 				String firstId = lexer.getStringValue();
 				PrimaryExpr prim_expr = new PrimaryExpr();
