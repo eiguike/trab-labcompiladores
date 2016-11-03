@@ -45,7 +45,7 @@ public class Compiler {
 			kraClassList.add(classDec());
 			while (lexer.token == Symbol.CLASS) {
 				kraClassList.add(classDec());
-                                symbolTable.removeLocalIdent();
+				symbolTable.removeLocalIdent();
 			}
 			if (lexer.token != Symbol.EOF) {
 				if (lexer.token == Symbol.IDENT) {
@@ -218,8 +218,9 @@ public class Compiler {
 					signalError.showError("private, or public expected");
 					qualifier = Symbol.PUBLIC;
 			}
-			if(lexer.token == Symbol.STATIC)
+			if (lexer.token == Symbol.STATIC) {
 				signalError.showError("Identifier expected");
+			}
 			Type t = type();
 			if (lexer.token != Symbol.IDENT) {
 				signalError.showError("Identifier expected");
@@ -280,7 +281,7 @@ public class Compiler {
 		 * MethodDec ::= Qualifier Return Id "("[ FormalParamDec ] ")" "{"
 		 *                StatementList "}"
 		 */
-		symbolTable.removeMethodIdent();
+		symbolTable.removeLocalIdent();
 		MethodDec_class aux_methodDec = new MethodDec_class(qualifier, name, type, quali_static, quali_final);
 		lexer.nextToken();
 		if (lexer.token != Symbol.RIGHTPAR) {
@@ -330,11 +331,11 @@ public class Compiler {
 		lexer.nextToken();
 
 		// semântico, verificação se existe tal variável
-		if (symbolTable.getInLocalAndMethod(lexer.getStringValue()) != null) {
+		if (symbolTable.getInLocal(lexer.getStringValue()) != null) {
 			signalError.showError("Variable " + lexer.getStringValue() + " is being redeclared");
 		} else {
 			// semântico, adicionando variável na symboltable
-			symbolTable.putInMethod(v.getName(), v);
+			symbolTable.putInLocal(v.getName(), v);
 		}
 
 		while (lexer.token == Symbol.COMMA) {
@@ -347,11 +348,11 @@ public class Compiler {
 			lexer.nextToken();
 
 			// semântico, verificação se existe tal variável
-			if (symbolTable.getInLocalAndMethod(lexer.getStringValue()) != null) {
+			if (symbolTable.getInLocal(lexer.getStringValue()) != null) {
 				signalError.showError("Variable " + lexer.getStringValue() + " is being redeclared");
 			} else {
 				// semântico, adicionando variável na symboltable
-				symbolTable.putInMethod(v.getName(), v);
+				symbolTable.putInLocal(v.getName(), v);
 			}
 		}
 		if (lexer.token != Symbol.SEMICOLON) {
@@ -382,7 +383,7 @@ public class Compiler {
 		// devo colocar as variáveis na tabela local? não sei aidna...
 		// decidi criar uma symboltable para as variáveis da função...
 		// semântico, variáveis que estão nos parâmetros devem ser adicionados...
-		symbolTable.putInMethod(lexer.getStringValue(), new Variable(lexer.getStringValue(), aux_type));
+		symbolTable.putInLocal(lexer.getStringValue(), new Variable(lexer.getStringValue(), aux_type));
 		Parameter parametro = new Parameter(lexer.getStringValue(), aux_type);
 		lexer.nextToken();
 		return parametro;
@@ -560,10 +561,12 @@ public class Compiler {
 	 */
 	private Expr assignExprLocalDec() {
 		Expr expr1 = null, expr2 = null;
+		// ok-sintatico12
 		if (lexer.token == Symbol.INT || lexer.token == Symbol.BOOLEAN
 			|| lexer.token == Symbol.STRING
 			|| // token � uma classe declarada textualmente antes desta
 			// instru��o
+			// DICA DOMINIK: verificar para classe se é global
 			(lexer.token == Symbol.IDENT && isType(lexer.getStringValue()))) {
 			/*
 			 * uma declara��o de vari�vel. 'lexer.token' � o tipo da vari�vel
@@ -580,13 +583,13 @@ public class Compiler {
 			if (lexer.token == Symbol.ASSIGN) {
 				lexer.nextToken();
 				expr2 = expr();
-				
+
 				// semântico, comparaçaõ de tipos de variáveis
 				// deve-se melhorar ainda...
-				if(expr1.getType() != expr2.getType()){
+				if (expr1.getType() != expr2.getType()) {
 					signalError.showError("Type error: value of the right-hand side is not subtype of the variable of the left-hand side.");
 				}
-				
+
 				if (lexer.token != Symbol.SEMICOLON) {
 					signalError.showError("Missing ';'", true);
 				} else {
@@ -659,6 +662,11 @@ public class Compiler {
 		}
 		lexer.nextToken();
 		Expr expr = expr();
+
+		if(expr.getType().getName() != "boolean"){
+			signalError.showError("non-boolean expression in 'while' command");
+		}
+
 		if (lexer.token != Symbol.RIGHTPAR) {
 			signalError.showError(") expected");
 		}
@@ -722,6 +730,7 @@ public class Compiler {
 			signalError.showError("Command 'read' without arguments");
 		}
 		while (true) {
+			// leftvalue expression
 			if (lexer.token == Symbol.THIS) {
 				lexer.nextToken();
 				if (lexer.token != Symbol.DOT) {
@@ -730,13 +739,16 @@ public class Compiler {
 				lexer.nextToken();
 			}
 			if (lexer.token != Symbol.IDENT) {
-				signalError.showError("Expression expected");
+				signalError.showError("Command 'read' expects a variable");
 			}
 
 			String name = lexer.getStringValue();
-			// AQUI TEM QUE FAZER A VERIFICAÇAÕ DA EXISTÊNCIA DA VARIÁVEL
-			// NÃO ESQUECER.................
-			variableList.add(new Variable(name, null));
+			Variable aux = symbolTable.getInLocal(name);
+
+			if(aux.getType().getName() == "boolean"){
+				signalError.showError("Command 'read' does not accept 'boolean' variables");
+			}
+			variableList.add(symbolTable.getInLocal(name));
 			lexer.nextToken();
 			if (lexer.token == Symbol.COMMA) {
 				lexer.nextToken();
@@ -769,6 +781,14 @@ public class Compiler {
 			signalError.showError("Command 'write' without arguments");
 		}
 		ExprList exprList = exprList();
+		ArrayList<Expr> exprArray = exprList.getExpr();
+
+		for(Expr e: exprArray){
+			if(e.getType().getName().compareTo("boolean") == 0){
+				signalError.showError("Command 'write' does not accept 'boolean' expressions");
+			}
+		}
+
 		if (lexer.token != Symbol.RIGHTPAR) {
 			signalError.showError(") expected");
 		}
@@ -847,11 +867,17 @@ public class Compiler {
 		while ((op = lexer.token) == Symbol.MINUS || op == Symbol.PLUS
 			|| op == Symbol.OR) {
 			lexer.nextToken();
-			if(left.getType().getName().compareTo("boolean") == 0)
-				signalError.showError("type boolean does not support operation '+'");
+			if ((op == Symbol.PLUS) || (op == Symbol.MINUS)) {
+				if (left.getType().getName().compareTo("boolean") == 0) {
+					signalError.showError("type boolean does not support operation '" + op + "'");
+				}
+			}
 			Expr right = term();
-			if(right.getType().getName().compareTo("boolean") == 0)
-				signalError.showError("type boolean does not support operation '+'");
+			if ((op == Symbol.PLUS) || (op == Symbol.MINUS)) {
+				if (right.getType().getName().compareTo("boolean") == 0) {
+					signalError.showError("operator '"+op+"' of '"+left.getType().getName()+"' expects an '"+left.getType().getName()+"' value");
+				}
+			}
 			left = new CompositeExpr(left, op, right);
 		}
 		return left;
@@ -864,12 +890,18 @@ public class Compiler {
 		while ((op = lexer.token) == Symbol.DIV || op == Symbol.MULT
 			|| op == Symbol.AND) {
 			lexer.nextToken();
-			if(left.getType().getName().compareTo("int") == 0){
-				signalError.showError("type 'int' does not support operator '&&'");
+
+			if (lexer.token == Symbol.AND) {
+				if (left.getType().getName().compareTo("int") == 0) {
+					signalError.showError("type 'int' does not support operator '&&'");
+				}
 			}
 			Expr right = signalFactor();
-			if(right.getType().getName().compareTo("int") == 0){
-				signalError.showError("type 'int' does not support operator '&&'");
+
+			if (lexer.token == Symbol.AND) {
+				if (right.getType().getName().compareTo("int") == 0) {
+					signalError.showError("type 'int' does not support operator '&&'");
+				}
 			}
 			left = new CompositeExpr(left, op, right);
 		}
@@ -950,6 +982,10 @@ public class Compiler {
 			case NOT:
 				lexer.nextToken();
 				anExpr = expr();
+
+				if(anExpr.getType().getName().compareTo("int") == 0){
+					signalError.showError("Operator '!' does not accepts 'int' values");
+				}
 				return new UnaryExpr(anExpr, Symbol.NOT);
 			// ObjectCreation ::= "new" Id "(" ")"
 			case NEW:
@@ -1029,7 +1065,7 @@ public class Compiler {
           	 *                 Id "." Id "(" [ ExpressionList ] ")" |
           	 *                 Id "." Id "." Id "(" [ ExpressionList ] ")" |
 				 */
-						
+
 				String firstId = lexer.getStringValue();
 				PrimaryExpr prim_expr = new PrimaryExpr();
 				lexer.nextToken();
@@ -1042,7 +1078,7 @@ public class Compiler {
 
 					// verificando se variável existe...
 					Variable a;
-					if ((a = symbolTable.getInLocalAndMethod(firstId)) == null) {
+					if ((a = symbolTable.getInLocal(firstId)) == null) {
 						signalError.showError("Variable '" + firstId + "' was not declared");
 					}
 					prim_expr.setType(a.getType());
@@ -1165,13 +1201,12 @@ public class Compiler {
 					} else {
 						id = lexer.getStringValue();
 						this_expr.addID1(id);
-						
+
 						// descobrir em q classe eu estou...
 						KraClass auxClass = (KraClass) classeAtual.lastElement();
 						InstanceVariableList v_list = auxClass.getInstance();
 						this_expr.setType(v_list.getType(id));
-						
-						
+
 						// retorne o objeto da ASA que representa "this" "." Id
 						/*
 					 * confira se a classe corrente realmente possui uma
