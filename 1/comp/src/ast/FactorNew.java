@@ -25,6 +25,10 @@ public class FactorNew extends Expr{
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+        @Override
+	public void genKra(PW pw, boolean putParenthesis) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 	@Override
 	public Type getType() {
 		return kraclass;

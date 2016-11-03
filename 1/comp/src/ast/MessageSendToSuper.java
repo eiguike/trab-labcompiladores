@@ -22,6 +22,15 @@ public class MessageSendToSuper extends MessageSend {
 		return null;
 	}
 
+        
+                 
+        @Override
+        public void genKra(PW pw, boolean putParenthesis) {
+
+	}
+                 
+                 
+                 
 	public void genC(PW pw, boolean putParenthesis) {
 
 	}

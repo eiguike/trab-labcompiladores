@@ -46,6 +46,9 @@ public class PW {
 	      out.println("");
 	   }
    
+   public void genKra(PW pw) {
+	}
+   
    
    int currentIndent = 0;
    public int step = 3;

@@ -19,6 +19,14 @@ public class InstanceVariableList {
     public int getSize() {
         return instanceVariableList.size();
     }
+    
+     public void genKra(PW pw) {
+         pw.add();
+         for(InstanceVariable item : this.instanceVariableList){
+             item.genKra(pw);
+         }
+         pw.sub();
+     }
 
     private ArrayList<InstanceVariable> instanceVariableList;
 

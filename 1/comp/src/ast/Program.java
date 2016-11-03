@@ -14,6 +14,10 @@ public class Program {
 
 
 	public void genKra(PW pw) {
+            String linha;
+            for (KraClass item : this.classList){
+                item.genKra(pw);
+            }
 	}
 
 	public void genC(PW pw) {

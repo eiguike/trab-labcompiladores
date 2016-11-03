@@ -33,7 +33,27 @@ public class UnaryExpr extends Expr {
 	public Type getType() {
 		return expr.getType();
 	}
+        
+        
+        @Override
+	public void genKra(PW pw, boolean putParenthesis) {
+		switch (op) {
+		case PLUS:
+			pw.print("+");
+			break;
+		case MINUS:
+			pw.print("-");
+			break;
+		case NOT:
+			pw.print("!");
+			break;
+		default:
+			pw.print(" internal error at UnaryExpr::genC");
 
+		}
+		expr.genC(pw, false);
+	}
+                
 	private Expr	expr;
 	private Symbol	op;
 }

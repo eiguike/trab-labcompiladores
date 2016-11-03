@@ -129,7 +129,18 @@ public class KraClass extends Type {
         
         
         
-       
+       public void genKra(PW pw) {
+           String linha;
+           linha = "Class " + this.getCname() + " { \n";
+           pw.printIdent(linha);
+           pw.printIdent("\n");
+           this.instanceVariableList.genKra(pw);
+           pw.printIdent("\n");
+           
+           for(Variable item : this.methodDecList){
+                item.genKra(pw);
+           }
+	}
         
 
 	private String name; //id

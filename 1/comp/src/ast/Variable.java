@@ -15,9 +15,12 @@ public class Variable {
         return type;
     }
 
+    public void genKra(PW pw) {}
+    
     private String name;
     private Type type;
 
+    
     ArrayList<Variable> getParameter() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

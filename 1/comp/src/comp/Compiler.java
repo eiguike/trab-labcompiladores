@@ -268,7 +268,7 @@ public class Compiler {
 		if ( lexer.token != Symbol.LEFTCURBRACKET ) signalError.showError("{ expected");
 
 		lexer.nextToken();
-		statementList();
+		aux_methodDec.setStament(statementList());
 		if ( lexer.token != Symbol.RIGHTCURBRACKET ) signalError.showError("} expected");
 
 		lexer.nextToken();
@@ -884,7 +884,7 @@ public class Compiler {
                         PrimaryExpr prim_expr = new PrimaryExpr();
 			lexer.nextToken();
                         prim_expr.addID1(firstId);
-			if ( lexer.token != Symbol.DOT && lexer.token != Symbol.SEMICOLON) {
+			if ( lexer.token != Symbol.DOT && lexer.token == Symbol.SEMICOLON) {
 				// Id
 				// retorne um objeto da ASA que representa um identificador
 				return prim_expr;

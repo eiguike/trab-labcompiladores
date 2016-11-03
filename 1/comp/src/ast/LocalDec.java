@@ -29,6 +29,9 @@ public class LocalDec extends Expr{
 		return variableList;
 	}
 	
+        public void genKra(PW pw, boolean putParenthesis) {
+	}
+        
 	
 	private Type type;
 	private ArrayList<Variable> variableList;

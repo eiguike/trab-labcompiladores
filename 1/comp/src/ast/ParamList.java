@@ -23,6 +23,21 @@ public class ParamList {
     public ArrayList<Variable> getPara(){
         return this.paramList;
     }
+    
+    public void genKra(PW pw) {
+        String linha = "";
+        boolean primeiro = true;
+        for(Variable item : this.paramList){
+            if(primeiro){
+                primeiro = false;
+                linha = item.getType().getName() + " " + item.getName();
+            }
+            else{
+                linha += ", " + item.getType().getName() + " " + item.getName();
+            }
+        }
+        pw.print(linha);
+    }
 
     private ArrayList<Variable> paramList;
 

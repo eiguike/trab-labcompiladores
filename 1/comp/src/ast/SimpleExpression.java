@@ -30,6 +30,10 @@ public class SimpleExpression extends Expr {
         this.variable = new Variable(name,type);
     }
             
+    
+    @Override
+	public void genKra( PW pw, boolean putParenthesis ) {}
+    
     private Variable variable;
     
 }

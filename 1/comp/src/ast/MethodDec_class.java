@@ -60,6 +60,36 @@ public class MethodDec_class extends Variable{
         return super.getName();
     }
     
+    @Override
+    public void genKra(PW pw) {
+        String linha = "";
+        pw.add();
+        if(this.quali_final != null){
+            linha = this.quali_final.toString();
+        }
+        if(this.quali_static != null){
+            linha += " " + this.quali_static.toString();
+        }
+        linha += " " + this.qualifier.toString() + " " + this.getType().getName() + " " + this.getName() + "( ";
+           //+" { \n"
+        pw.printIdent(linha);
+        if(this.paramList != null){
+           this.paramList.genKra(pw);
+        }
+        pw.print("){ \n\n");
+//        for(Statement item : this.statementList){
+//            item.genKra(pw);
+//        }
+        pw.sub();
+    }
+    
+    public void setStament(ArrayList<Statement> state_entra) {
+        this.statementList = state_entra;
+    }
+    
+    public ArrayList<Statement>  getStament() {
+        return this.statementList;
+    }
     
     public void setParamList(ParamList paramList_entra) {
         this.paramList = paramList_entra;
@@ -79,6 +109,7 @@ public class MethodDec_class extends Variable{
 		return paramList;
 	}
 
+        private ArrayList<Statement> statementList;
 	private ParamList paramList;
 	private Symbol qualifier;
 	private Symbol quali_static;

@@ -30,8 +30,16 @@ public class AssignmentExpr extends Expr{
 		
 	private ArrayList<Expr> exprList;
 	
+        @Override
 	public Type getType() {
 		// implementar idk como fazer
 		return null;
 	}
+        
+        @Override
+        public void genKra(PW pw,  boolean putParenthesis) {
+            for(Expr item : this.exprList){
+                item.genKra(pw, putParenthesis);
+            }
+        }
 }
