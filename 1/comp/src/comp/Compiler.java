@@ -218,6 +218,8 @@ public class Compiler {
 					signalError.showError("private, or public expected");
 					qualifier = Symbol.PUBLIC;
 			}
+			if(lexer.token == Symbol.STATIC)
+				signalError.showError("Identifier expected");
 			Type t = type();
 			if (lexer.token != Symbol.IDENT) {
 				signalError.showError("Identifier expected");
