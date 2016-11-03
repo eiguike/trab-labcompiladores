@@ -33,5 +33,8 @@ public class WriteStatement extends Statement {
 	
 	private ExprList exprList;
 	
-	
+        @Override
+	public void genKra(PW pw) {
+
+	}
 }

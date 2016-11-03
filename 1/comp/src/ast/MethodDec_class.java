@@ -77,9 +77,11 @@ public class MethodDec_class extends Variable{
            this.paramList.genKra(pw);
         }
         pw.print("){ \n\n");
-//        for(Statement item : this.statementList){
-//            item.genKra(pw);
-//        }
+        pw.add();
+        for(Statement item : this.statementList){
+            item.genKra(pw);
+        }
+        pw.sub();
         pw.sub();
     }
     

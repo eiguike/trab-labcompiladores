@@ -17,7 +17,27 @@ public class PrimaryExpr  extends Expr{
     public void genC( PW pw, boolean putParenthesis ){}
     
     @Override
-    public void genKra( PW pw, boolean putParenthesis ){}
+    public void genKra( PW pw, boolean putParenthesis ){
+        String linha = "";
+        if(this.valueThis){
+            linha += "this.";
+        }
+        
+         if(this.valueSuper){
+             linha += "super.";
+        }
+         if(this.id1 != null){
+             linha += this.id1;
+        }
+         if(this.id2  != null){
+             linha += "."+ this.id2;
+        }
+         if(this.id3 != null){
+             linha += "."+ this.id3;
+        }
+         pw.print(linha);
+    
+    }
 
     @Override
     public Type getType(){

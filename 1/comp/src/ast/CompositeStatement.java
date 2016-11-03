@@ -23,7 +23,13 @@ public class CompositeStatement extends Statement {
 		return stmtList;
 	}
 
+        @Override
 	public void genC(PW pw) {
+
+	}
+        
+        @Override
+        public void genKra(PW pw) {
 
 	}
 	

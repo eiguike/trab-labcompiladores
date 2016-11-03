@@ -27,7 +27,7 @@ public class FactorNew extends Expr{
 
         @Override
 	public void genKra(PW pw, boolean putParenthesis) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            this.kraclass.genKra(pw, false);
 	}
 	@Override
 	public Type getType() {

@@ -29,4 +29,9 @@ public class WhileStatement extends Statement {
 	public void genC(PW pw) {
 		
 	}	
+        
+        @Override
+        public void genKra(PW pw) {
+
+	}
 }

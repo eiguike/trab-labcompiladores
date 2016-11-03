@@ -29,6 +29,11 @@ public class StatementAssert extends Statement {
 	public String getMessage() {
 		return message;
 	}
+        
+        @Override
+        public void genKra(PW pw) {
+
+	}
 
 	private Expr expr;
 	private int lineNumber;

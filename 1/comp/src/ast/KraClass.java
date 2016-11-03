@@ -129,6 +129,15 @@ public class KraClass extends Type {
         
         
         
+        
+       public void genKra(PW pw, boolean putParenthesis){
+           String linha = "";
+           linha = "new " + this.getCname() + "()";
+           pw.print(linha);
+           
+           
+       }
+        
        public void genKra(PW pw) {
            String linha;
            linha = "Class " + this.getCname() + " { \n";

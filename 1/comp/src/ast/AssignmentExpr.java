@@ -38,8 +38,19 @@ public class AssignmentExpr extends Expr{
         
         @Override
         public void genKra(PW pw,  boolean putParenthesis) {
+            int i = 0;
             for(Expr item : this.exprList){
+                if(i == 0){
+                    pw.printIdent("");
+                }
                 item.genKra(pw, putParenthesis);
+                if(i == 0){
+                    pw.print(" = ");
+                }
+                i++;
             }
+            pw.print(";");
+            pw.println();
+            pw.println();
         }
 }

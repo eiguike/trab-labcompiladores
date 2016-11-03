@@ -57,6 +57,10 @@ public class PW {
    
    static final private String space = "                                                                                                        ";
 
+    void print(char c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
       
        
