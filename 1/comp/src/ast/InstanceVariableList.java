@@ -20,6 +20,15 @@ public class InstanceVariableList {
         return instanceVariableList.size();
     }
     
+    public Type getType(String name){
+	    for(Variable v : instanceVariableList){
+		    if(v.getName().compareTo(name) == 0){
+			    return v.getType();
+		    }
+	    }
+	    return null;
+    }
+    
      public void genKra(PW pw) {
          pw.add();
          for(InstanceVariable item : this.instanceVariableList){
