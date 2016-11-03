@@ -378,6 +378,9 @@ public class Compiler {
 		if (lexer.token != Symbol.IDENT) {
 			signalError.showError("Identifier expected");
 		}
+		// devo colocar as variáveis na tabela local? não sei aidna...
+		// semântico, variáveis que estão nos parâmetros devem ser adicionados...
+		symbolTable.putInLocal(lexer.getStringValue(), new Variable(lexer.getStringValue(), aux_type));
 		Parameter parametro = new Parameter(lexer.getStringValue(), aux_type);
 		lexer.nextToken();
 		return parametro;
@@ -575,7 +578,6 @@ public class Compiler {
 			if (lexer.token == Symbol.ASSIGN) {
 				lexer.nextToken();
 				expr2 = expr();
-				System.out.println(expr1.getType());
 				
 				// semântico, comparaçaõ de tipos de variáveis
 				// deve-se melhorar ainda...
@@ -899,7 +901,7 @@ public class Compiler {
 //                MethodDec_class aux_method = (MethodDec_class) methodAtual.get(classeAtual.size()-1);
 //                String quali = aux_method.getQualifier().toString();
 //                String aux_name;
-		InstanceVariableList aux_instanceVariable = aux_class.getIntance();
+		InstanceVariableList aux_instanceVariable = aux_class.getInstance();
 		ArrayList<Variable> aux_method = aux_class.getMethodList();
 		switch (lexer.token) {
 			// IntValue
@@ -1199,6 +1201,13 @@ public class Compiler {
 					} else {
 						id = lexer.getStringValue();
 						this_expr.addID1(id);
+						
+						// descobrir em q classe eu estou...
+						KraClass auxClass = (KraClass) classeAtual.lastElement();
+						InstanceVariableList v_list = auxClass.getInstance();
+						this_expr.setType(v_list.getType(id));
+						
+						
 						// retorne o objeto da ASA que representa "this" "." Id
 						/*
 					 * confira se a classe corrente realmente possui uma

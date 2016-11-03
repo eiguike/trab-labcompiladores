@@ -81,7 +81,7 @@ public class KraClass extends Type {
             return methodDecList;
         }
         
-        public InstanceVariableList getIntance() {
+        public InstanceVariableList getInstance() {
             return instanceVariableList;
         }
         
