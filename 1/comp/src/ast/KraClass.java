@@ -110,7 +110,7 @@ public class KraClass extends Type {
                 signalError.showError("Method does not exist");
                 return null;
             }
-            if (parametros.size() != this.methodDecList.size()){
+            if (parametros.size() != message.getExp().size()){
                 signalError.showError("Parameter number different");
                 return null;
             }
