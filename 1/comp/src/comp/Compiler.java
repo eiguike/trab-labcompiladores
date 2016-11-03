@@ -280,6 +280,7 @@ public class Compiler {
 		 * MethodDec ::= Qualifier Return Id "("[ FormalParamDec ] ")" "{"
 		 *                StatementList "}"
 		 */
+		symbolTable.removeMethodIdent();
 		MethodDec_class aux_methodDec = new MethodDec_class(qualifier, name, type, quali_static, quali_final);
 		lexer.nextToken();
 		if (lexer.token != Symbol.RIGHTPAR) {
@@ -329,11 +330,11 @@ public class Compiler {
 		lexer.nextToken();
 
 		// semântico, verificação se existe tal variável
-		if (symbolTable.getInLocal(lexer.getStringValue()) != null) {
+		if (symbolTable.getInLocalAndMethod(lexer.getStringValue()) != null) {
 			signalError.showError("Variable " + lexer.getStringValue() + " is being redeclared");
 		} else {
 			// semântico, adicionando variável na symboltable
-			symbolTable.putInLocal(v.getName(), v);
+			symbolTable.putInMethod(v.getName(), v);
 		}
 
 		while (lexer.token == Symbol.COMMA) {
@@ -346,11 +347,11 @@ public class Compiler {
 			lexer.nextToken();
 
 			// semântico, verificação se existe tal variável
-			if (symbolTable.getInLocal(lexer.getStringValue()) != null) {
+			if (symbolTable.getInLocalAndMethod(lexer.getStringValue()) != null) {
 				signalError.showError("Variable " + lexer.getStringValue() + " is being redeclared");
 			} else {
 				// semântico, adicionando variável na symboltable
-				symbolTable.putInLocal(v.getName(), v);
+				symbolTable.putInMethod(v.getName(), v);
 			}
 		}
 		if (lexer.token != Symbol.SEMICOLON) {
@@ -379,8 +380,9 @@ public class Compiler {
 			signalError.showError("Identifier expected");
 		}
 		// devo colocar as variáveis na tabela local? não sei aidna...
+		// decidi criar uma symboltable para as variáveis da função...
 		// semântico, variáveis que estão nos parâmetros devem ser adicionados...
-		symbolTable.putInLocal(lexer.getStringValue(), new Variable(lexer.getStringValue(), aux_type));
+		symbolTable.putInMethod(lexer.getStringValue(), new Variable(lexer.getStringValue(), aux_type));
 		Parameter parametro = new Parameter(lexer.getStringValue(), aux_type);
 		lexer.nextToken();
 		return parametro;
@@ -1078,7 +1080,7 @@ public class Compiler {
 
 					// verificando se variável existe...
 					Variable a;
-					if ((a = symbolTable.getInLocal(firstId)) == null) {
+					if ((a = symbolTable.getInLocalAndMethod(firstId)) == null) {
 						signalError.showError("Variable '" + firstId + "' was not declared");
 					}
 					prim_expr.setType(a.getType());
