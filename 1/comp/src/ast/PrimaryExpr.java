@@ -18,7 +18,7 @@ public class PrimaryExpr  extends Expr{
     
     @Override
     public Type getType(){
-       return null;
+       return this.type;
     }
     
     public PrimaryExpr(boolean value){
@@ -33,7 +33,9 @@ public class PrimaryExpr  extends Expr{
         this.id2 = null;
         this.id3 = null;
     }
-    
+    public void setType(Type type){
+	    this.type = type;
+    }
     public void addID1(String type_entra){
         this.id1 = type_entra;
     }
@@ -62,4 +64,5 @@ public class PrimaryExpr  extends Expr{
     private String id2;
     private String id3;
     private ExprList expr;
+    private Type type;
 }
