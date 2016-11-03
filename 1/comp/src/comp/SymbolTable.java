@@ -9,18 +9,9 @@ public class SymbolTable {
     public SymbolTable() {
         globalTable = new HashMap<String, KraClass>();
         localTable  = new HashMap<String, Variable>();
-	methodLocalTable  = new HashMap<String, Variable>();
 	
     }
     
-    public Variable getInLocalAndMethod(String key){
-	    Variable aux = this.getInMethod(key);
-	    if(aux != null){
-		    return aux;
-	    }else
-		    return this.getInLocal(key);
-    }
-
     public Object putInGlobal( String key, KraClass value ) {
        return globalTable.put(key, value);
     }
@@ -35,14 +26,6 @@ public class SymbolTable {
 
     public Variable getInLocal( String key ) {
        return localTable.get(key);
-    }
-    
-    public Variable putInMethod( String key, Variable value ) {
-       return methodLocalTable.put(key, value);
-    }
-
-    public Variable getInMethod( String key ) {
-       return methodLocalTable.get(key);
     }
     
     public Object get( String key ) {
@@ -63,13 +46,6 @@ public class SymbolTable {
          localTable.clear();
     }
 
-    public void removeMethodIdent() {
-           // remove all local identifiers from the table
-         methodLocalTable.clear();
-    }
-
-
     private HashMap<String, KraClass> globalTable;
     private HashMap<String, Variable> localTable;
-    private HashMap<String, Variable> methodLocalTable;
 }
