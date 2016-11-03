@@ -29,7 +29,19 @@ public class LocalDec extends Expr{
 		return variableList;
 	}
 	
+        @Override
         public void genKra(PW pw, boolean putParenthesis) {
+           String linha ="";
+//           pw.print(this.type.getName();
+            pw.print(this.type.getName());
+            int aux = 0;
+           for (Variable item : variableList){
+               if (aux == 0){
+                    pw.print(" " + item.getName());
+               }else{
+                   pw.print(", " + item.getName());
+               }
+           }
 	}
         
 	

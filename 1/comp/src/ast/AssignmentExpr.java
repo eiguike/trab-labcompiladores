@@ -42,7 +42,7 @@ public class AssignmentExpr extends Expr{
             if(this.exprList.size() == 1){
                 pw.printIdent("");
                 this.exprList.get(0).genKra(pw, putParenthesis);
-                pw.print(")");
+//                pw.print(")"); //chamda de metodo no assign
             }else{
                 for(Expr item : this.exprList){
                     if(i == 0){

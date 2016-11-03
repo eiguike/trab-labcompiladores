@@ -28,7 +28,7 @@ public class GenericStatement extends Statement{
         
         @Override
         public void genKra(PW pw) {
-
+            pw.printlnIdent(this.stmt);
 	}
 	
 }

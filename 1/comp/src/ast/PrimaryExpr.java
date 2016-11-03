@@ -39,6 +39,7 @@ public class PrimaryExpr  extends Expr{
              linha += "(";
               pw.print(linha);
              this.expr.genKra(pw);
+              pw.print(")");
          }else{
          pw.print(linha);
          }

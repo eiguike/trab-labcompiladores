@@ -17,7 +17,7 @@ public class IfStatement extends Statement{
 	public IfStatement(Expr expr, Statement stmt, Statement stmtElse){
 		this.expr = expr;
 		this.stmt = stmt;
-		this.stmt = stmtElse;
+		this.stmtElse = stmtElse;
 	}
 
 	public Expr getExpr() {
@@ -41,7 +41,31 @@ public class IfStatement extends Statement{
         
         @Override
         public void genKra(PW pw) {
-
+            String linha;
+            if(this.expr != null){
+                pw.printIdent("if ( ");
+                this.expr.genKra(pw, false);
+                pw.print(") {\n\n");
+            }else{
+                pw.print("if() {\n\n");
+            }
+            pw.add();
+            if(this.stmt != null){
+                this.stmt.genKra(pw);
+            }
+            pw.sub();
+            pw.printIdent("}");
+            if(this.stmtElse != null){
+                pw.print("else{\n");
+                pw.add();
+                this.stmtElse.genKra(pw);
+                pw.sub();
+                pw.println();
+                pw.printIdent("}\n");
+            }else{
+                pw.print("\n");
+            }
+            
 	}
 	
 }

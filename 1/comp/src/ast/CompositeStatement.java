@@ -30,7 +30,12 @@ public class CompositeStatement extends Statement {
         
         @Override
         public void genKra(PW pw) {
-
+            if (this.stmtList == null){
+                return ;
+            }
+            for(Statement item : this.stmtList){
+                item.genKra(pw);
+            }
 	}
 	
 }
