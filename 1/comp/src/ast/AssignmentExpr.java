@@ -39,15 +39,21 @@ public class AssignmentExpr extends Expr{
         @Override
         public void genKra(PW pw,  boolean putParenthesis) {
             int i = 0;
-            for(Expr item : this.exprList){
-                if(i == 0){
-                    pw.printIdent("");
+            if(this.exprList.size() == 1){
+                pw.printIdent("");
+                this.exprList.get(0).genKra(pw, putParenthesis);
+                pw.print(")");
+            }else{
+                for(Expr item : this.exprList){
+                    if(i == 0){
+                        pw.printIdent("");
+                    }
+                    item.genKra(pw, putParenthesis);
+                    if(i == 0){
+                        pw.print(" = ");
+                    }
+                    i++;
                 }
-                item.genKra(pw, putParenthesis);
-                if(i == 0){
-                    pw.print(" = ");
-                }
-                i++;
             }
             pw.print(";");
             pw.println();

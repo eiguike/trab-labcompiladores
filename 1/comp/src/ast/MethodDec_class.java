@@ -82,7 +82,9 @@ public class MethodDec_class extends Variable{
             item.genKra(pw);
         }
         pw.sub();
+        pw.printlnIdent("}\n");
         pw.sub();
+        
     }
     
     public void setStament(ArrayList<Statement> state_entra) {

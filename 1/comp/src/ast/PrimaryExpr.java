@@ -35,7 +35,13 @@ public class PrimaryExpr  extends Expr{
          if(this.id3 != null){
              linha += "."+ this.id3;
         }
+         if(this.expr != null ){
+             linha += "(";
+              pw.print(linha);
+             this.expr.genKra(pw);
+         }else{
          pw.print(linha);
+         }
     
     }
 
@@ -88,4 +94,5 @@ public class PrimaryExpr  extends Expr{
     private String id3;
     private ExprList expr;
     private Type type;
+         
 }

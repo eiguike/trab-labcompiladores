@@ -27,6 +27,16 @@ public class ExprList {
         }
     }
     
+    public void genKra( PW pw ){
+        int size = exprList.size();
+        for ( Expr e : exprList ) {
+                e.genKra(pw, false);
+            if ( --size > 0 )
+                pw.print(", ");
+        }
+    
+    }
+    
     public ArrayList<Expr> getExpr(){
         return this.exprList;
     }
