@@ -105,7 +105,7 @@ public class KraClass extends Type {
 			}
 		}
 
-		signalError.showError("cara não achei nenhum método desse dai. é isso msm?"+message.getMethodName());
+		signalError.showError("Method '"+message.getMethodName()+"' was not found in the class and its superclass");
 		return null;
 	}
 
