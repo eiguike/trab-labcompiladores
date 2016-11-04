@@ -703,7 +703,20 @@ public class Compiler {
 				// MELHORAR ESSA PARTE AQUI DE VERIFICAÇÃO
 				if (expr1.getType() != expr2.getType()) {
 					if(expr2.getType().getName().compareTo("null") != 0){
-						signalError.showError("Type error: value of the right-hand side is not subtype of the variable of the left-hand side.");
+
+						// semântico, verificação de subtipos
+						if((expr2.getType() instanceof KraClass) && (expr1.getType() instanceof KraClass)){
+							KraClass kraClass2 = (KraClass) expr2.getType();
+							KraClass kraClass1 = (KraClass) expr1.getType();
+
+							while(kraClass2.getCname().compareTo(kraClass1.getCname()) != 0){
+								kraClass2 = kraClass2.getSuper();
+								if(kraClass2 == null)
+									signalError.showError("não é subclasse do pai mew");
+							}
+						}else{
+							signalError.showError("Type error: value of the right-hand side is not subtype of the variable of the left-hand side.");
+						}
 					}
 				}
 
