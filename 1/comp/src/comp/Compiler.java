@@ -410,8 +410,10 @@ public class Compiler {
 		ArrayList<Variable> variableList = new ArrayList<Variable>();
 
 		Type type = type();
-		if (lexer.token != Symbol.IDENT) {
+
+		if(lexer.token != Symbol.IDENT){
 			signalError.showError("Identifier expected");
+
 		}
 
 		Variable v = new Variable(lexer.getStringValue(), type);
@@ -576,7 +578,9 @@ public class Compiler {
 					if (aux.getExprList().size() == 1) {
 						if (!(aux.getExprList().get(0) instanceof LocalDec)) {
 							// tenho apeans uma expressão, logo não tem um =
-							if (aux.getExprList().get(0).getType().getName().compareTo("void") != 0) {
+							if(aux.getExprList().get(0) instanceof PrimaryExpr){
+
+							}else if (aux.getExprList().get(0).getType().getName().compareTo("void") != 0) {
 								// se for diferente de void, então esta sendo usado como uma instrução
 								signalError.showError("Message send 'a.m()' returns a value that is not used", true);
 							}
@@ -685,6 +689,10 @@ public class Compiler {
 			/*
 			 * AssignExprLocalDec ::= Expression [ ``$=$'' Expression ]
 			 */
+			String stringaux = null;
+			if(lexer.token == Symbol.IDENT){
+				stringaux = lexer.getStringValue();
+			}
 			expr1 = expr();
 			if (lexer.token == Symbol.ASSIGN) {
 				lexer.nextToken();
@@ -694,7 +702,9 @@ public class Compiler {
 				// deve-se melhorar ainda...
 				// MELHORAR ESSA PARTE AQUI DE VERIFICAÇÃO
 				if (expr1.getType() != expr2.getType()) {
-					signalError.showError("Type error: value of the right-hand side is not subtype of the variable of the left-hand side.");
+					if(expr2.getType().getName().compareTo("null") != 0){
+						signalError.showError("Type error: value of the right-hand side is not subtype of the variable of the left-hand side.");
+					}
 				}
 
 				if (lexer.token != Symbol.SEMICOLON) {
@@ -702,6 +712,8 @@ public class Compiler {
 				} else {
 					lexer.nextToken();
 				}
+			}else if(lexer.token == Symbol.IDENT && !isType(stringaux)){
+				signalError.showError("Type '" + stringaux + "' was not found");
 			}
 
 			if (expr1 == null) {
@@ -1211,7 +1223,7 @@ public class Compiler {
 					}
 					prim_expr.setType(a.getType());
 					return prim_expr;
-				} else if (lexer.token != Symbol.SEMICOLON) { // Id "."
+				} else if (lexer.token != Symbol.SEMICOLON && lexer.token == Symbol.DOT) { // Id "."
 					lexer.nextToken(); // coma o "."
 					if (lexer.token != Symbol.IDENT) {
 						signalError.showError("Identifier expected");
