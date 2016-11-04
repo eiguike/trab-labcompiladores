@@ -1,10 +1,8 @@
+// CompilationError.java
+// João Marcos Costa Salles RA: 489972
+// Henrique Teruo Eihara RA: 490016
 package comp;
 
-/**
- * a compilation error
- * 
-   @author José
- */
 public class CompilationError {
 
 

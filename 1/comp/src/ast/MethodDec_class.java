@@ -1,8 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+// MethodDec_class.java
+// João Marcos Costa Salles RA: 489972
+// Henrique Teruo Eihara RA: 490016
 package ast;
 
 import java.util.ArrayList;
