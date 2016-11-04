@@ -239,7 +239,7 @@ public class Compiler {
 			String name = lexer.getStringValue();
 			lexer.nextToken();
 			if (lexer.token == Symbol.LEFTPAR) {
-				aux_member.add(methodDec(t, name, qualifier, quali_static, quali_final));
+				methodDec(t, name, qualifier, quali_static, quali_final);
 			} else if (qualifier != Symbol.PRIVATE) {
 				signalError.showError("Attempt to declare a public instance variable");
 			} else {
@@ -351,6 +351,8 @@ public class Compiler {
 			signalError.showError("{ expected");
 		}
 
+		auxClass.getMethodList().add(aux_methodDec);
+
 		// semântico, atualizar método atual
 		metodoAtual = aux_methodDec;
 
@@ -375,15 +377,26 @@ public class Compiler {
 
 		}
 
-		if (type.getName() != "void") {
-			returnStack.add(aux_methodDec);
-		}
-
 		lexer.nextToken();
 		aux_methodDec.setStament(statementList());
 
 		if (returnStack.isEmpty() == false) {
 			signalError.showError("Missing 'return' statement in method '" + name + "'");
+		}
+
+		if (aux_methodDec.getType().getName().compareTo("void") != 0) {
+			// semântica, verificação de returns
+			ArrayList<Statement> auxStmtList = aux_methodDec.getStament();
+			Boolean flag = true;
+			for (Statement v : auxStmtList) {
+				if (v instanceof ReturnStatement) {
+					flag = false;
+				}
+			}
+
+			if (flag) {
+				signalError.showError("Missing 'return' statement in method '" + name + "'");
+			}
 		}
 
 		if (lexer.token != Symbol.RIGHTCURBRACKET) {
@@ -580,7 +593,7 @@ public class Compiler {
 				break;
 			case RETURN:
 				stmt = returnStatement();
-/*				ReturnStatement returnStmt = (ReturnStatement) stmt;
+				/*				ReturnStatement returnStmt = (ReturnStatement) stmt;
 				// semântico, verificar tipagem de retorno do método q estou.
 				if(metodoAtual.getType().getName().compareTo(returnStmt.getExpr().getType().getName()) != 0){
 					// o retorno é diferente do retorno definido pelo metodo
@@ -816,16 +829,12 @@ public class Compiler {
 		lexer.nextToken();
 
 		MethodDec_class aux = null;
-		try{
-			aux = (MethodDec_class) returnStack.lastElement();
-		}catch(NoSuchElementException e){
-			signalError.showError("Illegal 'return' statement. Method returns '"+metodoAtual.getType().getName()+"'", true);
+
+		if (metodoAtual.getType().getName().compareTo("void") == 0) {
+			signalError.showError("Illegal 'return' statement. Method returns '" + metodoAtual.getType().getName() + "'", true);
 		}
 
-		// verificar se getName não é apenas o nome da variável
-		if (aux.getType().getName() == expr.getType().getName()) {
-			returnStack.pop();
-		} else {
+		if (metodoAtual.getType().getName().compareTo(expr.getType().getName()) != 0) {
 			signalError.showError("Expected a return type of " + aux.getType().getName() + " but found type of " + expr.getType().getName(), true);
 		}
 
@@ -1033,11 +1042,7 @@ public class Compiler {
 			if (expr.getType().getName().compareTo("boolean") == 0) {
 				signalError.showError("Operator '" + op + "' does not accepts 'boolean' expressions");
 			}
-//                        if(lexer.token == Symbol.SEMICOLON){ //caso exista
-//                            
-//                        }else{
-                            return new SignalExpr(op, expr);
-//                        }
+			return new SignalExpr(op, expr);
 		} else {
 			return factor();
 		}
