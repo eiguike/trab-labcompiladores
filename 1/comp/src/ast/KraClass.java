@@ -163,30 +163,23 @@ public class KraClass extends Type {
 		Variable metodo = null;
 		for (Variable item : this.methodDecList) {//procura pelo metodos
 			if (item.getName().equals(message.getString())) {
-				parametros = this.parametros(item.getName());
-				metodo = item;
-				achouMethod = true;
-				break;
+				if(item.getParameter().size() == message.getExprList().size())
+					return (MethodDec_class) item;
 			}
 		}
-		if (!achouMethod) {
-			signalError.showError("Method does not exist");
-			return null;
-		}
-		if (parametros.size() != message.getExprList().size()) {
-			signalError.showError("Parameter number different");
-			return null;
-		}
-		int i = 0;
-		ArrayList<Expr> message_pametros = message.getExprList();
-		for (Variable item : parametros) {
-			if (item.getType() != message_pametros.get(i).getType()) {
-				signalError.showError("Type error: the type of the real parameter is not subclass of the type of the formal parameter");
-				return null;
+
+		if(achouMethod == false){
+			MethodDec_class aux = this.message2(new MessageSendToSuper(new ExprList(message.getExprList()),message.getString()) ,signalError);
+			if(aux == null){
+				signalError.showError("não tem o método no pai.");
+			}
+			if (aux.getParamList().getSize() != message.getExprList().size()) {
+				signalError.showError("Parameter number different");
 			}
 
-			i++;
+			return aux;
 		}
+
 		return (MethodDec_class) metodo;
 	}
         

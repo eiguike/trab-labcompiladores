@@ -1336,37 +1336,12 @@ public class Compiler {
 					 * Confira se a classe corrente possui um m�todo cujo nome �
 					 * 'ident' e que pode tomar os par�metros de ExpressionList
 						 */
-						boolean possui_metodo = false;
-						for (Variable item : aux_method) {
-							if (item.getName().equals(id)) {
-								possui_metodo = true;
-							}
-						}
-
-						if (!possui_metodo) {
-							signalError.showError("Method does not exist");
-						}
 
                                                 exprList = realParameters();
                                                 this_expr.setExprList(exprList);
 
-                                                Variable auxVar = symbolTable.getInLocal(id);
-                                                KraClass object = null;
-                                                try {
-                                                        object = (KraClass) auxVar.getType();
-                                                } catch (ClassCastException e) {
-                                                        signalError.showError("Message send to a non-object receiver");
-                                                }
-
-							// é extraido o método, se não tiver o metodo é sinalizado erro dnetro de kraclass
-                                                auxVar = object.message(new MessageSendToVariable(id, exprList), signalError);
-                                                this_expr.setType(auxVar.getType());
-                                                
-                                                
-                                                
-						this_expr.setExprList(this.realParameters());
-						MessageSendToSelf message = new MessageSendToSelf(id, this_expr.getExpr());
-						aux_class.message(message, signalError);
+						MethodDec_class metodo = ((KraClass)classeAtual.lastElement()).message(new MessageSendToSelf(id, this_expr.getExpr()), signalError);
+                                                this_expr.setType(metodo.getType());
 						return this_expr;
 //					exprList = this.realParameters();
 					} else if (lexer.token == Symbol.DOT) {

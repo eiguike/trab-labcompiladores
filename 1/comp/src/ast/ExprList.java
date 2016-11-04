@@ -4,43 +4,49 @@ import java.util.*;
 
 public class ExprList {
 
-    public ExprList() {
-        exprList = new ArrayList<Expr>();
-    }
-    
-    // utilizando no kraclass
-    public Integer getSizeExprList(){
-	    return exprList.size();
-    }
+	public ExprList() {
+		exprList = new ArrayList<Expr>();
+	}
 
-    public void addElement( Expr expr ) {
-        exprList.add(expr);
-    }
+	public ExprList(ArrayList<Expr> thisexpr) {
+		exprList = thisexpr;
+	}
 
-    public void genC( PW pw ) {
+	// utilizando no kraclass
+	public Integer getSizeExprList() {
+		return exprList.size();
+	}
 
-        int size = exprList.size();
-        for ( Expr e : exprList ) {
-        	e.genC(pw, false);
-            if ( --size > 0 )
-                pw.print(", ");
-        }
-    }
-    
-    public void genKra( PW pw ){
-        int size = exprList.size();
-        for ( Expr e : exprList ) {
-                e.genKra(pw, false);
-            if ( --size > 0 )
-                pw.print(", ");
-        }
-    
-    }
-    
-    public ArrayList<Expr> getExpr(){
-        return this.exprList;
-    }
+	public void addElement(Expr expr) {
+		exprList.add(expr);
+	}
 
-    private ArrayList<Expr> exprList;
+	public void genC(PW pw) {
+
+		int size = exprList.size();
+		for (Expr e : exprList) {
+			e.genC(pw, false);
+			if (--size > 0) {
+				pw.print(", ");
+			}
+		}
+	}
+
+	public void genKra(PW pw) {
+		int size = exprList.size();
+		for (Expr e : exprList) {
+			e.genKra(pw, false);
+			if (--size > 0) {
+				pw.print(", ");
+			}
+		}
+
+	}
+
+	public ArrayList<Expr> getExpr() {
+		return this.exprList;
+	}
+
+	private ArrayList<Expr> exprList;
 
 }
