@@ -27,7 +27,7 @@ public class MessageSendToSelf extends MessageSend {
     }
     
     
-    public ArrayList<Expr> getExp(){
+    public ArrayList<Expr> getExprList(){
         return this.exprList.getExpr();
     }
     

@@ -51,10 +51,6 @@ public class PrimaryExpr  extends Expr{
        return this.type;
     }
     
-    public PrimaryExpr(boolean value){
-        this.valueThis = value;
-    }
-    
     public PrimaryExpr(){
         this.valueThis = false;
         this.valueSuper = false;
@@ -76,7 +72,7 @@ public class PrimaryExpr  extends Expr{
         this.id3 = type_entra;
     }
     
-    public void setExpr(ExprList expr_entra){
+    public void setExprList(ExprList expr_entra){
         this.expr = expr_entra;
     }
     

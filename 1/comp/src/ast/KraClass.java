@@ -32,7 +32,7 @@ public class KraClass extends Type {
 
 	// recebe a mensagem referente a classe super
 	// preciso receber o errorSignal para fazer os tratamentos
-	public MethodDec_class receivingMessage(MessageSendToSuper msg, ErrorSignaller errorSignal) {
+	public MethodDec_class message(MessageSendToSuper msg, ErrorSignaller errorSignal) {
 		KraClass aux_superclass = this.getSuper();
 		while (true) {
 			if (aux_superclass == null) {
@@ -66,98 +66,107 @@ public class KraClass extends Type {
 			//	errorSignal.showError("não há métodos no rolê... " + this.getCname());
 			//}
 		}
-		
+
 	}
 
 	public String getCname() {
 		return getName();
 	}
-        
-        public KraClass getSuper(){
-            return this.superclass;
-        }
-	
-        public ArrayList<Variable> getMethodList() {
-            return methodDecList;
-        }
-        
-        public InstanceVariableList getInstance() {
-            return instanceVariableList;
-        }
-        
-        public ArrayList<Variable> parametros(String method){
-             for(Variable item : this.methodDecList){//procura pelo metodos
-                 if (item.getName().equals(method) ){
-                    return item.getParameter();
-                 }
-             }
-             return null;
-        }
-        
-        public MethodDec_class message(MessageSendToSelf message, ErrorSignaller signalError) {
-            boolean achouMethod = false;
-            ArrayList<Variable> parametros = null;
-            Variable metodo = null;
-            for(Variable item : this.methodDecList){//procura pelo metodos
-                if (item.getName().equals(message.getString()) ){
-                    parametros = this.parametros(item.getName());
-                    metodo = item;
-                    achouMethod = true;
-                    break;
-                }
-            }
-            if (!achouMethod){
-                signalError.showError("Method does not exist");
-                return null;
-            }
-            if (parametros.size() != message.getExp().size()){
-                signalError.showError("Parameter number different");
-                return null;
-            }
-            int i = 0;
-            ArrayList<Expr> message_pametros =  message.getExp();
-            for(Variable item : parametros){
-                if(item.getType() != message_pametros.get(i).getType()){
-                    signalError.showError("Parameter value different");
-                    return null;
-                }
-                
-               i++;
-            }
-            return (MethodDec_class) metodo;
-        }
-        
-        
-        
-        
-       public void genKra(PW pw, boolean putParenthesis){
-           String linha = "";
-           linha = "new " + this.getCname() + "()";
-           pw.print(linha);
-           
-           
-       }
-        
-       public void genKra(PW pw) {
-           String linha;
-           linha = "Class " + this.getCname() + " { \n";
-           pw.printIdent(linha);
-           pw.printIdent("\n");
-           this.instanceVariableList.genKra(pw);
-           pw.printIdent("\n");
-           
-           for(Variable item : this.methodDecList){
-                item.genKra(pw);
-           }
+
+	public KraClass getSuper() {
+		return this.superclass;
 	}
-        
+
+	public ArrayList<Variable> getMethodList() {
+		return methodDecList;
+	}
+
+	public InstanceVariableList getInstance() {
+		return instanceVariableList;
+	}
+
+	public ArrayList<Variable> parametros(String method) {
+		for (Variable item : this.methodDecList) {//procura pelo metodos
+			if (item.getName().equals(method)) {
+				return item.getParameter();
+			}
+		}
+		return null;
+	}
+
+	public Variable message(MessageSendToVariable message, ErrorSignaller signalError) {
+		for (Variable v : methodDecList) {
+			if (v.getName().compareTo(message.getMethodName()) == 0) {
+				// o método tem o mesmo nome...
+				if (v.getParameter().size() == message.getExprList().getSizeExprList()) {
+					// tem a mesma quantidade de parâmetros, ta ok, posso devolver o método que é...
+					return v;
+				}
+			}
+		}
+
+		signalError.showError("cara não achei nenhum método desse dai. é isso msm?"+message.getMethodName());
+		return null;
+	}
+
+	public MethodDec_class message(MessageSendToSelf message, ErrorSignaller signalError) {
+		boolean achouMethod = false;
+		ArrayList<Variable> parametros = null;
+		Variable metodo = null;
+		for (Variable item : this.methodDecList) {//procura pelo metodos
+			if (item.getName().equals(message.getString())) {
+				parametros = this.parametros(item.getName());
+				metodo = item;
+				achouMethod = true;
+				break;
+			}
+		}
+		if (!achouMethod) {
+			signalError.showError("Method does not exist");
+			return null;
+		}
+		if (parametros.size() != message.getExprList().size()) {
+			signalError.showError("Parameter number different");
+			return null;
+		}
+		int i = 0;
+		ArrayList<Expr> message_pametros = message.getExprList();
+		for (Variable item : parametros) {
+			if (item.getType() != message_pametros.get(i).getType()) {
+				signalError.showError("Parameter value different");
+				return null;
+			}
+
+			i++;
+		}
+		return (MethodDec_class) metodo;
+	}
+
+	public void genKra(PW pw, boolean putParenthesis) {
+		String linha = "";
+		linha = "new " + this.getCname() + "()";
+		pw.print(linha);
+
+	}
+
+	public void genKra(PW pw) {
+		String linha;
+		linha = "Class " + this.getCname() + " { \n";
+		pw.printIdent(linha);
+		pw.printIdent("\n");
+		this.instanceVariableList.genKra(pw);
+		pw.printIdent("\n");
+
+		for (Variable item : this.methodDecList) {
+			item.genKra(pw);
+		}
+	}
 
 	private String name; //id
 	private KraClass superclass; // extends
 	private InstanceVariableList instanceVariableList;
-        private ArrayList<Variable> methodDecList;
-        private MessageSendToSelf self;
-
+	private ArrayList<Variable> methodDecList;
+	private MessageSendToSelf self;
 
 	// private MethodList publicMethodList, privateMethodList;
 	// métodos públicos get e set para obter e iniciar as variáveis acima,
