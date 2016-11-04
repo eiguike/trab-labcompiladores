@@ -876,11 +876,15 @@ public class Compiler {
 
 			String name = lexer.getStringValue();
 			Variable aux = symbolTable.getInLocal(name);
-
+                        if (aux == null){
+                            KraClass aux_class = (KraClass) this.classeAtual.lastElement();
+                            aux = aux_class.messageVariable(name);
+                        }
+                        
 			if (aux.getType().getName() == "boolean") {
 				signalError.showError("Command 'read' does not accept 'boolean' variables");
 			}
-			variableList.add(symbolTable.getInLocal(name));
+			variableList.add(aux);
 			lexer.nextToken();
 			if (lexer.token == Symbol.COMMA) {
 				lexer.nextToken();
@@ -1330,6 +1334,23 @@ public class Compiler {
 							signalError.showError("Method does not exist");
 						}
 
+                                                exprList = realParameters();
+                                                this_expr.setExprList(exprList);
+
+                                                Variable auxVar = symbolTable.getInLocal(id);
+                                                KraClass object = null;
+                                                try {
+                                                        object = (KraClass) auxVar.getType();
+                                                } catch (ClassCastException e) {
+                                                        signalError.showError("Message send to a non-object receiver");
+                                                }
+
+							// é extraido o método, se não tiver o metodo é sinalizado erro dnetro de kraclass
+                                                auxVar = object.message(new MessageSendToVariable(id, exprList), signalError);
+                                                this_expr.setType(auxVar.getType());
+                                                
+                                                
+                                                
 						this_expr.setExprList(this.realParameters());
 						MessageSendToSelf message = new MessageSendToSelf(id, this_expr.getExpr());
 						aux_class.message(message, signalError);

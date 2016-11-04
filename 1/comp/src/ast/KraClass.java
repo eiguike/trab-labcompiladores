@@ -189,6 +189,47 @@ public class KraClass extends Type {
 		}
 		return (MethodDec_class) metodo;
 	}
+        
+        public Variable messageVariable(String procura) {
+		boolean achouMethod = false;
+		ArrayList<Variable> parametros = null;
+		Variable metodo = null;
+                for(Variable item   : this.instanceVariableList.getInstanceVariableList()){
+                    if (item.getName().equals(procura)) {
+                        return item;
+                      }
+                }
+                    
+		for (Variable item2 : this.methodDecList) {//procura pelo metodos
+			if (item2.getName().equals(procura)) {
+				parametros = this.parametros(item2.getName());
+				return item2;
+			}
+		}
+                
+		int i = 0;
+//		ArrayList<Expr> message_pametros = message.getExprList();
+//		for (Variable item2 : parametros) {
+//			if (item2.getType() != message_pametros.get(i).getType()) {
+//				signalError.showError("Type error: the type of the real parameter is not subclass of the type of the formal parameter");
+//				return null;
+//			}
+//
+//			i++;
+//		}
+                KraClass aux_class = null;
+                if(this.superclass != null){
+                    aux_class = this.superclass;
+                }
+                while(aux_class != null){
+                    aux_class.messageVariable(procura);
+                }
+                    
+                    
+		return  metodo;
+	}
+                
+        
 
 	public void genKra(PW pw, boolean putParenthesis) {
 		String linha = "";
