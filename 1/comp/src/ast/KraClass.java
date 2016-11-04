@@ -146,6 +146,12 @@ public class KraClass extends Type {
 				}
 			}
 		}
+		MessageSendToSuper msg = new MessageSendToSuper(message.getExprList(), message.getMethodName());
+		Variable v = this.message2(msg, signalError);
+
+		if(v != null){
+			return v;
+		}
 
 		signalError.showError("Method '"+message.getMethodName()+"' was not found in class '"+this.getCname()+"' or its superclass");
 		return null;
