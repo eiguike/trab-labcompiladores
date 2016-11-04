@@ -30,6 +30,45 @@ public class KraClass extends Type {
 		return methodDecList.iterator();
 	}
 
+        
+        
+        //para metodo em methodDec
+        public MethodDec_class message2(MessageSendToSuper msg, ErrorSignaller errorSignal) {
+		KraClass aux_superclass = this.getSuper();
+		while (true) {
+			if (aux_superclass == null) {
+				return null;
+			}
+			ArrayList<Variable> methodDecList_aux = aux_superclass.getMethodList();
+
+			// tenho a superclasse, devo procurar o método
+			for (Variable v : methodDecList_aux) {
+				if (msg.getNameMethod().compareTo(v.getName()) == 0) {
+					// encontrei o método, verificar possibildiade de utilização deles
+					// pelo parâmetros enviados...
+
+					//ESTAREI FAZENDO ESSA VERIFICAÇÃO DPS. POR ENQUANTO, VAI SER SÓ PELO NÚMERO DE EXPRESSÕES
+					// PQ É UMA VERIFICAÇÃO DE SEMÃNTICA ESSE ROLE
+					if (v instanceof MethodDec_class) { // devo verificar se não é uma variável, apesar que pelo fluxo não existira, mas creio que teremos esse problema
+						if (msg.getExprList().getSizeExprList() == ((MethodDec_class) v).getParamList().getSize()) {
+							// tudo limpo e tem tal função...
+							// preparar mensagem de retorno...
+							// NESSE MOMENTO RETORNAREI A CLASSE, PQ SÓ QUERO VER SE ESTA FUCNIOANDO.
+							// O IDEAL É RETORNAR UMA MENSAGEM QUE TENHA O MÉTODO, A CLASSE, O TIPO DE RETORNO E ETC...
+							return (MethodDec_class) v;
+						}
+					}
+				}
+			}
+			// queria ter feito recursivo, mas não passo pelo paarmetro a classe atual
+			// vai ser assim mesmo, iterativo.
+			aux_superclass = aux_superclass.getSuper();
+			//if (aux_superclass == null) {
+			//	errorSignal.showError("não há métodos no rolê... " + this.getCname());
+			//}
+		}
+
+	}
 	// recebe a mensagem referente a classe super
 	// preciso receber o errorSignal para fazer os tratamentos
 	public MethodDec_class message(MessageSendToSuper msg, ErrorSignaller errorSignal) {

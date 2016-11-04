@@ -358,14 +358,20 @@ public class Compiler {
 		// fazer essa verificação caso a classe seja filha
 		if (auxClass.getSuper() != null) {
 			// mando mensagem para super para pegar o método do pai
-			MethodDec_class metodo = auxClass.message(new MessageSendToSuper(new ExprList(), name), signalError);
-			// se os parametros estiverem diferentes, é zik@!
-			if (aux_methodDec.getParamList().getSize() != metodo.getParamList().getSize()) {
-				signalError.showError("Method '" + name + "' of the subclass '" + auxClass.getCname() + "' has a signature different from the same method of superclass '" + auxClass.getSuper().getCname() + "'");
-			}
-			if (aux_methodDec.getType().getName().compareTo(metodo.getType().getName()) != 0) {
-				signalError.showError("Method '" + name + "' of the subclass '" + auxClass.getCname() + "' has a signature different from the same method of superclass '" + auxClass.getSuper().getCname() + "'");
-			}
+                            MethodDec_class metodo = auxClass.message2(new MessageSendToSuper(new ExprList(), name), signalError);
+                            // se os parametros estiverem diferentes, é zik
+                        if (metodo != null){
+                            //se parametros sao diferentes nao eh override
+                            if (aux_methodDec.getParamList().getSize() != metodo.getParamList().getSize()) {
+                                    
+                            }else{ // se o nome for diferente nao eh override
+                                 if (aux_methodDec.getType().getName().compareTo(metodo.getType().getName()) != 0) {
+                                    
+                                 }else{
+                                     return metodo;
+                                 }
+                            }
+                        }
 
 		}
 
