@@ -36,7 +36,11 @@ public class WriteStatement extends Statement {
         @Override
 	public void genKra(PW pw) {
             String linha = "";
-            pw.printIdent("write( ");
+            if(this.ln == ""){
+               pw.printIdent("write( ");
+            }else{
+                pw.printIdent("writeln( ");
+            }
             this.exprList.genKra(pw);
             pw.print(" ); \n");
 	}
