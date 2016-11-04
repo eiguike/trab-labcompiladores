@@ -317,9 +317,11 @@ public class Compiler {
 		symbolTable.removeLocalIdent();
 		MethodDec_class aux_methodDec = new MethodDec_class(qualifier, name, type, quali_static, quali_final);
 		lexer.nextToken();
-		if (lexer.token == Symbol.RIGHTPAR) {
+		if (lexer.token != Symbol.RIGHTPAR) {
 			aux_methodDec.setParamList(formalParamDec());
-		}else{
+		}else
+			aux_methodDec.setParamList(new ParamList());
+		if (lexer.token != Symbol.RIGHTPAR) {
 			signalError.showError(") expected");
 		}
 		
@@ -617,6 +619,8 @@ public class Compiler {
 
 				// semântico, comparaçaõ de tipos de variáveis
 				// deve-se melhorar ainda...
+
+				// MELHORAR ESSA PARTE AQUI DE VERIFICAÇÃO
 				if (expr1.getType() != expr2.getType()) {
 					signalError.showError("Type error: value of the right-hand side is not subtype of the variable of the left-hand side.");
 				}
@@ -1176,7 +1180,12 @@ public class Compiler {
 						prim_expr.setExprList(exprList);
 
 						Variable auxVar = symbolTable.getInLocal(firstId);
-						KraClass object = (KraClass) auxVar.getType();
+						KraClass object = null;
+						try{
+							object = (KraClass) auxVar.getType();
+						}catch(ClassCastException e){
+							signalError.showError("Message send to a non-object receiver");
+						}
 
 						// é extraido o método, se não tiver o metodo é sinalizado erro dnetro de kraclass
 						auxVar = object.message(new MessageSendToVariable(secondId, exprList), signalError);
