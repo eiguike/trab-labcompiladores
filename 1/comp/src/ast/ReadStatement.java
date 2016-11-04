@@ -30,6 +30,18 @@ public class ReadStatement extends Statement{
         
         @Override
         public void genKra(PW pw) {
-
+            String linha = "";
+            pw.printIdent("read( ");
+            int i = 0;
+            for(Variable item : this.variableList){
+                if (i == 0){
+                     item.genKra(pw);
+                }else{
+                    pw.print(", ");
+                    item.genKra(pw);
+                }
+                i++;
+            }
+            pw.print(");\n");
 	}
 }

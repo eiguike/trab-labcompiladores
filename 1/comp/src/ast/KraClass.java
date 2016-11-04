@@ -160,6 +160,7 @@ public class KraClass extends Type {
 		for (Variable item : this.methodDecList) {
 			item.genKra(pw);
 		}
+                pw.print("}");
 	}
 
 	private String name; //id

@@ -15,7 +15,9 @@ public class Variable {
         return type;
     }
 
-    public void genKra(PW pw) {}
+    public void genKra(PW pw) {
+        pw.print(this.name);
+    }
     
     private String name;
     private Type type;

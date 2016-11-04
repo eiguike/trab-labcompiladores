@@ -17,6 +17,7 @@ public class Program {
             String linha;
             for (KraClass item : this.classList){
                 item.genKra(pw);
+                pw.println();
             }
 	}
 

@@ -514,6 +514,9 @@ public class Compiler {
 				if (aux == null) {
 					signalError.showError("Statement expected");
 				} else {
+                                        if(lexer.token == Symbol.SEMICOLON){
+                                            lexer.nextToken();
+                                        }
 					stmt = new AssignmentStatement(aux);
 				}
 				break;
