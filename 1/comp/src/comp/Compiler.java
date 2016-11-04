@@ -579,6 +579,9 @@ public class Compiler {
 						if (!(aux.getExprList().get(0) instanceof LocalDec)) {
 							// tenho apeans uma expressão, logo não tem um =
 							if(aux.getExprList().get(0) instanceof PrimaryExpr){
+								if(aux.getExprList().get(0).getType().getName().compareTo("void") != 0){
+									signalError.showError("Message send 'a.m()' returns a value that is not used", true);
+								}
 
 							}else if (aux.getExprList().get(0).getType().getName().compareTo("void") != 0) {
 								// se for diferente de void, então esta sendo usado como uma instrução
@@ -712,7 +715,7 @@ public class Compiler {
 							while(kraClass2.getCname().compareTo(kraClass1.getCname()) != 0){
 								kraClass2 = kraClass2.getSuper();
 								if(kraClass2 == null)
-									signalError.showError("não é subclasse do pai mew");
+									signalError.showError("Type error: type of the right-hand side of the assignment is not a subclass of the left-hand side");
 							}
 						}else{
 							signalError.showError("Type error: value of the right-hand side is not subtype of the variable of the left-hand side.");
