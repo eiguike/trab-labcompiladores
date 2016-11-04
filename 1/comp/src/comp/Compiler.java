@@ -1212,7 +1212,7 @@ public class Compiler {
 				lexer.nextToken();
 				exprList = realParameters();
 
-				return new ExprSuper(aux.message(new MessageSendToSuper(exprList, messageName), signalError));
+				return new ExprSuper(aux.message(new MessageSendToSuper(exprList, messageName), signalError),exprList);
 			//break;
 			case IDENT:
 				/*

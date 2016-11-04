@@ -24,6 +24,7 @@ public class ParamList {
         return this.paramList;
     }
     
+    
     public void genKra(PW pw) {
         String linha = "";
         boolean primeiro = true;
