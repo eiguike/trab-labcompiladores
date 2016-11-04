@@ -54,6 +54,19 @@ public class Compiler {
 				kraClassList.add(classDec());
 				symbolTable.removeLocalIdent();
 			}
+
+			Boolean flag = false;
+			for(KraClass c : kraClassList){
+				if(c.getCname().compareTo("Program") == 0){
+					flag = true;
+					break;
+				}
+			}
+
+			if(flag == false){
+				signalError.showError("Source code without a class 'Program'");
+			}
+
 			if (lexer.token != Symbol.EOF) {
 				if (lexer.token == Symbol.IDENT) {
 					signalError.showError("'class' expected");
@@ -168,7 +181,11 @@ public class Compiler {
 		if (lexer.token == Symbol.EXTENDS) {
 			lexer.nextToken();
 			if (lexer.token != Symbol.IDENT) {
-				signalError.show(ErrorSignaller.ident_expected);
+				if((lexer.token == Symbol.INT)||(lexer.token == Symbol.STRING)||(lexer.token == Symbol.BOOLEAN)){
+					signalError.showError("Class expected");
+				}else{
+					signalError.show(ErrorSignaller.ident_expected);
+				}
 			}
 			superclassName = lexer.getStringValue();
 
@@ -238,6 +255,8 @@ public class Compiler {
 			}
 			String name = lexer.getStringValue();
 			lexer.nextToken();
+
+
 			if (lexer.token == Symbol.LEFTPAR) {
 				methodDec(t, name, qualifier, quali_static, quali_final);
 			} else if (qualifier != Symbol.PRIVATE) {
@@ -251,6 +270,21 @@ public class Compiler {
 				signalError.showError(" \'}\' expected");
 			} else {
 				signalError.showError("'private',  'public', or '}' expected");
+			}
+		}
+
+		//semântica, verificar se metodo run esta implementado
+		if(((KraClass)classeAtual.lastElement()).getCname().compareTo("Program") == 0){
+			ArrayList<Variable> vList = ((KraClass)classeAtual.lastElement()).getMethodList();
+			Boolean flag = false;
+			for(Variable v: vList){
+				if(v.getName().compareTo("run") == 0){
+					flag = true;
+				}
+			}
+
+			if(flag == false){
+				signalError.showError("Method 'run' was not found in class 'Program'");
 			}
 		}
 		lexer.nextToken();
@@ -317,6 +351,17 @@ public class Compiler {
 		 */
 
 		KraClass auxClass = (KraClass) classeAtual.lastElement();
+
+		if(auxClass.getCname().compareTo("Program") == 0){
+			if(name.compareTo("run") == 0){
+				if(qualifier == Symbol.PRIVATE){
+					signalError.showError("Method 'run' of class 'Program' cannot be private");
+				}
+				if(type.getName().compareTo("void") != 0){
+					signalError.showError("Method 'run' of class 'Program' with a return value type different from 'void'");
+				}
+			}
+		}
 		ArrayList<InstanceVariable> vList = auxClass.getInstance().getInstanceVariableList();
 		ArrayList<Variable> methodDecList = auxClass.getMethodList();
 
@@ -342,12 +387,20 @@ public class Compiler {
 			aux_methodDec.setParamList(formalParamDec());
 		} else {
 			aux_methodDec.setParamList(new ParamList());
+			
 		}
 		if (lexer.token != Symbol.RIGHTPAR) {
 			signalError.showError(") expected");
 		}
 
 		lexer.nextToken();
+		if(((KraClass)classeAtual.lastElement()).getCname().compareTo("Program") == 0){
+			if(name.compareTo("run") == 0){
+				if(aux_methodDec.getParamList().getSize() > 0){
+					signalError.showError("Method 'run' of class 'Program' cannot take parameters");
+				}
+			}
+		}
 		if (lexer.token != Symbol.LEFTCURBRACKET) {
 			signalError.showError("{ expected");
 		}
@@ -361,19 +414,18 @@ public class Compiler {
 		// fazer essa verificação caso a classe seja filha
 		if (auxClass.getSuper() != null) {
 			// mando mensagem para super para pegar o método do pai
-                            MethodDec_class metodo = auxClass.message2(new MessageSendToSuper(new ExprList(), name), signalError);
-                            // se os parametros estiverem diferentes, é zik
-                        if (metodo != null){
-                            //se parametros sao diferentes nao eh override
-                            if (aux_methodDec.getParamList().getSize() != metodo.getParamList().getSize()) {
-				    signalError.showError("Method "+metodoAtual.getName()+" of the subclass '"+((KraClass)classeAtual.lastElement()).getCname()+"' has a signature different from the same method of superclass '"+((KraClass)classeAtual.lastElement()).getSuper().getCname()+"'");
-                            }else{ // se o nome for diferente nao eh override
-                                 if (aux_methodDec.getType().getName().compareTo(metodo.getType().getName()) != 0) {
-				    signalError.showError("Method "+metodoAtual.getName()+" of the subclass '"+((KraClass)classeAtual.lastElement()).getCname()+"' has a signature different from method inherited from superclass '"+((KraClass)classeAtual.lastElement()).getSuper().getCname()+"'");
-                                 }else{
-                                 }
-                            }
-                        }
+			MethodDec_class metodo = auxClass.message2(new MessageSendToSuper(new ExprList(), name), signalError);
+			// se os parametros estiverem diferentes, é zik
+			if (metodo != null) {
+				//se parametros sao diferentes nao eh override
+				if (aux_methodDec.getParamList().getSize() != metodo.getParamList().getSize()) {
+					signalError.showError("Method " + metodoAtual.getName() + " of the subclass '" + ((KraClass) classeAtual.lastElement()).getCname() + "' has a signature different from the same method of superclass '" + ((KraClass) classeAtual.lastElement()).getSuper().getCname() + "'");
+				} else // se o nome for diferente nao eh override
+				if (aux_methodDec.getType().getName().compareTo(metodo.getType().getName()) != 0) {
+					signalError.showError("Method " + metodoAtual.getName() + " of the subclass '" + ((KraClass) classeAtual.lastElement()).getCname() + "' has a signature different from method inherited from superclass '" + ((KraClass) classeAtual.lastElement()).getSuper().getCname() + "'");
+				} else {
+				}
+			}
 
 		}
 
@@ -411,7 +463,7 @@ public class Compiler {
 
 		Type type = type();
 
-		if(lexer.token != Symbol.IDENT){
+		if (lexer.token != Symbol.IDENT) {
 			signalError.showError("Identifier expected");
 
 		}
@@ -570,20 +622,20 @@ public class Compiler {
 				if (aux == null) {
 					signalError.showError("Statement expected");
 				} else {
-                                        if(lexer.token == Symbol.SEMICOLON){
-                                            lexer.nextToken();
-                                        }
+					if (lexer.token == Symbol.SEMICOLON) {
+						lexer.nextToken();
+					}
 					stmt = new AssignmentStatement(aux);
 					// semântica, verificar se o valor retornado de uma função naõ esteja sendo usao como instrução
 					if (aux.getExprList().size() == 1) {
 						if (!(aux.getExprList().get(0) instanceof LocalDec)) {
 							// tenho apeans uma expressão, logo não tem um =
-							if(aux.getExprList().get(0) instanceof PrimaryExpr){
-								if(aux.getExprList().get(0).getType().getName().compareTo("void") != 0){
+							if (aux.getExprList().get(0) instanceof PrimaryExpr) {
+								if (aux.getExprList().get(0).getType().getName().compareTo("void") != 0) {
 									signalError.showError("Message send 'a.m()' returns a value that is not used", true);
 								}
 
-							}else if (aux.getExprList().get(0).getType().getName().compareTo("void") != 0) {
+							} else if (aux.getExprList().get(0).getType().getName().compareTo("void") != 0) {
 								// se for diferente de void, então esta sendo usado como uma instrução
 								signalError.showError("Message send 'a.m()' returns a value that is not used", true);
 							}
@@ -693,7 +745,7 @@ public class Compiler {
 			 * AssignExprLocalDec ::= Expression [ ``$=$'' Expression ]
 			 */
 			String stringaux = null;
-			if(lexer.token == Symbol.IDENT){
+			if (lexer.token == Symbol.IDENT) {
 				stringaux = lexer.getStringValue();
 			}
 			expr1 = expr();
@@ -705,20 +757,26 @@ public class Compiler {
 				// deve-se melhorar ainda...
 				// MELHORAR ESSA PARTE AQUI DE VERIFICAÇÃO
 				if (expr1.getType() != expr2.getType()) {
-					if(expr2.getType().getName().compareTo("null") != 0){
+					if (expr2.getType().getName().compareTo("null") != 0) {
 
 						// semântico, verificação de subtipos
-						if((expr2.getType() instanceof KraClass) && (expr1.getType() instanceof KraClass)){
+						if ((expr2.getType() instanceof KraClass) && (expr1.getType() instanceof KraClass)) {
 							KraClass kraClass2 = (KraClass) expr2.getType();
 							KraClass kraClass1 = (KraClass) expr1.getType();
 
-							while(kraClass2.getCname().compareTo(kraClass1.getCname()) != 0){
+							while (kraClass2.getCname().compareTo(kraClass1.getCname()) != 0) {
 								kraClass2 = kraClass2.getSuper();
-								if(kraClass2 == null)
+								if (kraClass2 == null) {
 									signalError.showError("Type error: type of the right-hand side of the assignment is not a subclass of the left-hand side");
+								}
 							}
-						}else{
+						} else {
 							signalError.showError("Type error: value of the right-hand side is not subtype of the variable of the left-hand side.");
+						}
+					}else{
+						String auxiliar = expr1.getType().getName();
+						if(auxiliar.compareTo("int")==0 || auxiliar.compareTo("string")==0 || auxiliar.compareTo("boolean")==0){
+							signalError.showError("Type error: 'null' cannot be assigned to a variable of a basic type");
 						}
 					}
 				}
@@ -728,7 +786,7 @@ public class Compiler {
 				} else {
 					lexer.nextToken();
 				}
-			}else if(lexer.token == Symbol.IDENT && !isType(stringaux)){
+			} else if (lexer.token == Symbol.IDENT && !isType(stringaux)) {
 				signalError.showError("Type '" + stringaux + "' was not found");
 			}
 
@@ -776,6 +834,9 @@ public class Compiler {
 			if (lexer.token == Symbol.LEFTPAR) {
 				lexer.nextToken();
 				expr = expr();
+				if(expr.getType().getName().compareTo("boolean") != 0){
+					signalError.showError("boolean expression expected in a do-while statement");
+				}
 				if (lexer.token == Symbol.RIGHTPAR) {
 					lexer.nextToken();
 					return new DoWhileStatement(cmpstmt, expr);
@@ -858,7 +919,31 @@ public class Compiler {
 			signalError.showError("Illegal 'return' statement. Method returns '" + metodoAtual.getType().getName() + "'", true);
 		}
 
-		if (metodoAtual.getType().getName().compareTo(expr.getType().getName()) != 0) {
+		if (metodoAtual.getType() instanceof KraClass) {
+			if(expr.getType() instanceof KraClass){
+				if(((KraClass)metodoAtual.getType()).getCname().compareTo(((KraClass)expr.getType()).getCname()) != 0){
+					// se as classes forem diferentes, verificar se expr é filha de A
+					KraClass superClass = ((KraClass)expr.getType()).getSuper();
+					if(superClass == null){
+						// erro
+						signalError.showError("Type error: type of the expression returned is not subclass of the method return type", true);
+					}
+					while(((KraClass)metodoAtual.getType()).getCname().compareTo(superClass.getCname()) != 0){
+						if(superClass == null){
+							// não tem classe, logo não funfa
+							signalError.showError("Type error: type of the expression returned is not subclass of the method return type", true);
+						}
+						superClass = superClass.getSuper();
+					}
+					// aqui ele encontrou a superclasse, logo tem que passar
+				}
+			}else if((expr.getType().getName().compareTo("int") == 0)||(expr.getType().getName().compareTo("string") == 0)||(expr.getType().getName().compareTo("boolean") == 0)){
+				// classe = int | string | qualquer coisa
+				// tme que dar algum erro
+				signalError.showError("algo deu errado...");
+			}
+
+		} else if (metodoAtual.getType().getName().compareTo(expr.getType().getName()) != 0) {
 			signalError.showError("Expected a return type of " + aux.getType().getName() + " but found type of " + expr.getType().getName(), true);
 		}
 
@@ -892,11 +977,11 @@ public class Compiler {
 
 			String name = lexer.getStringValue();
 			Variable aux = symbolTable.getInLocal(name);
-                        if (aux == null){
-                            KraClass aux_class = (KraClass) this.classeAtual.lastElement();
-                            aux = aux_class.messageVariable(name);
-                        }
-                        
+			if (aux == null) {
+				KraClass aux_class = (KraClass) this.classeAtual.lastElement();
+				aux = aux_class.messageVariable(name);
+			}
+
 			if (aux.getType().getName() == "boolean") {
 				signalError.showError("Command 'read' does not accept 'boolean' variables");
 			}
@@ -938,6 +1023,9 @@ public class Compiler {
 		for (Expr e : exprArray) {
 			if (e.getType().getName().compareTo("boolean") == 0) {
 				signalError.showError("Command 'write' does not accept 'boolean' expressions");
+			}
+			if(e.getType() instanceof KraClass){
+				signalError.showError("Command 'write' does not accept objects");
 			}
 		}
 
@@ -1179,6 +1267,7 @@ public class Compiler {
 				/*
 			 * return an object representing the creation of an object
 				 */
+
 				if (aClass != null) {
 					return new FactorNew(aClass);
 				}
@@ -1215,7 +1304,7 @@ public class Compiler {
 				lexer.nextToken();
 				exprList = realParameters();
 
-				return new ExprSuper(aux.message(new MessageSendToSuper(exprList, messageName), signalError),exprList);
+				return new ExprSuper(aux.message(new MessageSendToSuper(exprList, messageName), signalError), exprList);
 			//break;
 			case IDENT:
 				/*
@@ -1340,11 +1429,11 @@ public class Compiler {
 					 * 'ident' e que pode tomar os par�metros de ExpressionList
 						 */
 
-                                                exprList = realParameters();
-                                                this_expr.setExprList(exprList);
+						exprList = realParameters();
+						this_expr.setExprList(exprList);
 
-						MethodDec_class metodo = ((KraClass)classeAtual.lastElement()).message(new MessageSendToSelf(id, this_expr.getExpr()), signalError);
-                                                this_expr.setType(metodo.getType());
+						MethodDec_class metodo = ((KraClass) classeAtual.lastElement()).message(new MessageSendToSelf(id, this_expr.getExpr()), signalError);
+						this_expr.setType(metodo.getType());
 						return this_expr;
 //					exprList = this.realParameters();
 					} else if (lexer.token == Symbol.DOT) {
