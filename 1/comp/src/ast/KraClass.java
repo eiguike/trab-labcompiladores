@@ -73,9 +73,12 @@ public class KraClass extends Type {
 	// preciso receber o errorSignal para fazer os tratamentos
 	public MethodDec_class message(MessageSendToSuper msg, ErrorSignaller errorSignal) {
 		KraClass aux_superclass = this.getSuper();
+		if (aux_superclass == null) {
+			errorSignal.showError("'super' used in class '"+this.getCname()+"' that does not have a superclass");
+		}
 		while (true) {
-			if (aux_superclass == null) {
-				errorSignal.showError("Não há super classe nesta classe " + this.getCname());
+			if (aux_superclass == null){
+				errorSignal.showError("Method '"+msg.getNameMethod()+"' was not found in superclass or its superclasses");
 			}
 			ArrayList<Variable> methodDecList_aux = aux_superclass.getMethodList();
 
@@ -143,8 +146,14 @@ public class KraClass extends Type {
 				}
 			}
 		}
+		MessageSendToSuper msg = new MessageSendToSuper(message.getExprList(), message.getMethodName());
+		Variable v = this.message2(msg, signalError);
 
-		signalError.showError("Method '"+message.getMethodName()+"' was not found in the class and its superclass");
+		if(v != null){
+			return v;
+		}
+
+		signalError.showError("Method '"+message.getMethodName()+"' was not found in class '"+this.getCname()+"' or its superclass");
 		return null;
 	}
 
@@ -172,7 +181,7 @@ public class KraClass extends Type {
 		ArrayList<Expr> message_pametros = message.getExprList();
 		for (Variable item : parametros) {
 			if (item.getType() != message_pametros.get(i).getType()) {
-				signalError.showError("Parameter value different");
+				signalError.showError("Type error: the type of the real parameter is not subclass of the type of the formal parameter");
 				return null;
 			}
 

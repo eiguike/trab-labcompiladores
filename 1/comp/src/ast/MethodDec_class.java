@@ -21,13 +21,15 @@ public class MethodDec_class extends Variable{
         this.qualifier = symbol_entra;
         this.quali_static = null;
         this.quali_final = null;
+	this.returned = false;
     }
     
     public MethodDec_class(Symbol symbol_entra, String name, Type type, Symbol symbol_entra1, Symbol symbol_entra2) {
         super(name, type);
         this.qualifier = symbol_entra;
-        this.quali_static = symbol_entra1;
+        this.quali_static = symbol_entra1; Symbol quali_final;  //final
         this.quali_final = symbol_entra2;
+	this.returned = false;
     }
     
     
@@ -118,4 +120,23 @@ public class MethodDec_class extends Variable{
 	private Symbol qualifier;
 	private Symbol quali_static;
 	private Symbol quali_final;  //final
+	private Boolean returned;
+
+	public ArrayList<Statement> getStatementList() {
+		return statementList;
+	}
+
+	public void setStatementList(ArrayList<Statement> statementList) {
+		this.statementList = statementList;
+	}
+
+	public Boolean getReturned() {
+		return returned;
+	}
+
+	public void setReturned(Boolean returned) {
+		this.returned = returned;
+	}
+
+	
 }
