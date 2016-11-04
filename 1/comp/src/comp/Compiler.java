@@ -332,6 +332,7 @@ public class Compiler {
 			if (m.getName().compareTo(name) == 0) {
 				signalError.showError("Method '" + name + "' is being redeclared");
 			}
+
 		}
 
 		symbolTable.removeLocalIdent();
@@ -365,12 +366,11 @@ public class Compiler {
                         if (metodo != null){
                             //se parametros sao diferentes nao eh override
                             if (aux_methodDec.getParamList().getSize() != metodo.getParamList().getSize()) {
-                                    
+				    signalError.showError("Method "+metodoAtual.getName()+" of the subclass '"+((KraClass)classeAtual.lastElement()).getCname()+"' has a signature different from the same method of superclass '"+((KraClass)classeAtual.lastElement()).getSuper().getCname()+"'");
                             }else{ // se o nome for diferente nao eh override
                                  if (aux_methodDec.getType().getName().compareTo(metodo.getType().getName()) != 0) {
-                                    
+				    signalError.showError("Method "+metodoAtual.getName()+" of the subclass '"+((KraClass)classeAtual.lastElement()).getCname()+"' has a signature different from method inherited from superclass '"+((KraClass)classeAtual.lastElement()).getSuper().getCname()+"'");
                                  }else{
-                                     return metodo;
                                  }
                             }
                         }
@@ -379,10 +379,6 @@ public class Compiler {
 
 		lexer.nextToken();
 		aux_methodDec.setStament(statementList());
-
-		if (returnStack.isEmpty() == false) {
-			signalError.showError("Missing 'return' statement in method '" + name + "'");
-		}
 
 		if (aux_methodDec.getType().getName().compareTo("void") != 0) {
 			// semântica, verificação de returns
@@ -394,7 +390,7 @@ public class Compiler {
 				}
 			}
 
-			if (flag) {
+			if (flag && !aux_methodDec.getReturned()) {
 				signalError.showError("Missing 'return' statement in method '" + name + "'");
 			}
 		}
@@ -582,7 +578,7 @@ public class Compiler {
 							// tenho apeans uma expressão, logo não tem um =
 							if (aux.getExprList().get(0).getType().getName().compareTo("void") != 0) {
 								// se for diferente de void, então esta sendo usado como uma instrução
-								signalError.showError("Message send 'a.m()' returns a value that is not used");
+								signalError.showError("Message send 'a.m()' returns a value that is not used", true);
 							}
 						}
 					}
@@ -837,6 +833,8 @@ public class Compiler {
 		if (metodoAtual.getType().getName().compareTo(expr.getType().getName()) != 0) {
 			signalError.showError("Expected a return type of " + aux.getType().getName() + " but found type of " + expr.getType().getName(), true);
 		}
+
+		metodoAtual.setReturned(true);
 
 		return new ReturnStatement(expr);
 	}
