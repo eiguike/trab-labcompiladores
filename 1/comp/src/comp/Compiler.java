@@ -962,7 +962,11 @@ public class Compiler {
 			if(expr.getType().getName().compareTo("boolean") == 0){
 				signalError.showError("Operator '"+op+"' does not accepts 'boolean' expressions");
 			}
-			return new SignalExpr(op, factor());
+//                        if(lexer.token == Symbol.SEMICOLON){ //caso exista
+//                            
+//                        }else{
+                            return new SignalExpr(op, expr);
+//                        }
 		} else {
 			return factor();
 		}
