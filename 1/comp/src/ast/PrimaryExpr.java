@@ -4,6 +4,7 @@
 package ast;
 
 import java.util.ArrayList;
+import lexer.Symbol;
 
 /**
  *
@@ -21,6 +22,36 @@ public class PrimaryExpr  extends Expr{
             linha += "this.";
         }
         
+         if(this.valueSuper){
+             linha += "super.";
+        }
+         if(this.id1 != null){
+             linha += this.id1;
+        }
+         if(this.id2  != null){
+             linha += "."+ this.id2;
+        }
+         if(this.id3 != null){
+             linha += "."+ this.id3;
+        }
+         if(this.expr != null ){
+             linha += "(";
+              pw.print(linha);
+             this.expr.genKra(pw);
+              pw.print(")");
+         }else{
+         pw.print(linha);
+         }
+    
+    }
+    
+    @Override
+    public void genKra( PW pw, boolean putParenthesis ,Symbol op){
+        String linha = "";
+        linha+= op.toString();
+        if(this.valueThis){
+            linha += "this.";
+        }
          if(this.valueSuper){
              linha += "super.";
         }
