@@ -6,6 +6,7 @@ package ast;
 import comp.ErrorSignaller;
 import java.util.ArrayList;
 import java.util.Iterator;
+import lexer.Symbol;
 
 /*
 * Krakatoa Class
@@ -40,7 +41,7 @@ public class KraClass extends Type {
 		KraClass aux_superclass = this.getSuper();
 		while (true) {
 			if (aux_superclass == null) {
-				return null;
+				break;
 			}
 			ArrayList<Variable> methodDecList_aux = aux_superclass.getMethodList();
 
@@ -63,13 +64,9 @@ public class KraClass extends Type {
 					}
 				}
 			}
-			// queria ter feito recursivo, mas não passo pelo paarmetro a classe atual
-			// vai ser assim mesmo, iterativo.
 			aux_superclass = aux_superclass.getSuper();
-			//if (aux_superclass == null) {
-			//	errorSignal.showError("não há métodos no rolê... " + this.getCname());
-			//}
 		}
+		return null;
 
 	}
 	// recebe a mensagem referente a classe super
@@ -99,6 +96,9 @@ public class KraClass extends Type {
 							// preparar mensagem de retorno...
 							// NESSE MOMENTO RETORNAREI A CLASSE, PQ SÓ QUERO VER SE ESTA FUCNIOANDO.
 							// O IDEAL É RETORNAR UMA MENSAGEM QUE TENHA O MÉTODO, A CLASSE, O TIPO DE RETORNO E ETC...
+							if (((MethodDec_class) (v)).getQualifier() == Symbol.PRIVATE) {
+								errorSignal.showError("Method 'p' was not found in the public interface of 'A' or its superclasses");
+								}
 							return (MethodDec_class) v;
 						}
 					}
@@ -145,6 +145,12 @@ public class KraClass extends Type {
 				// o método tem o mesmo nome...
 				if (v.getParameter().size() == message.getExprList().getSizeExprList()) {
 					// tem a mesma quantidade de parâmetros, ta ok, posso devolver o método que é...
+
+					// verificar se o método é private, se for, tem q bugar
+					if(((MethodDec_class)v).getQualifier() == Symbol.PRIVATE){
+						signalError.showError("Method '"+v.getName()+"' was not found in the public interface of 'A' or its superclasses");
+						
+					}
 					return v;
 				}
 			}
@@ -166,7 +172,7 @@ public class KraClass extends Type {
 		Variable metodo = null;
 		for (Variable item : this.methodDecList) {//procura pelo metodos
 			if (item.getName().equals(message.getString())) {
-				if(item.getParameter().size() == message.getExprList().size()){
+				if((item.getParameter().size() == message.getExprList().size())&&(item.getParameter().size() > 0)){
 					Integer i = 0;
 						if(item.getParameter().get(i).getType().getName().compareTo(message.getExprList().get(i).getType().getName()) == 0){
 							// variável é a mesma, nada faz
@@ -180,15 +186,21 @@ public class KraClass extends Type {
 
 								if(aux == null){
 									// não é do mesmo subtipo, não foi encontrado classe super
-									signalError.showError("2222Type error: the type of the real parameter is not subclass of the type of the formal parameter");
+									signalError.showError("Type error: the type of the real parameter is not subclass of the type of the formal parameter");
 								}
 								
 							}else{
-								signalError.showError("111Type error: the type of the real parameter is not subclass of the type of the formal parameter");
+								signalError.showError("Type error: the type of the real parameter is not subclass of the type of the formal parameter");
 								// não é do mesmo subtipo pq não é classe
 							}
 						}
 						i++;
+					if((((MethodDec_class) item).getQualifier()) == Symbol.PRIVATE){
+						signalError.showError("Method '"+item.getName()+"' was not found in the public interface of '"+((KraClass)item.getType()).getCname()+"' or its superclasses (comp.Compiler.factor())");
+					}
+					return (MethodDec_class) item;
+				}else{
+					// achou o metodo e não tem nada que possa impedir
 					return (MethodDec_class) item;
 				}
 			}

@@ -390,11 +390,36 @@ public class Compiler {
 			aux_methodDec.setParamList(formalParamDec());
 		} else {
 			aux_methodDec.setParamList(new ParamList());
-			
 		}
 		if (lexer.token != Symbol.RIGHTPAR) {
 			signalError.showError(") expected");
 		}
+
+		// deve-se verificar se nas instâncias superiores tem o mesmo metodo
+		KraClass aux = auxClass;
+		aux = aux.getSuper();
+		Integer i = 0;
+		while((aux != null)&&(i >= 0)){
+			for(Variable method : aux.getMethodList()){
+				if((method.getName().compareTo(name) == 0) &&(i >= 0)){
+					// É O MESMO MÉTODO, LOGO TEMOS Q VERIFICAR SE SÃO IGUAIS
+					MethodDec_class methodAux = (MethodDec_class) method;
+					for(Variable param : methodAux.getParameter()){
+						if(param.getType().getName().compareTo(aux_methodDec.getParameter().get(i).getType().getName()) == 0){
+							i = -1;
+							break;
+						}else{
+							signalError.showError("Method '"+name+"' is being redefined in subclass '"+auxClass.getName()+"' with a signature different from the method of superclass '"+aux.getCname()+"'");
+						}
+						i++;
+					}
+				}
+
+			}
+			aux = aux.getSuper();
+		}
+
+		
 
 		lexer.nextToken();
 		if(((KraClass)classeAtual.lastElement()).getCname().compareTo("Program") == 0){
