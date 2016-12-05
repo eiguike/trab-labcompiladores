@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/Program.java</file>
+            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/ExprList.java</file>
+            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/KraClass.java</file>
+            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/InstanceVariable.java</file>
+            <file>file:/home/joaosalles/lab_compilas/1/comp/src/comp/Comp.java</file>
+            <file>file:/home/joaosalles/lab_compilas/1/comp/src/lexer/Lexer.java</file>
+            <file>file:/home/joaosalles/lab_compilas/1/comp/src/comp/Compiler.java</file>
+            <file>file:/home/joaosalles/lab_compilas/1/comp/src/lexer/Symbol.java</file>
+            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/InstanceVariableList.java</file>
+            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/CompositeExpr.java</file>
+            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/MetaobjectCall.java</file>
+        </group>
+    </open-files>
+</project-private>
