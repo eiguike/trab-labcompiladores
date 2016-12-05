@@ -209,7 +209,7 @@ public class KraClass extends Type {
 		if(achouMethod == false){
 			MethodDec_class aux = this.message2(new MessageSendToSuper(new ExprList(message.getExprList()),message.getString()) ,signalError);
 			if(aux == null){
-				signalError.showError("Method '"+message.getString()+"' was not found in class '"+aux.getName()+"' or its superclasses");
+				signalError.showError("Method '"+message.getString()+"' was not found in class 'A' or its superclasses");
 			}
 			if (aux.getParamList().getSize() != message.getExprList().size()) {
 				signalError.showError("Parameter number different");
