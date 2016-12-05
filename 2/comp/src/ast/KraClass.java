@@ -166,8 +166,31 @@ public class KraClass extends Type {
 		Variable metodo = null;
 		for (Variable item : this.methodDecList) {//procura pelo metodos
 			if (item.getName().equals(message.getString())) {
-				if(item.getParameter().size() == message.getExprList().size())
+				if(item.getParameter().size() == message.getExprList().size()){
+					Integer i = 0;
+						if(item.getParameter().get(i).getType().getName().compareTo(message.getExprList().get(i).getType().getName()) == 0){
+							// variável é a mesma, nada faz
+						}else{
+							// ok não é do mesmo tipo, verificar se é do mesmo subtipo
+							if((item.getType() instanceof KraClass)&&(message.getExprList().get(i).getType() instanceof KraClass)){
+								KraClass aux = ((KraClass)item.getType());
+								while((aux != null) && (aux != message.getExprList().get(i).getType())){
+									aux = aux.getSuper();
+								}
+
+								if(aux == null){
+									// não é do mesmo subtipo, não foi encontrado classe super
+									signalError.showError("2222Type error: the type of the real parameter is not subclass of the type of the formal parameter");
+								}
+								
+							}else{
+								signalError.showError("111Type error: the type of the real parameter is not subclass of the type of the formal parameter");
+								// não é do mesmo subtipo pq não é classe
+							}
+						}
+						i++;
 					return (MethodDec_class) item;
+				}
 			}
 		}
 
