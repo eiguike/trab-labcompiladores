@@ -1127,6 +1127,14 @@ public class Compiler {
 		if (op == Symbol.EQ || op == Symbol.NEQ || op == Symbol.LE || op == Symbol.LT || op == Symbol.GE || op == Symbol.GT) {
 			lexer.nextToken();
 			Expr right = simpleExpr();
+			if(left.getType() instanceof KraClass){
+				KraClass aux = (KraClass) left.getType();
+				KraClass aux2 = (KraClass) right.getType();
+
+				if(!aux.isSubType(aux2) && !aux2.isSubType(aux)){
+					signalError.showError("Incompatible types cannot be compared with '"+op+"' because the result will always be 'false'");
+				}
+			}
 			left = new CompositeExpr(left, op, right);
 		}
 		return left;

@@ -14,7 +14,7 @@ class A {
 
 class B extends A {
    
-   public void put(int x, int y, int ok) {  //#
+   public void put(boolean x, int y, int ok) {  //#
    }   
 
 }

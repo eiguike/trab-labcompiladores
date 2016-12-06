@@ -114,6 +114,20 @@ public class KraClass extends Type {
 
 	}
 
+	public boolean isSubType(KraClass p){
+		KraClass aux;
+		aux = p;
+		while(aux != null && (this.getName().compareTo(aux.getName()) != 0)){
+			aux = aux.getSuper();
+		}
+
+		if(aux == null){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
 	public String getCname() {
 		return getName();
 	}

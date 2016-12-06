@@ -3,17 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/Program.java</file>
-            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/ExprList.java</file>
-            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/KraClass.java</file>
-            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/InstanceVariable.java</file>
-            <file>file:/home/joaosalles/lab_compilas/1/comp/src/comp/Comp.java</file>
-            <file>file:/home/joaosalles/lab_compilas/1/comp/src/lexer/Lexer.java</file>
-            <file>file:/home/joaosalles/lab_compilas/1/comp/src/comp/Compiler.java</file>
-            <file>file:/home/joaosalles/lab_compilas/1/comp/src/lexer/Symbol.java</file>
-            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/InstanceVariableList.java</file>
-            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/CompositeExpr.java</file>
-            <file>file:/home/joaosalles/lab_compilas/1/comp/src/ast/MetaobjectCall.java</file>
+            <file>file:/home/floss/Documents/git/trab-labcompiladores/2/comp/src/ast/Program.java</file>
+            <file>file:/home/floss/Documents/git/trab-labcompiladores/2/comp/src/ast/MethodDec_class.java</file>
+            <file>file:/home/floss/Documents/git/trab-labcompiladores/2/comp/src/ast/Variable.java</file>
+            <file>file:/home/floss/Documents/git/trab-labcompiladores/2/comp/src/ast/ExprList.java</file>
+            <file>file:/home/floss/Documents/git/trab-labcompiladores/2/comp/src/ast/KraClass.java</file>
+            <file>file:/home/floss/Documents/git/trab-labcompiladores/2/comp/src/comp/Comp.java</file>
+            <file>file:/home/floss/Documents/git/trab-labcompiladores/2/comp/src/ast/Expr.java</file>
+            <file>file:/home/floss/Documents/git/trab-labcompiladores/2/comp/src/lexer/Lexer.java</file>
+            <file>file:/home/floss/Documents/git/trab-labcompiladores/2/comp/src/comp/SymbolTable.java</file>
+            <file>file:/home/floss/Documents/git/trab-labcompiladores/2/comp/src/comp/Compiler.java</file>
         </group>
     </open-files>
 </project-private>
