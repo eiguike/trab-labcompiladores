@@ -234,6 +234,33 @@ public class KraClass extends Type {
 
 	}
 
+        public void genC(PW pw) {
+		String linha;
+		linha = "typedef \nstruct __St_" + this.getCname() + "{ ";
+                
+//                if(this.superclass != null){
+//                    linha += " extends " + this.superclass.getCname();
+//                }
+                linha += " {\n";
+		pw.printIdent(linha);
+		pw.printIdent("\n");
+		this.instanceVariableList.genC(pw);
+		pw.printIdent("\n");
+                if (!this.methodDecList.isEmpty()){
+                    pw.add();
+                    pw.printIdent("Func *vt;\n");
+                    pw.sub();
+                    
+                }
+		for (Variable item : this.methodDecList) {
+			item.genC(pw, this.getCname());
+		}
+                pw.print("} _class_"+ this.getCname());
+	}
+        
+        
+        
+        
 	public void genKra(PW pw) {
 		String linha;
 		linha = "Class " + this.getCname();

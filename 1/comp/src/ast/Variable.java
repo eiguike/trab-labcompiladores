@@ -22,6 +22,10 @@ public class Variable {
         pw.print(this.name);
     }
     
+    public void genC(PW pw, String class_name) {
+        pw.print(this.name);
+    }
+    
     private String name;
     private Type type;
 

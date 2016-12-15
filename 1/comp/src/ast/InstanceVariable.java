@@ -41,6 +41,20 @@ public class InstanceVariable extends Variable {
         linha += " " + this.qualifier.toString() + " " + this.getType().getName() + " " + this.getName() +";\n";
         pw.printIdent(linha);
     }
+    
+    public void genC(PW pw) {
+        String linha = "";
+        if(this.quali_final != null){
+            linha = this.quali_final.toString();
+        }
+        if(this.quali_static != null){
+            linha += " " + this.quali_static.toString();
+        }
+        linha += " " + this.qualifier.toString() + " _" + this.getType().getName() + " " + this.getName() +";\n";
+        pw.printIdent(linha);
+    }
+    
+    
     private Symbol qualifier;
     private Symbol quali_static;
     private Symbol quali_final; 

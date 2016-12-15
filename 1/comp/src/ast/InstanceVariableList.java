@@ -43,6 +43,14 @@ public class InstanceVariableList {
 		}
 		pw.sub();
 	}
+        
+        public void genC(PW pw) {
+		pw.add();
+		for (InstanceVariable item : this.instanceVariableList) {
+			item.genC(pw);
+		}
+		pw.sub();
+	}
 
 	private ArrayList<InstanceVariable> instanceVariableList;
 
