@@ -43,6 +43,20 @@ public class ParamList {
         pw.print(linha);
     }
 
+    public void genC(PW pw) {
+        String linha = "";
+//        boolean primeiro = true;
+        for(Variable item : this.paramList){
+//            if(primeiro){
+//                primeiro = false;
+//                linha = item.getType().getName() + " _" + item.getName();
+//            }
+//            else{
+              linha += ", " + item.getType().getCname() + " _" + item.getName();
+//            }
+        }
+        pw.print(linha);
+    }
     private ArrayList<Variable> paramList;
 
 }

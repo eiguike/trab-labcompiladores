@@ -25,7 +25,15 @@ public class WhileStatement extends Statement {
 	}
 	
 	public void genC(PW pw) {
-		
+            String linha = "";
+//            pw.add();
+            pw.printIdent("while(");
+            this.expr.genKra(pw, false);
+             pw.print(") {\n");
+            pw.add();
+            this.stmt.genKra(pw);
+            pw.sub();
+            pw.printIdent("}\n\n");
 	}	
         
         @Override
