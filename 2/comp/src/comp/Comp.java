@@ -259,6 +259,7 @@ public class Comp {
         	   
         	   
                FileOutputStream  outputStream;
+               FileOutputStream  outputStreamC;
                try {
                   outputStream = new FileOutputStream(outputFileName + ".kra2");
                } catch ( IOException e ) {
@@ -267,15 +268,27 @@ public class Comp {
                    return ;
                }
                PrintWriter printWriter = new PrintWriter(outputStream);
-        	   
+ 
+	       try {
+                  outputStreamC = new FileOutputStream(outputFileName + ".c");
+               } catch ( IOException e ) {
+                   String msg = "File " + outputFileName + " was not found";
+                   outError.println(msg);
+                   return ;
+               }
+               PrintWriter printWriterC = new PrintWriter(outputStreamC);
+        	          	   
         	   
               PW pw = new PW();
               pw.set(printWriter);
               program.genKra( pw );
+              pw.set(printWriterC);
+              program.genC( pw );
               if ( printWriter.checkError() ) {
                  outError.println("There was an error in the output");
               }
               printWriter.close();
+              printWriterC.close();
            }
 	}
 
