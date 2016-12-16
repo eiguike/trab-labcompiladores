@@ -22,7 +22,7 @@ public class AssignmentStatement extends Statement{
 	
 	@Override
 	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
-		this.assignExpr.genC(pw, false, null ,null);
+		this.assignExpr.genC(pw, false, current , pai);
 	}
         
         @Override

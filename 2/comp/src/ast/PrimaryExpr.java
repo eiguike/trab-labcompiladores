@@ -10,37 +10,8 @@ import lexer.Symbol;
  *
  * @author joaosalles
  */
-public class PrimaryExpr  extends Expr{
-	
-	public void genC( PW pw, ArrayList<String> current, ArrayList<String> parent ){
-		String linha = "";
-		if(this.valueThis){
-			linha += "this.";
-		}
-		
-		if(this.valueSuper){
-			linha += "super.";
-		}
-		if(this.id1 != null){
-			linha += "_"+this.id1;
-		}
-		if(this.id2  != null){
-			linha += "."+ this.id2;
-		}
-		if(this.id3 != null){
-			linha += "."+ this.id3;
-		}
-		if(this.expr != null ){
-			linha += "(";
-			pw.print(linha);
-			this.expr.genKra(pw);
-			pw.print(")");
-		}else{
-			pw.print(linha);
-		}
+public class PrimaryExpr extends Expr {
 
-	}
-	
 //	public void genC( PW pw, ArrayList<String> current, ArrayList<String> parent){
 //
 //		Integer i;
@@ -86,73 +57,72 @@ public class PrimaryExpr  extends Expr{
 //			}
 //		}
 //	}
-	
 	@Override
-	public void genKra( PW pw, boolean putParenthesis ){
+	public void genKra(PW pw, boolean putParenthesis) {
 		String linha = "";
-		if(this.valueThis){
+		if (this.valueThis) {
 			linha += "this.";
 		}
-		
-		if(this.valueSuper){
+
+		if (this.valueSuper) {
 			linha += "super.";
 		}
-		if(this.id1 != null){
+		if (this.id1 != null) {
 			linha += this.id1;
 		}
-		if(this.id2  != null){
-			linha += "."+ this.id2;
+		if (this.id2 != null) {
+			linha += "." + this.id2;
 		}
-		if(this.id3 != null){
-			linha += "."+ this.id3;
+		if (this.id3 != null) {
+			linha += "." + this.id3;
 		}
-		if(this.expr != null ){
+		if (this.expr != null) {
 			linha += "(";
 			pw.print(linha);
 			this.expr.genKra(pw);
 			pw.print(")");
-		}else{
+		} else {
 			pw.print(linha);
 		}
-		
+
 	}
-	
+
 	@Override
-	public void genKra( PW pw, boolean putParenthesis ,Symbol op){
+	public void genKra(PW pw, boolean putParenthesis, Symbol op) {
 		String linha = "";
-		linha+= op.toString();
-		if(this.valueThis){
+		linha += op.toString();
+		if (this.valueThis) {
 			linha += "this.";
 		}
-		if(this.valueSuper){
+		if (this.valueSuper) {
 			linha += "super.";
 		}
-		if(this.id1 != null){
+		if (this.id1 != null) {
 			linha += this.id1;
 		}
-		if(this.id2  != null){
-			linha += "."+ this.id2;
+		if (this.id2 != null) {
+			linha += "." + this.id2;
 		}
-		if(this.id3 != null){
-			linha += "."+ this.id3;
+		if (this.id3 != null) {
+			linha += "." + this.id3;
 		}
-		if(this.expr != null ){
+		if (this.expr != null) {
 			linha += "(";
 			pw.print(linha);
 			this.expr.genKra(pw);
 			pw.print(")");
-		}else{
+		} else {
 			pw.print(linha);
 		}
-		
+
 	}
-	
+
 	@Override
-	public Type getType(){
+	public Type getType() {
 		return this.type;
 	}
-	
-	public PrimaryExpr(){
+
+	public PrimaryExpr() {
 		this.valueThis = false;
 		this.valueSuper = false;
 		this.expr = null;
@@ -160,31 +130,35 @@ public class PrimaryExpr  extends Expr{
 		this.id2 = null;
 		this.id3 = null;
 	}
-	public void setType(Type type){
+
+	public void setType(Type type) {
 		this.type = type;
 	}
-	public void addID1(String type_entra){
+
+	public void addID1(String type_entra) {
 		this.id1 = type_entra;
 	}
-	public void addID2(String type_entra){
+
+	public void addID2(String type_entra) {
 		this.id2 = type_entra;
 	}
-	public void addID3(String type_entra){
+
+	public void addID3(String type_entra) {
 		this.id3 = type_entra;
 	}
-	
-	public void setExprList(ExprList expr_entra){
+
+	public void setExprList(ExprList expr_entra) {
 		this.expr = expr_entra;
 	}
-	
-	public void setThis(boolean value){
+
+	public void setThis(boolean value) {
 		this.valueThis = value;
 	}
-	
-	public ExprList getExpr(){
+
+	public ExprList getExpr() {
 		return this.expr;
 	}
-	
+
 	private boolean valueThis;
 	private boolean valueSuper;
 	private String id1;
@@ -195,7 +169,43 @@ public class PrimaryExpr  extends Expr{
 
 	@Override
 	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		String linha = "";
+		Integer i;
+		if (this.valueThis) {
+			linha += "this.";
+		}
+
+		if (this.valueSuper) {
+			linha += "super.";
+		}
+		if (this.id1 != null) {
+			linha += "_" + this.id1;
+
+		}
+		if ((this.id1 != null) &&(this.id2 != null)) {
+			linha += "( (void (*)(_class_";
+			for (i = current.size() - 1; i >= 0; i--) {
+				if (current.get(i)[0].compareTo(this.id2) == 0) {
+					linha += current.get(i)[1];
+					break;
+				}
+			}
+			linha += "*, int)) _" + this.id1+"->vt["+ i +"])(_"+this.id1+",";
+			this.expr.genC(pw, putParenthesis, current, pai);
+			linha += ");";
+//			linha += "." + this.id2;
+		}
+		if (this.id3 != null) {
+			linha += "." + this.id3;
+		}
+		if (this.expr != null) {
+			linha += "(";
+			pw.print(linha);
+			this.expr.genKra(pw);
+			pw.print(")");
+		} else {
+			pw.print(linha);
+		}
 	}
 
 }
