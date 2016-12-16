@@ -30,7 +30,7 @@ public class Variable {
         pw.print(this.name);
     }
     
-    public void genC(PW pw, String class_name, ArrayList<String> current, ArrayList<String> parent) {
+    public void genC(PW pw, String class_name, ArrayList<String[]> current, ArrayList<String[]> parent) {
         pw.print(this.name);
     }
     
