@@ -28,11 +28,12 @@ public class Program {
             String linha;
             pw.println("#include <malloc.h>");
             pw.println("#include <stdlib.h>");
-            pw.println("#include <stdio.h>");
+            pw.println("#include <stdio.h>\n");
             pw.println("typedef int boolean;");
             pw.println("#define true 1");
-            pw.println("#define false 0"); 
-            pw.println("void (*Func)();"); 
+            pw.println("#define false 0\n"); 
+            pw.println("typedef"); 
+            pw.println("   void (*Func)();"); 
             for (KraClass item : this.classList){
                 item.genC(pw);
                 pw.println();

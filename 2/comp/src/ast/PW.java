@@ -30,23 +30,29 @@ public class PW {
    public void printIdent( String s ) {
       out.print( space.substring(0, currentIndent) );
       out.print(s);
+	System.out.print(s);
    }
    
    public void printlnIdent( String s ) {
       out.print( space.substring(0, currentIndent) );
       out.println(s);
+	System.out.print(s);
    }
 
    public void print( String s ) {
+	System.out.print(s);
       out.print(s);
    }
    
    public void println( String s ) {
       out.println(s);
+	System.out.println(s);
    }
 
    public void println() {
 	      out.println("");
+
+	System.out.println();
 	   }
    
    public void genKra(PW pw) {

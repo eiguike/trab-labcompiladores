@@ -125,6 +125,7 @@ public class MethodDec_class extends Variable{
                //+" { \n"
             pw.printIdent(linha);
             if(this.paramList != null){
+                
                this.paramList.genC(pw);
             }
             pw.print("){ \n\n");
@@ -137,7 +138,7 @@ public class MethodDec_class extends Variable{
 
         }
 
-        public void genC(PW pw, String class_name, ArrayList<String> current, ArrayList<String> parent) {
+        public void genC(PW pw, String class_name, ArrayList<String[]> current, ArrayList<String[]> parent) {
             String linha = "";
             if(this.quali_final != null){
                 linha = this.quali_final.toString();

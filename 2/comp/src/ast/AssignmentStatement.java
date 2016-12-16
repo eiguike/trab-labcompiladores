@@ -23,9 +23,6 @@ public class AssignmentStatement extends Statement{
 		this.assignExpr.genC(pw, false);
 	}
         
-  
-        
-        
         @Override
         public void genKra(PW pw) {
             this.assignExpr.genKra(pw, false);
