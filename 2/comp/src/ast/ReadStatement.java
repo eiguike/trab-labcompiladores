@@ -24,8 +24,11 @@ public class ReadStatement extends Statement{
 	public void genC(PW pw) {
 		String linha = "";
 		Integer i;
-		
-		pw.printIdent("scanf(\"");
+                pw.printIdent("{\n");
+		pw.add();
+                pw.printIdent("char __s[512];\n");
+                pw.printIdent("gets __s;\n");
+		pw.printIdent("sscanf(__s, \"");
 		for(i = 0; i < this.variableList.size(); i++){
 			if(i > 0){
 				pw.print(" ");
@@ -49,6 +52,8 @@ public class ReadStatement extends Statement{
 			}
 		}
 		pw.print("); \n");
+                pw.sub();
+                pw.printlnIdent("}");
 	}
 	@Override
 	public void genKra(PW pw) {

@@ -335,7 +335,7 @@ public class KraClass extends Type {
 		String linha;
                 ArrayList<String> thisMethod = null;
                 ArrayList<String> parentMethod = null;
-		linha = "typedef \nstruct __St_" + this.getCname() + "{ \n";
+		linha = "typedef \nstruct _St_" + this.getCname() + "{ \n";
                 
 //                if(this.superclass != null){
 //                    linha += " extends " + this.superclass.getCname();
