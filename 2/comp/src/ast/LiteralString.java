@@ -3,13 +3,15 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 public class LiteralString extends Expr {
     
     public LiteralString( String literalString ) { 
         this.literalString = literalString;
     }
     
-    public void genC( PW pw, boolean putParenthesis ) {
+    public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ) {
         pw.print(literalString);
     }
     

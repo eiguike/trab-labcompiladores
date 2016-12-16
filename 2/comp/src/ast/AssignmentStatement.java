@@ -3,6 +3,8 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author floss
@@ -19,8 +21,8 @@ public class AssignmentStatement extends Statement{
 	}
 	
 	@Override
-	public void genC(PW pw) {
-		this.assignExpr.genC(pw, false);
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
+		this.assignExpr.genC(pw, false, null ,null);
 	}
         
         @Override

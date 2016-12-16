@@ -3,6 +3,7 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
 import lexer.*;
 
 public class SignalExpr extends Expr {
@@ -13,11 +14,11 @@ public class SignalExpr extends Expr {
     }
 
     @Override
-	public void genC( PW pw, boolean putParenthesis ) {
+	public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ) {
        if ( putParenthesis )
           pw.print("(");
        pw.print( oper == Symbol.PLUS ? "+" : "-" );
-       expr.genC(pw, true);
+       expr.genC(pw, true, null, null);
        if ( putParenthesis )
           pw.print(")");
     }

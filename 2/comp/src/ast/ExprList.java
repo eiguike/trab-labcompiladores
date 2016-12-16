@@ -24,11 +24,11 @@ public class ExprList {
 		exprList.add(expr);
 	}
 
-	public void genC(PW pw) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 
 		int size = exprList.size();
 		for (Expr e : exprList) {
-			e.genC(pw, false);
+			e.genC(pw, false, null, null);
 			if (--size > 0) {
 				pw.print(", ");
 			}

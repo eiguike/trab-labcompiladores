@@ -22,12 +22,12 @@ public class CompositeStatement extends Statement {
 	}
 
 	@Override
-	public void genC(PW pw) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 		if (this.stmtList == null) {
 			return;
 		}
 		for (Statement item : this.stmtList) {
-			item.genC(pw);
+			item.genC(pw, false, null, null);
 		}
 
 	}

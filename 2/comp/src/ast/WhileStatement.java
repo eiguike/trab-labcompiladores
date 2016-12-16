@@ -3,6 +3,8 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author floss
@@ -24,14 +26,15 @@ public class WhileStatement extends Statement {
 		return expr;
 	}
 	
-	public void genC(PW pw) {
+	@Override
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
             String linha = "";
 //            pw.add();
             pw.printIdent("while(");
-            this.expr.genC(pw, false);
+            this.expr.genC(pw, false, null, null);
              pw.print(") {\n");
             pw.add();
-            this.stmt.genC(pw);
+            this.stmt.genC(pw, false, null, null);
 	    pw.print("\n");
             pw.sub();
             pw.printIdent("}\n\n");

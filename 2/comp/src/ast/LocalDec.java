@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class LocalDec extends Expr{
 
-	public void genC(PW pw, boolean putParenthesis) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
             String linha ="";
 //           pw.print(this.type.getName();
             pw.print("_class_"+this.type.getName());

@@ -27,7 +27,7 @@ public class WriteStatement extends Statement {
 	}
 	
 	@Override
-	public void genC(PW pw) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 		String linha = "";
 		ArrayList<Expr> elem = this.exprList.getExpr();
 		Integer i;
@@ -53,10 +53,10 @@ public class WriteStatement extends Statement {
 //			}
 			if(elem.get(i).getType().getCname().compareTo("char *") == 0){
 				pw.print("\"");
-				elem.get(i).genC(pw, false);
+				elem.get(i).genC(pw, false, null, null);
 				pw.print("\"");
 			}else{
-				elem.get(i).genC(pw, false);
+				elem.get(i).genC(pw, false, null, null);
 			}
 		}
 		pw.print("); \n");

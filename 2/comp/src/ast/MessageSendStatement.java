@@ -3,10 +3,12 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 public class MessageSendStatement extends Statement { 
 
 
-   public void genC( PW pw ) {
+   public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ) {
       pw.printIdent("");
       // messageSend.genC(pw);
       pw.println(";");

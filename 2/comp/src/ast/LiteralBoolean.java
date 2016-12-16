@@ -3,6 +3,7 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
 import lexer.Symbol;
 
 public class LiteralBoolean extends Expr {
@@ -12,7 +13,7 @@ public class LiteralBoolean extends Expr {
     }
 
     @Override
-	public void genC( PW pw, boolean putParenthesis ) {
+	public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ) {
        pw.print( value ? "true" : "false" );
     }
 

@@ -3,15 +3,17 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 public class ParenthesisExpr extends Expr {
     
     public ParenthesisExpr( Expr expr ) {
         this.expr = expr;
     }
     
-    public void genC( PW pw, boolean putParenthesis ) {
+    public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ) {
         pw.print("(");
-        expr.genC(pw, false);
+        expr.genC(pw, false, null, null);
         pw.printIdent(")");
     }
     

@@ -4,6 +4,7 @@
 
 package ast;
 
+import java.util.ArrayList;
 import lexer.*;
 import java.util.HashMap;
 
@@ -18,17 +19,17 @@ public class CompositeExpr extends Expr {
     
     
     @Override
-	public void genC( PW pw, boolean putParenthesis ) {
+	public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ) {
         if ( putParenthesis )
           pw.print("(");
-        left.genC(pw, true);
+        left.genC(pw, true, null, null);
         String strSymbol = arrayOper.get(oper);
         if ( strSymbol == null ) {
         	pw.println("internal error in CompositeExpr::genC");
         }
         else
             pw.print(" " + strSymbol + " ");
-        right.genC(pw, true);
+        right.genC(pw, true, null, null);
         if ( putParenthesis )
           pw.print(")");
     }
@@ -37,14 +38,14 @@ public class CompositeExpr extends Expr {
     public void genC( PW pw, boolean putParenthesis,Symbol op) {
         if ( putParenthesis )
           pw.print("("+ op.toString());
-        left.genC(pw, true);
+        left.genC(pw, true, null, null);
         String strSymbol = arrayOper.get(oper);
         if ( strSymbol == null ) {
         	pw.println("internal error in CompositeExpr::genKra");
         }
         else
             pw.print(" " + strSymbol + " ");
-        right.genC(pw, true);
+        right.genC(pw, true, null, null);
         if ( putParenthesis )
           pw.print(")");
     }    

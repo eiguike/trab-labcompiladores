@@ -131,7 +131,7 @@ public class MethodDec_class extends Variable{
             pw.print("){ \n\n");
             pw.add();
             for(Statement item : this.statementList){
-                item.genC(pw);
+                item.genC(pw, false, null, null);
             }
             pw.sub();
             pw.printlnIdent("}\n");
@@ -155,7 +155,7 @@ public class MethodDec_class extends Variable{
             pw.print("){ \n\n");
             pw.add();
             for(Statement item : this.statementList){
-                item.genC(pw);
+                item.genC(pw, false, null, null);
             }
             pw.sub();
             pw.printlnIdent("}\n");

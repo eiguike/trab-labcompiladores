@@ -3,6 +3,8 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 public class LiteralInt extends Expr {
     
     public LiteralInt( int value ) { 
@@ -12,7 +14,7 @@ public class LiteralInt extends Expr {
     public int getValue() {
         return value;
     }
-    public void genC( PW pw, boolean putParenthesis ) {
+    public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ) {
         pw.printIdent("" + value);
     }
     

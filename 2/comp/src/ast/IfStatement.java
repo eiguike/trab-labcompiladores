@@ -3,6 +3,8 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author floss
@@ -30,27 +32,26 @@ public class IfStatement extends Statement{
 		return stmtElse;
 	}
 	
-	
 	@Override
-	public void genC(PW pw) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
             String linha;
             if(this.expr != null){
                 pw.printIdent("if ( ");
-                this.expr.genC(pw, false);
+                this.expr.genC(pw, false, null, null);
                 pw.print(") {\n\n");
             }else{
                 pw.print("if() {\n\n");
             }
             pw.add();
             if(this.stmt != null){
-                this.stmt.genC(pw);
+                this.stmt.genC(pw, false, null, null);
             }
             pw.sub();
             pw.printIdent("}");
             if(this.stmtElse != null){
                 pw.print("else{\n");
                 pw.add();
-                this.stmtElse.genC(pw);
+                this.stmtElse.genC(pw, false, null, null);
                 pw.sub();
                 pw.println();
                 pw.printIdent("}\n");

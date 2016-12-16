@@ -12,7 +12,7 @@ public class MessageSendToSelf extends MessageSend {
         return null;
     }
     
-    public void genC( PW pw, boolean putParenthesis ) {
+    public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ) {
     }
     
     @Override

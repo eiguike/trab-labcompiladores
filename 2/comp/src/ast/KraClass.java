@@ -285,7 +285,7 @@ public class KraClass extends Type {
         
         public void genC(PW pw, boolean putParenthesis) {
 		String linha = "";
-		linha = "new " + this.getCname() + "()";
+		linha = "new_" + this.getCname() + "()";
 		pw.print(linha);
 
 	}

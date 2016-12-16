@@ -21,7 +21,7 @@ public class ReadStatement extends Statement{
 	private ArrayList<Variable> variableList;
 	
 	@Override
-	public void genC(PW pw) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 		String linha = "";
 		Integer i;
                 pw.printIdent("{\n");

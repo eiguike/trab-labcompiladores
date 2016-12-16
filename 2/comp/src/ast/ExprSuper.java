@@ -3,6 +3,8 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author floss
@@ -22,16 +24,16 @@ public class ExprSuper extends Expr{
 	}
 
 	@Override
-	public void genC(PW pw, boolean putParenthesis) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 		String linha = "";
                 pw.print("super." + this.variable.getName()+ "(");
                 int i = 0;
                 for(Expr item : this.exprList.getExpr()){
                     if(i == 0){
-                        item.genC(pw, putParenthesis);
+                        item.genC(pw, putParenthesis, null, null);
                     }else{
                         pw.print(", ");
-                        item.genC(pw, putParenthesis);
+                        item.genC(pw, putParenthesis, null, null);
                     }
                     i++;
                 }

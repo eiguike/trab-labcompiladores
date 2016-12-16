@@ -3,6 +3,8 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author floss
@@ -19,9 +21,9 @@ public class ReturnStatement extends Statement{
 	}
 
 	@Override
-	public void genC(PW pw) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 		pw.printIdent("return ");
-		expr.genC(pw, false);
+		expr.genC(pw, false, null , null);
 		pw.print(";");
 		pw.println();
 	}

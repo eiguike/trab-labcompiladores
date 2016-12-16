@@ -3,9 +3,11 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 public class NullExpr extends Expr {
     
-   public void genC( PW pw, boolean putParenthesis ) {
+   public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ) {
       pw.printIdent("NULL");
    }
    

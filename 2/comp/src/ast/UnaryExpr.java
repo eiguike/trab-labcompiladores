@@ -3,6 +3,7 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
 import lexer.*;
 
 public class UnaryExpr extends Expr {
@@ -13,7 +14,7 @@ public class UnaryExpr extends Expr {
 	}
 
 	@Override
-	public void genC(PW pw, boolean putParenthesis) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 		switch (op) {
 		case PLUS:
                         expr.genC(pw, putParenthesis,op);

@@ -3,6 +3,8 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 public class MessageSendToVariable extends MessageSend {
 
 	public MessageSendToVariable(String methodName, ExprList exprList){
@@ -28,7 +30,7 @@ public class MessageSendToVariable extends MessageSend {
 	}
 
 	@Override
-	public void genC(PW pw, boolean putParenthesis) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 
 	}
 

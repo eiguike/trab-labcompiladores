@@ -56,18 +56,19 @@ public class AssignmentExpr extends Expr{
             pw.println();
         }
         
-        public void genC(PW pw, boolean putParenthesis) {
+	@Override
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 		int i = 0;
             if(this.exprList.size() == 1){
                 pw.printIdent("");
-                this.exprList.get(0).genC(pw, putParenthesis);
+                this.exprList.get(0).genC(pw, putParenthesis, null, null);
 //                pw.print(")"); //chamda de metodo no assign
             }else{
                 for(Expr item : this.exprList){
                     if(i == 0){
                         pw.printIdent("");
                     }
-                    item.genC(pw, putParenthesis);
+                    item.genC(pw, putParenthesis, null, null);
                     if(i == 0){
                         pw.print(" = ");
                     }

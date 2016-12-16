@@ -3,6 +3,8 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 public class StatementAssert extends Statement {
 	public StatementAssert(Expr expr, int lineNumber, String message) {
 		this.expr = expr;
@@ -10,9 +12,9 @@ public class StatementAssert extends Statement {
 		this.message = message;
 	}
 	@Override
-	public void genC(PW pw) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 		pw.printIdent("if ( !( ");
-		expr.genC(pw, false);
+		expr.genC(pw, false, null, null);
 		pw.println(" ) ) {");
 		pw.add();
 		pw.printlnIdent("puts(\"" + message +  "\");");

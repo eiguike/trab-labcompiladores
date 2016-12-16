@@ -3,6 +3,8 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author floss
@@ -19,7 +21,7 @@ public class FactorNew extends Expr{
 	}
 	
 	@Override
-	public void genC(PW pw, boolean putParenthesis) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
             this.kraclass.genC(pw, false);
 	}
 

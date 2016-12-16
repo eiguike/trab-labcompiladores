@@ -12,54 +12,80 @@ import lexer.Symbol;
  */
 public class PrimaryExpr  extends Expr{
 	
-	@Override
-	public void genC( PW pw, boolean putParenthesis ){}
-	
-	public void genC( PW pw, ArrayList<String> current, ArrayList<String> parent){
-
-		Integer i;
-		boolean flag= false;
-		if(this.id3 == null){
-			if(this.id2 == null){
-
-			}else{
-				// id2 é método, mas pode ser variável
-				if(this.expr != null){
-					//id2 é um método
-					// encontrando nós próprios métodos da classe
-					for(i=current.size()-1; i >= 0; i--){
-						if(parent.get(i).compareTo(this.id1) == 0){
-							flag = true;
-							break;
-						}
-					}
-					// procurando nos métodos p´ublicos existentes
-					for(i=parent.size()-1; i >= 0; i--){
-						if((parent.get(i).compareTo(this.id1) == 0)||(flag == true)){
-							flag = true;
-							break;		
-						}
-					}
-
-					pw.printIdent("(_"+id1+"->vt["+i+"])(_"+id1+", ");
-					expr.genC(pw);
-					pw.println(")");
-
-				}
-			}
-		}else{
-			// id3 é método
-			if(this.id1 != null){
-				for(i=parent.size()-1; i >= 0; i--){
-					if(parent.get(i).compareTo(this.id1) == 0){
-						
-					}
-				}
-				for(i=parent.size()-1; i >= 0; i--){
-				}
-			}
+	public void genC( PW pw, ArrayList<String> current, ArrayList<String> parent ){
+		String linha = "";
+		if(this.valueThis){
+			linha += "this.";
 		}
+		
+		if(this.valueSuper){
+			linha += "super.";
+		}
+		if(this.id1 != null){
+			linha += "_"+this.id1;
+		}
+		if(this.id2  != null){
+			linha += "."+ this.id2;
+		}
+		if(this.id3 != null){
+			linha += "."+ this.id3;
+		}
+		if(this.expr != null ){
+			linha += "(";
+			pw.print(linha);
+			this.expr.genKra(pw);
+			pw.print(")");
+		}else{
+			pw.print(linha);
+		}
+
 	}
+	
+//	public void genC( PW pw, ArrayList<String> current, ArrayList<String> parent){
+//
+//		Integer i;
+//		boolean flag= false;
+//		if(this.id3 == null){
+//			if(this.id2 == null){
+//
+//			}else{
+//				// id2 é método, mas pode ser variável
+//				if(this.expr != null){
+//					//id2 é um método
+//					// encontrando nós próprios métodos da classe
+//					for(i=current.size()-1; i >= 0; i--){
+//						if(parent.get(i).compareTo(this.id1) == 0){
+//							flag = true;
+//							break;
+//						}
+//					}
+//					// procurando nos métodos p´ublicos existentes
+//					for(i=parent.size()-1; i >= 0; i--){
+//						if((parent.get(i).compareTo(this.id1) == 0)||(flag == true)){
+//							flag = true;
+//							break;		
+//						}
+//					}
+//
+//					pw.printIdent("(_"+id1+"->vt["+i+"])(_"+id1+", ");
+//					expr.genC(pw);
+//					pw.println(")");
+//
+//				}
+//			}
+//		}else{
+//			// id3 é método
+//			if(this.id1 != null){
+//				for(i=parent.size()-1; i >= 0; i--){
+//					if(parent.get(i).compareTo(this.id1) == 0){
+//						
+//					}
+//				}
+//				for(i=parent.size()-1; i >= 0; i--){
+//				}
+//			}
+//		}
+//	}
 	
 	@Override
 	public void genKra( PW pw, boolean putParenthesis ){
@@ -166,5 +192,10 @@ public class PrimaryExpr  extends Expr{
 	private String id3;
 	private ExprList expr;
 	private Type type;
-	
+
+	@Override
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
 }

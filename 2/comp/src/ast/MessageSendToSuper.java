@@ -3,6 +3,8 @@
 // Henrique Teruo Eihara RA: 490016
 package ast;
 
+import java.util.ArrayList;
+
 public class MessageSendToSuper extends MessageSend {
 
 	private ExprList exprList;
@@ -34,7 +36,7 @@ public class MessageSendToSuper extends MessageSend {
                  
                  
                  
-	public void genC(PW pw, boolean putParenthesis) {
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 
 	}
 
