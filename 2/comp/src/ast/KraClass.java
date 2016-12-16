@@ -355,7 +355,7 @@ public class KraClass extends Type {
                 pw.print("} _class_"+ this.getCname() + "\n\n");
                 pw.printlnIdent("_class_" + this.getCname() + " *new_" + this.getCname() + "(void);\n");
 		for (Variable item : this.methodDecList) {
-                    item.genC(pw, this.getCname());
+                    item.genC(pw, this.getCname(),thisMethod, parentMethod);
 		}
                 pw.println("Func VTclass_" + this.getCname() + "[]{");
                 Boolean primeiro = true;

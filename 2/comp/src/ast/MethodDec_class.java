@@ -137,6 +137,30 @@ public class MethodDec_class extends Variable{
 
         }
 
+        public void genC(PW pw, String class_name, ArrayList<String> current, ArrayList<String> parent) {
+            String linha = "";
+            if(this.quali_final != null){
+                linha = this.quali_final.toString();
+            }
+            if(this.quali_static != null){
+                linha += " " + this.quali_static.toString();
+            }
+            linha += " " + this.getType().getCname() + " " + "_" + class_name + "_" + this.getName() + "( _class_" + class_name + " *this" ;
+               //+" { \n"
+            pw.printIdent(linha);
+            if(this.paramList != null){
+               this.paramList.genC(pw);
+            }
+            pw.print("){ \n\n");
+            pw.add();
+            for(Statement item : this.statementList){
+                item.genC(pw);
+            }
+            pw.sub();
+            pw.printlnIdent("}\n");
+
+        }
+        
         private ArrayList<Statement> statementList;
 	private ParamList paramList;
 	private Symbol qualifier;
