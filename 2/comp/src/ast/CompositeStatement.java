@@ -10,30 +10,36 @@ import java.util.ArrayList;
  * @author floss
  */
 public class CompositeStatement extends Statement {
-	
+
 	private ArrayList<Statement> stmtList;
-	
-	public CompositeStatement(ArrayList<Statement> stmtList){
-		this.stmtList = stmtList;		
+
+	public CompositeStatement(ArrayList<Statement> stmtList) {
+		this.stmtList = stmtList;
 	}
 
 	public ArrayList<Statement> getStmtList() {
 		return stmtList;
 	}
 
-        @Override
+	@Override
 	public void genC(PW pw) {
+		if (this.stmtList == null) {
+			return;
+		}
+		for (Statement item : this.stmtList) {
+			item.genC(pw);
+		}
 
 	}
-        
-        @Override
-        public void genKra(PW pw) {
-            if (this.stmtList == null){
-                return ;
-            }
-            for(Statement item : this.stmtList){
-                item.genKra(pw);
-            }
+
+	@Override
+	public void genKra(PW pw) {
+		if (this.stmtList == null) {
+			return;
+		}
+		for (Statement item : this.stmtList) {
+			item.genKra(pw);
+		}
 	}
-	
+
 }
