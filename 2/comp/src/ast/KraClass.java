@@ -291,31 +291,27 @@ public class KraClass extends Type {
 	}
 
         
-	public ArrayList<String[]> currentMethod(){
-		ArrayList<String[]> current = new ArrayList<String[]>();
+	public void currentMethod(ArrayList<String[]> current){
 		String[] aux = new String[2];
 		for (Variable item : this.methodDecList) {
 			aux[0] = item.getName();
 			aux[1] = this.getName();
 			current.add(aux);
 		}
-		return current;
 	}
 	
-        public ArrayList<String[]> parentMethod(KraClass pai){
-            ArrayList<String[]> current = new ArrayList<String[]>();
+        public void parentMethod(KraClass pai, ArrayList<String[]> pai2){
 	    String[] aux = new String[2];
             if (pai != null){
                 if(pai.getSuper() != null){
-                    current = parentMethod(pai.getSuper());
+                    parentMethod(pai.getSuper(), pai2);
                 }
                 for (Variable item : pai.methodDecList) {
 			aux[0] = item.getName();
 			aux[1] = pai.getName();
-			current.add(aux);
+			pai2.add(aux);
                 }
             }
-            return current;
         }
         
         public String VTcreation(KraClass currentClass, PW pw, String line){
@@ -346,10 +342,8 @@ public class KraClass extends Type {
            return line;
         }
         
-        public void genC(PW pw) {
+        public void genC(PW pw, ArrayList<String[]> thisMethod, ArrayList<String[]> parentMethod) {
 		String linha;
-                ArrayList<String[]> thisMethod = null;
-                ArrayList<String[]> parentMethod = null;
 		linha = "\ntypedef \n   struct __St_" + this.getCname() + "{";
                 
 //                if(this.superclass != null){
@@ -365,8 +359,8 @@ public class KraClass extends Type {
                     pw.sub();
                     
                 }
-                thisMethod =  this.currentMethod();
-                parentMethod = this.parentMethod(this.superclass);
+                this.currentMethod(thisMethod);
+                this.parentMethod(this.superclass, parentMethod);
                 pw.print("} _class_"+ this.getCname() + ";\n\n");
                 pw.printlnIdent("_class_" + this.getCname() + " *new_" + this.getCname() + "(void);\n");
 		for (Variable item : this.methodDecList) {
@@ -388,6 +382,7 @@ public class KraClass extends Type {
                  pw.printlnIdent("t->vt = VTclass_" + this.getCname() + ";");
                  pw.sub();
                  pw.printlnIdent("return t;");
+		 pw.print("}");
                  pw.sub();
 	}
         

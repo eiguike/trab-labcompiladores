@@ -32,25 +32,25 @@ public class WriteStatement extends Statement {
 		ArrayList<Expr> elem = this.exprList.getExpr();
 		Integer i;
 		
-		pw.printIdent("puts(");
-//		for(i = 0; i < elem.size(); i++){
-//			if(i > 0){
-//				pw.print(",");
-//			}
-//			if(elem.get(i).getType().getCname().compareTo("int") == 0){
-//				pw.print("%d");
-//			}else if(elem.get(i).getType().getCname().compareTo("char *") == 0){
-//				pw.print("%s");
-//			}
-//		}
-//		if(this.ln != ""){
-//			pw.print("\\n");
-//		}
-//		pw.print("\"");
+		pw.printIdent("printf(\"");
 		for(i = 0; i < elem.size(); i++){
-//			if(i >= 0){
-//				pw.print(", ");
-//			}
+			if(i > 0){
+				pw.print(",");
+			}
+			if(elem.get(i).getType().getCname().compareTo("int") == 0){
+				pw.print("%d");
+			}else if(elem.get(i).getType().getCname().compareTo("char *") == 0){
+				pw.print("%s");
+			}
+		}
+		if(this.ln != ""){
+			pw.print("\\n");
+		}
+		pw.print("\"");
+		for(i = 0; i < elem.size(); i++){
+			if(i >= 0){
+				pw.print(", ");
+			}
 			if(elem.get(i).getType().getCname().compareTo("char *") == 0){
 				pw.print("\"");
 				elem.get(i).genC(pw, false, null, null);

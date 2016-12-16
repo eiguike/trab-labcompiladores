@@ -27,7 +27,7 @@ public class ReadStatement extends Statement{
                 pw.printIdent("{\n");
 		pw.add();
                 pw.printIdent("char __s[512];\n");
-                pw.printIdent("gets __s;\n");
+                pw.printIdent("gets(__s);\n");
 		pw.printIdent("sscanf(__s, \"");
 		for(i = 0; i < this.variableList.size(); i++){
 			if(i > 0){

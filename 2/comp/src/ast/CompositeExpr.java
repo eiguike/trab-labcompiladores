@@ -22,18 +22,34 @@ public class CompositeExpr extends Expr {
 	public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ) {
         if ( putParenthesis )
           pw.print("(");
-        left.genC(pw, true, null, null);
+        left.genC(pw, true, current , pai);
         String strSymbol = arrayOper.get(oper);
         if ( strSymbol == null ) {
-        	pw.println("internal error in CompositeExpr::genC");
+        	pw.println("internal error in CompositeExpr::genKra");
         }
         else
             pw.print(" " + strSymbol + " ");
-        right.genC(pw, true, null, null);
+        right.genC(pw, true, current, pai);
         if ( putParenthesis )
           pw.print(")");
     }
     
+    public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ,Symbol op) {
+        if ( putParenthesis )
+          pw.print("("+ op.toString());
+        left.genC(pw, true, current, pai);
+        String strSymbol = arrayOper.get(oper);
+        if ( strSymbol == null ) {
+        	pw.println("internal error in CompositeExpr::genKra");
+        }
+        else
+            pw.print(" " + strSymbol + " ");
+        right.genC(pw, true, current, pai);
+        if ( putParenthesis )
+          pw.print(")");
+    }    
+	
+	
      @Override
     public void genC( PW pw, boolean putParenthesis,Symbol op) {
         if ( putParenthesis )

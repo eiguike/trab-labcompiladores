@@ -25,6 +25,8 @@ public class Program {
 	}
 
 	public void genC(PW pw) {
+		ArrayList<String[]> current = new ArrayList<String[]>();
+		ArrayList<String[]> pai = new ArrayList<String[]>();
             String linha;
             pw.println("#include <malloc.h>");
             pw.println("#include <stdlib.h>");
@@ -35,7 +37,7 @@ public class Program {
             pw.println("typedef"); 
             pw.println("   void (*Func)();"); 
             for (KraClass item : this.classList){
-                item.genC(pw);
+                item.genC(pw, current, pai);
                 pw.println();
             }
             

@@ -16,6 +16,10 @@ public class LiteralBoolean extends Expr {
 	public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai ) {
        pw.print( value ? "true" : "false" );
     }
+	
+		public void genC( PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai, Symbol op) {
+       pw.print( value ? "true" : "false" );
+    }
 
     @Override
 	public Type getType() {

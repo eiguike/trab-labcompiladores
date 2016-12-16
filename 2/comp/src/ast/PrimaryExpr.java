@@ -178,11 +178,11 @@ public class PrimaryExpr extends Expr {
 		if (this.valueSuper) {
 			linha += "super.";
 		}
-		if (this.id1 != null) {
+		if ((this.id1 != null)&&(this.id2 == null)) {
 			linha += "_" + this.id1;
 
 		}
-		if ((this.id1 != null) &&(this.id2 != null)) {
+		if (this.id2 != null) {
 			linha += "( (void (*)(_class_";
 			for (i = current.size() - 1; i >= 0; i--) {
 				if (current.get(i)[0].compareTo(this.id2) == 0) {
@@ -190,22 +190,83 @@ public class PrimaryExpr extends Expr {
 					break;
 				}
 			}
-			linha += "*, int)) _" + this.id1+"->vt["+ i +"])(_"+this.id1+",";
-			this.expr.genC(pw, putParenthesis, current, pai);
-			linha += ");";
+			linha += "*)) _" + this.id1+"->vt["+ i +"])(_"+this.id1+"";
+			if(expr != null){
+				linha+= "";
+				this.expr.genC(pw, putParenthesis, current, pai);
+			}
+			
+			linha += ")";
 //			linha += "." + this.id2;
 		}
 		if (this.id3 != null) {
 			linha += "." + this.id3;
 		}
-		if (this.expr != null) {
-			linha += "(";
+
 			pw.print(linha);
-			this.expr.genKra(pw);
-			pw.print(")");
-		} else {
-			pw.print(linha);
-		}
 	}
+	
+	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai, Symbol op) {
+		String linha = "";
+		Integer i;
+		if (this.valueThis) {
+			linha += "this.";
+		}
+
+		if (this.valueSuper) {
+			linha += "super.";
+		}
+		if ((this.id1 != null)&&(this.id2 == null)) {
+			linha += "_" + this.id1;
+
+		}
+		Integer i_aux = 0;
+		if (this.id2 != null) {
+			if(this.getType() instanceof KraClass){
+				KraClass aux = (KraClass) this.getType();
+				
+				for(Variable m : aux.getMethodList()){
+					if(m.getName().compareTo(this.id2)== 0){
+						break;
+					}
+					i_aux +=1;
+				}
+				linha += "( (void (*)(_class_"+aux.getCname();
+				linha += "*) ";
+				if(this.expr.getSizeExprList() > 0){
+					for(Expr t : this.expr.getExpr()){
+						pw.print(",");
+						pw.print(t.getType().getCname());
+					}
+				}
+				linha += ") _" + this.id1+"->vt["+ i_aux +"])(_"+this.id1+"";
+				if(this.expr.getSizeExprList() > 0){
+					for(Expr t : this.expr.getExpr()){
+						pw.print(",");
+					}
+				}
+			}
+			
+//			for (i = current.size() - 1; i >= 0; i--) {
+//				if (current.get(i)[0].compareTo(this.id2) == 0) {
+//					linha += current.get(i)[1];
+//					break;
+//				}
+//			}
+			
+			if(expr != null){
+				linha+= "";
+				this.expr.genC(pw, putParenthesis, current, pai);
+			}
+			
+			linha += ")";
+//			linha += "." + this.id2;
+		}
+		if (this.id3 != null) {
+			linha += "." + this.id3;
+		}
+
+			pw.print(linha);
+	}	
 
 }
