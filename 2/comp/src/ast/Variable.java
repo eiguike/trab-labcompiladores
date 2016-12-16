@@ -27,11 +27,11 @@ public class Variable {
     }
     
     public void genC(PW pw, String class_name) {
-        pw.print(this.name);
+        pw.print("_" + this.name);
     }
     
     public void genC(PW pw, String class_name, ArrayList<String[]> current, ArrayList<String[]> parent) {
-        pw.print(this.name);
+        pw.print("_" + this.name);
     }
     
     private String name;
