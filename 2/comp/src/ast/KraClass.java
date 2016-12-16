@@ -282,9 +282,50 @@ public class KraClass extends Type {
 		pw.print(linha);
 
 	}
+        public ArrayList<String> currentMethod(){
+            ArrayList<String> current = new ArrayList<String>();
+            for (Variable item : this.methodDecList) {
+                current.add(item.getName());
+            }
+            return current;
+        }
+        
+        public ArrayList<String> parentMethod(KraClass pai){
+            ArrayList<String> current = new ArrayList<String>();
+            if (pai != null){
+                if(pai.getSuper() != null){
+                    current = parentMethod(pai.getSuper());
+                }
+                for (Variable item : pai.methodDecList) {
+                    current.add(item.getName());
+                }
+            }
+            return current;
+        }
+        
+        public void VTcreation(KraClass currentClass, PW pw){
+            
+            if(currentClass.getSuper() != null){
+               this.VTcreation(currentClass.getSuper(), pw);
+            }
+           boolean primeiro = true;
+           for (Variable item : this.methodDecList) {
+                if(item.getQualifier() == Symbol.PUBLIC){
+                    if(primeiro){
+                        primeiro = false;
+                        pw.printIdent("( void (*)() ) _" + this.getCname() + "_" + item.getName() + ";");
+                    }else{
+                        pw.println(",");
+                        pw.printlnIdent("( void (*)() ) _" + this.getCname() + "_" + item.getName() + ";");
+                    }
+                }
+            }
+        }
         
         public void genC(PW pw) {
 		String linha;
+                ArrayList<String> thisMethod = null;
+                ArrayList<String> parentMethod = null;
 		linha = "typedef \nstruct __St_" + this.getCname() + "{ \n";
                 
 //                if(this.superclass != null){
@@ -300,23 +341,18 @@ public class KraClass extends Type {
                     pw.sub();
                     
                 }
+                thisMethod =  this.currentMethod();
+                parentMethod = this.parentMethod(this.superclass);
                 pw.print("} _class_"+ this.getCname() + "\n\n");
                 pw.printlnIdent("_class_" + this.getCname() + " *new_" + this.getCname() + "(void);\n");
 		for (Variable item : this.methodDecList) {
-			item.genC(pw, this.getCname());
+                    item.genC(pw, this.getCname());
 		}
                 pw.println("Func VTclass_" + this.getCname() + "[]{");
                 Boolean primeiro = true;
                 pw.add();
-                for (Variable item : this.methodDecList) {
-                    if(primeiro){
-                        primeiro = false;
-                        pw.printIdent("( void (*)() ) _" + this.getCname() + "_" + item.getName() + ";");
-                    }else{
-                        pw.println(",");
-                        pw.printlnIdent("( void (*)() ) _" + this.getCname() + "_" + item.getName() + ";");
-                    }
-                }
+                
+                this.VTcreation(this, pw);
                 pw.sub();
                 pw.print("};\n\n");
                 
@@ -325,8 +361,13 @@ public class KraClass extends Type {
                  pw.add();
                  pw.printlnIdent("_class_" + this.getCname() + " *t;");
                  pw.printlnIdent("if ( t = malloc(sizeof(_class_" + this.getCname() + "))) != NULL )");
+                 pw.add();
+                 pw.printlnIdent("t->vt = VTclass_" + this.getCname() + ";");
+                 pw.sub();
+                 pw.printlnIdent("return t;");
                 
 	}
+        
 
 	public void genKra(PW pw) {
 		String linha;

@@ -4,6 +4,7 @@
 package ast;
 
 import java.util.ArrayList;
+import lexer.Symbol;
 
 public class Variable {
 
@@ -20,6 +21,9 @@ public class Variable {
 
     public void genKra(PW pw) {
         pw.print(this.name);
+    }
+    public Symbol getQualifier() {
+        return null;
     }
     
     public void genC(PW pw, String class_name) {
