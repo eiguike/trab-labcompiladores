@@ -33,7 +33,30 @@ public class IfStatement extends Statement{
 	
 	@Override
 	public void genC(PW pw) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            String linha;
+            if(this.expr != null){
+                pw.printIdent("if ( ");
+                this.expr.genC(pw, false);
+                pw.print(") {\n\n");
+            }else{
+                pw.print("if() {\n\n");
+            }
+            pw.add();
+            if(this.stmt != null){
+                this.stmt.genC(pw);
+            }
+            pw.sub();
+            pw.printIdent("}");
+            if(this.stmtElse != null){
+                pw.print("else{\n");
+                pw.add();
+                this.stmtElse.genC(pw);
+                pw.sub();
+                pw.println();
+                pw.printIdent("}\n");
+            }else{
+                pw.print("\n");
+            }
 	}
 	
         

@@ -20,6 +20,7 @@ public class AssignmentStatement extends Statement{
 	
 	@Override
 	public void genC(PW pw) {
+		this.assignExpr.genC(pw, false);
 	}
         
   
