@@ -16,19 +16,22 @@ public class UnaryExpr extends Expr {
 	public void genC(PW pw, boolean putParenthesis) {
 		switch (op) {
 		case PLUS:
-			pw.print("+");
+                        expr.genC(pw, putParenthesis,op);
+//			pw.print("+");
 			break;
 		case MINUS:
-			pw.print("-");
+                        expr.genC(pw,putParenthesis,op);
+//			pw.print("-");
 			break;
 		case NOT:
-			pw.print("!");
+                        expr.genC(pw, putParenthesis, op);
+//			pw.print("!");
 			break;
 		default:
-			pw.print(" internal error at UnaryExpr::genC");
+			pw.print(" internal error at UnaryExpr::genKra");
 
 		}
-		expr.genC(pw, false);
+//		expr.genKra(pw, putParenthesis);
 	}
 
 	@Override

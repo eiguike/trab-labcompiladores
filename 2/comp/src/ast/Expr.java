@@ -12,6 +12,11 @@ abstract public class Expr {
     
     abstract public void genKra( PW pw, boolean putParenthesis );
     
+    
+    public void genC( PW pw, boolean putParenthesis,Symbol op ){
+        throw new UnsupportedOperationException("Only CompositeExpr should enter in this method."); //To change body of generated methods, choose Tools | Templates.
+    };
+    
     public void genKra( PW pw, boolean putParenthesis,Symbol op ){
         throw new UnsupportedOperationException("Only CompositeExpr should enter in this method."); //To change body of generated methods, choose Tools | Templates.
     };

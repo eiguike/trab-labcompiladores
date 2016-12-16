@@ -23,7 +23,19 @@ public class ExprSuper extends Expr{
 
 	@Override
 	public void genC(PW pw, boolean putParenthesis) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		String linha = "";
+                pw.print("super." + this.variable.getName()+ "(");
+                int i = 0;
+                for(Expr item : this.exprList.getExpr()){
+                    if(i == 0){
+                        item.genC(pw, putParenthesis);
+                    }else{
+                        pw.print(", ");
+                        item.genC(pw, putParenthesis);
+                    }
+                    i++;
+                }
+                pw.print(")");
 	}
 
         @Override

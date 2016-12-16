@@ -282,6 +282,15 @@ public class KraClass extends Type {
 		pw.print(linha);
 
 	}
+        
+        public void genC(PW pw, boolean putParenthesis) {
+		String linha = "";
+		linha = "new " + this.getCname() + "()";
+		pw.print(linha);
+
+	}
+        
+        
         public ArrayList<String> currentMethod(){
             ArrayList<String> current = new ArrayList<String>();
             for (Variable item : this.methodDecList) {

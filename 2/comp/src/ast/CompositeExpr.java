@@ -33,6 +33,22 @@ public class CompositeExpr extends Expr {
           pw.print(")");
     }
     
+     @Override
+    public void genC( PW pw, boolean putParenthesis,Symbol op) {
+        if ( putParenthesis )
+          pw.print("("+ op.toString());
+        left.genC(pw, true);
+        String strSymbol = arrayOper.get(oper);
+        if ( strSymbol == null ) {
+        	pw.println("internal error in CompositeExpr::genKra");
+        }
+        else
+            pw.print(" " + strSymbol + " ");
+        right.genC(pw, true);
+        if ( putParenthesis )
+          pw.print(")");
+    }    
+        
         
     @Override
     public void genKra( PW pw, boolean putParenthesis,Symbol op) {

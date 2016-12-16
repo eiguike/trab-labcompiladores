@@ -60,14 +60,14 @@ public class AssignmentExpr extends Expr{
 		int i = 0;
             if(this.exprList.size() == 1){
                 pw.printIdent("");
-                this.exprList.get(0).genKra(pw, putParenthesis);
+                this.exprList.get(0).genC(pw, putParenthesis);
 //                pw.print(")"); //chamda de metodo no assign
             }else{
                 for(Expr item : this.exprList){
                     if(i == 0){
                         pw.printIdent("");
                     }
-                    item.genKra(pw, putParenthesis);
+                    item.genC(pw, putParenthesis);
                     if(i == 0){
                         pw.print(" = ");
                     }

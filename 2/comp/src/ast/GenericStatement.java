@@ -21,7 +21,7 @@ public class GenericStatement extends Statement{
 
 	@Override
 	public void genC(PW pw) {
-		pw.printIdent(this.stmt);
+            pw.printIdent(this.stmt);
 	}
         
         @Override
