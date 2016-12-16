@@ -309,14 +309,16 @@ public class KraClass extends Type {
                this.VTcreation(currentClass.getSuper(), pw);
             }
            boolean primeiro = true;
-           for (Variable item : this.methodDecList) {
+           for (Variable item : currentClass.methodDecList) {
                 if(item.getQualifier() == Symbol.PUBLIC){
                     if(primeiro){
                         primeiro = false;
-                        pw.printIdent("( void (*)() ) _" + this.getCname() + "_" + item.getName() + ";");
+                        pw.printIdent("( void (*)() ) _" + currentClass.getCname() + "_" + item.getName() + ";");
+			pw.println();
                     }else{
                         pw.println(",");
-                        pw.printlnIdent("( void (*)() ) _" + this.getCname() + "_" + item.getName() + ";");
+                        pw.printlnIdent("( void (*)() ) _" + currentClass.getCname() + "_" + item.getName() + ";");
+			pw.println();
                     }
                 }
             }
