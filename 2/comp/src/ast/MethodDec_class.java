@@ -115,14 +115,13 @@ public class MethodDec_class extends Variable{
         
         public void genC(PW pw, String class_name) {
             String linha = "";
-            pw.add();
             if(this.quali_final != null){
                 linha = this.quali_final.toString();
             }
             if(this.quali_static != null){
                 linha += " " + this.quali_static.toString();
             }
-            linha += " " + this.getType().getName() + " " + "_" + class_name + "_" + this.getName() + "( _class_" + class_name + " *this" ;
+            linha += " " + this.getType().getCname() + " " + "_" + class_name + "_" + this.getName() + "( _class_" + class_name + " *this" ;
                //+" { \n"
             pw.printIdent(linha);
             if(this.paramList != null){
@@ -135,7 +134,6 @@ public class MethodDec_class extends Variable{
             }
             pw.sub();
             pw.printlnIdent("}\n");
-            pw.sub();
 
         }
 

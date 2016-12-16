@@ -12,6 +12,17 @@ import java.util.ArrayList;
 public class LocalDec extends Expr{
 
 	public void genC(PW pw, boolean putParenthesis) {
+            String linha ="";
+//           pw.print(this.type.getName();
+            pw.print(this.type.getName());
+            int aux = 0;
+           for (Variable item : variableList){
+               if (aux == 0){
+                    pw.print(" _" + item.getName());
+               }else{
+                   pw.print(", _" + item.getName());
+               }
+           }
 	}
 
 	public LocalDec(Type type, ArrayList<Variable> variableList){

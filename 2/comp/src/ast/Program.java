@@ -37,6 +37,14 @@ public class Program {
                 item.genC(pw);
                 pw.println();
             }
+            
+            pw.println("int main () { ");
+                pw.add();
+                pw.printIdent("_class_Program *program;\n");
+                pw.printIdent("program = new_Program();\n");
+                pw.printIdent("( ( void ( * ) (_class_Program *) ) program->vt[0] ) (program);\n");
+                pw.printIdent("return 0;");
+                pw.println("\n}\n");
 	}
 	
 	public ArrayList<KraClass> getClassList() {

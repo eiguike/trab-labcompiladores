@@ -13,10 +13,6 @@ import java.util.ArrayList;
  */
 public class AssignmentExpr extends Expr{
 
-	public void genC(PW pw, boolean putParenthesis) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-	
 	public AssignmentExpr(Expr expr1, Expr expr2){
 		this.exprList = new ArrayList<Expr>();
 		exprList.add(expr1);
@@ -59,4 +55,27 @@ public class AssignmentExpr extends Expr{
             pw.println();
             pw.println();
         }
+        
+        public void genC(PW pw, boolean putParenthesis) {
+		int i = 0;
+            if(this.exprList.size() == 1){
+                pw.printIdent("");
+                this.exprList.get(0).genKra(pw, putParenthesis);
+//                pw.print(")"); //chamda de metodo no assign
+            }else{
+                for(Expr item : this.exprList){
+                    if(i == 0){
+                        pw.printIdent("");
+                    }
+                    item.genKra(pw, putParenthesis);
+                    if(i == 0){
+                        pw.print(" = ");
+                    }
+                    i++;
+                }
+            }
+            pw.print(";");
+            pw.println();
+            pw.println();
+	}
 }

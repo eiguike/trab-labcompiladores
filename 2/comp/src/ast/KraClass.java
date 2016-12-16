@@ -300,10 +300,32 @@ public class KraClass extends Type {
                     pw.sub();
                     
                 }
+                pw.print("} _class_"+ this.getCname() + "\n\n");
+                pw.printlnIdent("_class_" + this.getCname() + " *new_" + this.getCname() + "(void);\n");
 		for (Variable item : this.methodDecList) {
 			item.genC(pw, this.getCname());
 		}
-                pw.print("} _class_"+ this.getCname());
+                pw.println("Func VTclass_" + this.getCname() + "[]{");
+                Boolean primeiro = true;
+                pw.add();
+                for (Variable item : this.methodDecList) {
+                    if(primeiro){
+                        primeiro = false;
+                        pw.printIdent("( void (*)() ) _" + this.getCname() + "_" + item.getName() + ";");
+                    }else{
+                        pw.println(",");
+                        pw.printlnIdent("( void (*)() ) _" + this.getCname() + "_" + item.getName() + ";");
+                    }
+                }
+                pw.sub();
+                pw.print("};\n\n");
+                
+                
+                 pw.println("_class_" + this.getCname() + " *new_" + this.getCname() + "()" +"{");
+                 pw.add();
+                 pw.printlnIdent("_class_" + this.getCname() + " *t;");
+                 pw.printlnIdent("if ( t = malloc(sizeof(_class_" + this.getCname() + "))) != NULL )");
+                
 	}
 
 	public void genKra(PW pw) {
