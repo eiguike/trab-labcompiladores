@@ -303,25 +303,32 @@ public class KraClass extends Type {
             return current;
         }
         
-        public void VTcreation(KraClass currentClass, PW pw){
+        public String VTcreation(KraClass currentClass, PW pw, String line){
             
             if(currentClass.getSuper() != null){
-               this.VTcreation(currentClass.getSuper(), pw);
+               line = this.VTcreation(currentClass.getSuper(), pw, line);
             }
            boolean primeiro = true;
            for (Variable item : currentClass.methodDecList) {
                 if(item.getQualifier() == Symbol.PUBLIC){
-                    if(primeiro){
-                        primeiro = false;
-                        pw.printIdent("( void (*)() ) _" + currentClass.getCname() + "_" + item.getName() + ";");
-			pw.println();
+                    
+                    if(line.isEmpty()){
+                        line = "( void (*)() ) _" + currentClass.getCname() + "_" + item.getName();
                     }else{
-                        pw.println(",");
-                        pw.printlnIdent("( void (*)() ) _" + currentClass.getCname() + "_" + item.getName() + ";");
-			pw.println();
+                        line += ", \n";
+                        line += "\t( void (*)() ) _" + currentClass.getCname() + "_" + item.getName();
                     }
+//                    if(primeiro){
+//                        primeiro = false;
+//                        pw.printIdent("( void (*)() ) _" + currentClass.getCname() + "_" + item.getName() + ";");
+//			pw.println();
+//                    }else{
+//                        pw.printlnIdent("( void (*)() ) _" + currentClass.getCname() + "_" + item.getName() + ";");
+//			pw.println();
+//                    }
                 }
             }
+           return line;
         }
         
         public void genC(PW pw) {
@@ -353,10 +360,9 @@ public class KraClass extends Type {
                 pw.println("Func VTclass_" + this.getCname() + "[]{");
                 Boolean primeiro = true;
                 pw.add();
-                
-                this.VTcreation(this, pw);
+                pw.printIdent(this.VTcreation(this, pw, ""));
                 pw.sub();
-                pw.print("};\n\n");
+                pw.print("\n};\n\n");
                 
                 
                  pw.println("_class_" + this.getCname() + " *new_" + this.getCname() + "()" +"{");
