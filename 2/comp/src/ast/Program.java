@@ -37,8 +37,13 @@ public class Program {
             pw.println("typedef"); 
             pw.println("   void (*Func)();"); 
             for (KraClass item : this.classList){
-                item.genC(pw, current, pai);
-                pw.println();
+		if(item.getName().compareTo("Program") == 0){
+//			current = new ArrayList<String[]>();
+//			pai = new ArrayList<String[]>();
+		}
+		item.genC(pw, current, pai);
+		pw.println();
+                
             }
             
             pw.println("int main () { ");

@@ -384,7 +384,7 @@ public class Compiler {
 		}
 
 		symbolTable.removeLocalIdent();
-		MethodDec_class aux_methodDec = new MethodDec_class(qualifier, name, type, quali_static, quali_final);
+		MethodDec_class aux_methodDec = new MethodDec_class(qualifier, name, type, quali_static, quali_final, (KraClass)classeAtual.lastElement());
 		lexer.nextToken();
 		if (lexer.token != Symbol.RIGHTPAR) {
 			aux_methodDec.setParamList(formalParamDec());

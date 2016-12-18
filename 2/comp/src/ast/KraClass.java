@@ -303,13 +303,25 @@ public class KraClass extends Type {
         
 	public void currentMethod(ArrayList<String[]> current){
 		String[] aux = new String[2];
-		for (Variable item : this.methodDecList) {
-			
-			aux[0] = item.getName();
-			aux[1] = this.getName();
-			current.add(aux);
-			aux = new String[2];
-		}
+
+			boolean flag = false;
+			for (Variable item : this.methodDecList) {
+				for(String[] i : current){
+					if(i[0].compareTo(item.getName()) == 0){
+						i[1] = this.getName();
+						flag = true;
+						break;
+					}
+				}
+				if(flag != true){
+				aux[0] = item.getName();
+				aux[1] = this.getName();
+				current.add(aux);
+				aux = new String[2];
+				}else{
+					flag = false;
+				}
+			}
 	}
 	
         public void parentMethod(KraClass pai, ArrayList<String[]> pai2){
@@ -326,20 +338,23 @@ public class KraClass extends Type {
             }
         }
         
-        public String VTcreation(KraClass currentClass, PW pw, String line){
+        public String VTcreation(KraClass currentClass, PW pw, String line,  ArrayList<String[]> thisMethod, ArrayList<String[]> parentMethod){
             
-            if(currentClass.getSuper() != null){
-               line = this.VTcreation(currentClass.getSuper(), pw, line);
-            }
+//            if(currentClass.getSuper() != null){
+//               line = this.VTcreation(currentClass.getSuper(), pw, line);
+//            }
+	   if(currentClass.getName().compareTo("Program") == 0){
+		   line+= "( void (*)() ) _Program_run";
+		   return line;
+	   }
            boolean primeiro = true;
-           for (Variable item : currentClass.methodDecList) {
-                if(item.getQualifier() == Symbol.PUBLIC){
-                    
+           for (String[] item : thisMethod) {
+                  
                     if(line.isEmpty()){
-                        line = "( void (*)() ) _" + currentClass.getCname() + "_" + item.getName();
+                        line = "( void (*)() ) _" + item[1] + "_" + item[0];
                     }else{
                         line += ", \n";
-                        line += "\t( void (*)() ) _" + currentClass.getCname() + "_" + item.getName();
+                        line += "\t( void (*)() ) _" + item[1] + "_" + item[0];
                     }
 //                    if(primeiro){
 //                        primeiro = false;
@@ -350,7 +365,6 @@ public class KraClass extends Type {
 //			pw.println();
 //                    }
                 }
-            }
            return line;
         }
         
@@ -369,7 +383,9 @@ public class KraClass extends Type {
                     pw.sub();
                     
 //                };
-
+		if(this.superclass != null){
+			this.superclass.getInstance().genC(pw);
+		}
 		this.instanceVariableList.genC(pw);
 		pw.printIdent("\n");
                 this.currentMethod(thisMethod);
@@ -382,7 +398,7 @@ public class KraClass extends Type {
                 pw.println("Func VTclass_" + this.getCname() + "[] = {");
                 Boolean primeiro = true;
                 pw.add();
-                pw.printIdent(this.VTcreation(this, pw, ""));
+                pw.printIdent(this.VTcreation(this, pw, "", thisMethod, parentMethod));
                 pw.sub();
                 pw.print("\n};\n\n");
                 
