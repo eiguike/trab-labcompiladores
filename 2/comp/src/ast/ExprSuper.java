@@ -4,6 +4,7 @@
 package ast;
 
 import java.util.ArrayList;
+import lexer.Symbol;
 
 /**
  *
@@ -24,16 +25,35 @@ public class ExprSuper extends Expr{
                 this.exprList = expr;
 		this.classeAtual = classeAtual;
 	}
+	
+	// MÉTODO ADICIONADO DEPOIS DA PROVA
+	public String classSuperFindingMethod(KraClass super_class, String name){
+		boolean flag = false;
+		for (Variable v : super_class.getMethodList()){
+			if(v.getName().compareTo(name) == 0){
+				flag = true;
+				break;
+			}
+		}
+		
+		if(flag == false){
+			return this.classSuperFindingMethod(super_class.getSuper(), name);
+		}
+		return super_class.getName();
+	}
 
 	@Override
 	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
-		pw.printIdent("_"+this.classeAtual.getSuper().getCname()+"_"+this.variable.getName());
-		pw.print("((_class_"+this.classeAtual.getSuper().getCname()+" * ) this ");
+		pw.printIdent("_"+this.classSuperFindingMethod(classeAtual.getSuper(), this.variable.getName())+"_"+this.variable.getName());
+		pw.print("((_class_"+this.classSuperFindingMethod(classeAtual.getSuper(), this.variable.getName())+" * ) this ");
 		
 		if(exprList.getSizeExprList() > 0 ){
 			pw.print(",");
 			for(Expr a : exprList.getExpr()){
-				if(a.getType() == Type.intType){
+				if(a instanceof CompositeExpr){
+					
+					((CompositeExpr)a).genC(pw, putParenthesis, current, pai, Symbol.OR);
+				}else if(a.getType() == Type.intType){
 					Integer aux = ((LiteralInt)a).getValue();
 					pw.print(aux.toString());
 				}else{
