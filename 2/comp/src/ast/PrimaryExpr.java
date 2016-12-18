@@ -60,7 +60,7 @@ public class PrimaryExpr extends Expr {
 	@Override
 	public void genKra(PW pw, boolean putParenthesis) {
 		String linha = "";
-		if (this.valueThis) {
+		if (this.valueThis != null) {
 			linha += "this.";
 		}
 
@@ -91,7 +91,7 @@ public class PrimaryExpr extends Expr {
 	public void genKra(PW pw, boolean putParenthesis, Symbol op) {
 		String linha = "";
 		linha += op.toString();
-		if (this.valueThis) {
+		if (this.valueThis != null) {
 			linha += "this.";
 		}
 		if (this.valueSuper) {
@@ -123,7 +123,7 @@ public class PrimaryExpr extends Expr {
 	}
 
 	public PrimaryExpr() {
-		this.valueThis = false;
+		this.valueThis = null;
 		this.valueSuper = false;
 		this.expr = null;
 		this.id1 = null;
@@ -135,15 +135,15 @@ public class PrimaryExpr extends Expr {
 		this.type = type;
 	}
 
-	public void addID1(String type_entra) {
+	public void addID1(Variable type_entra) {
 		this.id1 = type_entra;
 	}
 
-	public void addID2(String type_entra) {
+	public void addID2(Variable type_entra) {
 		this.id2 = type_entra;
 	}
 
-	public void addID3(String type_entra) {
+	public void addID3(Variable type_entra) {
 		this.id3 = type_entra;
 	}
 
@@ -151,7 +151,7 @@ public class PrimaryExpr extends Expr {
 		this.expr = expr_entra;
 	}
 
-	public void setThis(boolean value) {
+	public void setThis(Type value) {
 		this.valueThis = value;
 	}
 
@@ -159,11 +159,11 @@ public class PrimaryExpr extends Expr {
 		return this.expr;
 	}
 
-	private boolean valueThis;
+	private Type valueThis;
 	private boolean valueSuper;
-	private String id1;
-	private String id2;
-	private String id3;
+	private Variable id1;
+	private Variable id2;
+	private Variable id3;
 	private ExprList expr;
 	private Type type;
 
@@ -171,30 +171,93 @@ public class PrimaryExpr extends Expr {
 	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
 		String linha = "";
 		Integer i;
-		if (this.valueThis) {
-			linha += "this.";
-		}
-
-		if (this.valueSuper) {
-			linha += "super.";
-		}
-		if ((this.id1 != null)&&(this.id2 == null)) {
-			linha += "_" + this.id1;
-
-		}
-		if (this.id2 != null) {
-			linha += "( (void (*)(_class_";
-			for (i = current.size() - 1; i >= 0; i--) {
-				if (current.get(i)[0].compareTo(this.id2) == 0) {
-					linha += current.get(i)[1];
-					break;
+		if (this.valueThis != null) {
+			if(this.id1 instanceof InstanceVariable){
+				// acessando variável de instância
+				linha += "this->_"+this.valueThis.getName();
+			}else if(this.id1 instanceof MethodDec_class){
+				linha += "_"+this.valueThis.getName()+"_"+this.id1.getName()+"(";
+				linha += "this";
+				for(Expr expr_ : this.expr.getExpr()){
+					if(expr_ instanceof LiteralInt){
+						linha += ", ";
+						linha += ((LiteralInt) expr_).getValue();
+					}
 				}
+				linha += ")";
 			}
-			linha += "*)) _" + this.id1+"->vt["+ i +"])(_"+this.id1+"";
-			if(expr != null){
-				linha+= "";
-				this.expr.genC(pw, putParenthesis, current, pai);
+		}else if ((this.id1 != null)&&(this.id2 == null)) {
+			linha += "_" + this.id1.getName();
+		}
+		
+		Integer i_aux = 0;
+		if (this.id2 != null) {
+			if(this.id1.getType() instanceof KraClass){
+				KraClass aux = (KraClass) this.id1.getType();
+				Variable auxv = null;
+				
+				////////////////////////////
+				////////////////////////////
+//				for (String[] s : pai){
+//					if(s[0].compareTo(this.id2.getName()) == 0){
+//						auxv = new Variable(null,null);
+//						break;
+//					}
+//					i_aux += 1; 
+//				}
+				if(auxv == null){
+					for (String[] s : current){
+						if(s[0].compareTo(this.id2.getName()) == 0){
+							auxv = null;
+							break;
+						}
+						i_aux += 1;
+					}	
+				}
+				
+				////////////////////////////
+				////////////////////////////
+//				for(Variable m : aux.getMethodList()){;
+//					if(m.getName().compareTo(this.id2.getName())== 0){
+//						break;
+//					}
+//					auxv = m;
+//					i_aux +=1;
+//				}
+				////////////////////////////
+				////////////////////////////
+				////////////////////////////////////////////////////////
+				
+				linha += "( (";
+				
+				if(this.id2.getType() != null){
+					linha+= " "+ this.id2.getType().getName() +" ";
+				}
+				linha	+= " (*)(_class_"+aux.getCname();
+				linha += "* ";
+				if(this.expr.getSizeExprList() > 0){
+					for(Expr t : this.expr.getExpr()){
+						linha += ",";
+						linha += t.getType().getCname();
+					}
+				}
+				
+				linha += ")) _" + this.id1.getName()+"->vt["+ i_aux +"])(_"+this.id1.getName()+"";
+				if(this.expr.getSizeExprList() > 0){
+					pw.print(linha+", ");
+					this.expr.genC(pw, putParenthesis, current, pai);
+				}else{
+					pw.print(linha);
+				}
+				linha = "";
 			}
+			
+//			for (i = current.size() - 1; i >= 0; i--) {
+//				if (current.get(i)[0].compareTo(this.id2) == 0) {
+//					linha += current.get(i)[1];
+//					break;
+//				}
+//			}
 			
 			linha += ")";
 //			linha += "." + this.id2;
@@ -209,7 +272,7 @@ public class PrimaryExpr extends Expr {
 	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai, Symbol op) {
 		String linha = "";
 		Integer i;
-		if (this.valueThis) {
+		if (this.valueThis != null) {
 			linha += "this.";
 		}
 
@@ -217,16 +280,15 @@ public class PrimaryExpr extends Expr {
 			linha += "super.";
 		}
 		if ((this.id1 != null)&&(this.id2 == null)) {
-			linha += "_" + this.id1;
+			linha += "_" + this.id1.getName();
 
 		}
 		Integer i_aux = 0;
 		if (this.id2 != null) {
-			if(this.getType() instanceof KraClass){
 				KraClass aux = (KraClass) this.getType();
 				
 				for(Variable m : aux.getMethodList()){
-					if(m.getName().compareTo(this.id2)== 0){
+					if(m.getName().compareTo(this.id2.getName())== 0){
 						break;
 					}
 					i_aux +=1;
@@ -245,7 +307,6 @@ public class PrimaryExpr extends Expr {
 						pw.print(",");
 					}
 				}
-			}
 			
 //			for (i = current.size() - 1; i >= 0; i--) {
 //				if (current.get(i)[0].compareTo(this.id2) == 0) {

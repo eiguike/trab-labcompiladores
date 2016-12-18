@@ -35,12 +35,12 @@ public class WriteStatement extends Statement {
 		pw.printIdent("printf(\"");
 		for(i = 0; i < elem.size(); i++){
 			if(i > 0){
-				pw.print(",");
+//				pw.print(" ");
 			}
 			if(elem.get(i).getType().getCname().compareTo("int") == 0){
-				pw.print("%d");
+				pw.print("%d ");
 			}else if(elem.get(i).getType().getCname().compareTo("char *") == 0){
-				pw.print("%s");
+				pw.print("%s ");
 			}
 		}
 		if(this.ln != ""){

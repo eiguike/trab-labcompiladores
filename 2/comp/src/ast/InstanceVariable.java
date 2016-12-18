@@ -11,11 +11,12 @@ public class InstanceVariable extends Variable {
         super(name, type);
     }
     
-    public InstanceVariable( String name, Type type, Symbol sym_entra , Symbol sym_entra1, Symbol sym_entra2) {
+    public InstanceVariable( String name, Type type, Symbol sym_entra , Symbol sym_entra1, Symbol sym_entra2, String className) {
         super(name, type);
         this.qualifier = sym_entra;
         this.quali_static = sym_entra1;
         this.quali_final = sym_entra2;
+	this.class_name = className;
     }
     
     public Symbol getQualifier(){
@@ -50,10 +51,15 @@ public class InstanceVariable extends Variable {
         if(this.quali_static != null){
             linha += " " + this.quali_static.toString();
         }
-        linha += " " + this.getType().getName() + " _" + this.getName() +";\n";
+	if(this.qualifier == Symbol.PRIVATE){
+		linha += " " + this.getType().getName() + " _"+ this.class_name+"_" + this.getName() +";\n";
+	}else{
+		linha += " " + this.getType().getName() + " _" + this.getName() +";\n";
+	}
         pw.printIdent(linha);
     }
     private Symbol qualifier;
     private Symbol quali_static;
     private Symbol quali_final; 
+    private String class_name;
 }

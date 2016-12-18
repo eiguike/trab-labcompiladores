@@ -11,6 +11,7 @@ import java.util.ArrayList;
  */
 public class ExprSuper extends Expr{
 	
+	private KraClass classeAtual;	
 	private MethodDec_class variable; // é um metodo
         private ExprList exprList;
 	
@@ -18,29 +19,35 @@ public class ExprSuper extends Expr{
 		this.variable = variable;		
 	}
         
-        public ExprSuper(MethodDec_class variable, ExprList expr){
+        public ExprSuper(MethodDec_class variable, ExprList expr, KraClass classeAtual){
 		this.variable = variable;	
                 this.exprList = expr;
+		this.classeAtual = classeAtual;
 	}
 
 	@Override
 	public void genC(PW pw, boolean putParenthesis, ArrayList<String[]> current, ArrayList<String[]> pai) {
-		String linha = "";
-                pw.print("super." + this.variable.getName()+ "(");
-                int i = 0;
-                for(Expr item : this.exprList.getExpr()){
-                    if(i == 0){
-                        item.genC(pw, putParenthesis, null, null);
-                    }else{
-                        pw.print(", ");
-                        item.genC(pw, putParenthesis, null, null);
-                    }
-                    i++;
-                }
-                pw.print(")");
+		pw.printIdent("_"+this.classeAtual.getSuper().getCname()+"_"+this.variable.getName());
+		pw.print("((_class_"+this.classeAtual.getSuper().getCname()+" * ) this ");
+		
+		if(exprList.getSizeExprList() > 0 ){
+			pw.print(",");
+			for(Expr a : exprList.getExpr()){
+				if(a.getType() == Type.intType){
+					Integer aux = ((LiteralInt)a).getValue();
+					pw.print(aux.toString());
+				}else{
+					pw.print("_"+a.getType().getCname());
+				}
+				
+	
+			}			
+		}
+		pw.print(");");
+
 	}
 
-        @Override
+	@Override
 	public void genKra(PW pw, boolean putParenthesis) {
                 String linha = "";
                 pw.print("super." + this.variable.getName()+ "(");

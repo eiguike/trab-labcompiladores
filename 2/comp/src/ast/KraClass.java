@@ -135,6 +135,16 @@ public class KraClass extends Type {
 	public KraClass getSuper() {
 		return this.superclass;
 	}
+	
+	public Variable getMethodListString(String name){
+		for(Variable v : this.getMethodList()){
+			if(v.getName().compareTo(name) == 0){
+				return v;
+			}
+		}
+		return null;
+		
+	}
 
 	public ArrayList<Variable> getMethodList() {
 		return methodDecList;
@@ -294,9 +304,11 @@ public class KraClass extends Type {
 	public void currentMethod(ArrayList<String[]> current){
 		String[] aux = new String[2];
 		for (Variable item : this.methodDecList) {
+			
 			aux[0] = item.getName();
 			aux[1] = this.getName();
 			current.add(aux);
+			aux = new String[2];
 		}
 	}
 	
@@ -351,14 +363,15 @@ public class KraClass extends Type {
 //                }
 		pw.printIdent(linha);
 		pw.printIdent("\n");
-		this.instanceVariableList.genC(pw);
-		pw.printIdent("\n");
-                if (!this.methodDecList.isEmpty()){
+//                if (!this.methodDecList.isEmpty()){
                     pw.add();
                     pw.printIdent("Func *vt;\n");
                     pw.sub();
                     
-                }
+//                };
+
+		this.instanceVariableList.genC(pw);
+		pw.printIdent("\n");
                 this.currentMethod(thisMethod);
                 this.parentMethod(this.superclass, parentMethod);
                 pw.print("} _class_"+ this.getCname() + ";\n\n");
